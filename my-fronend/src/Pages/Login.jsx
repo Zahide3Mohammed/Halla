@@ -173,119 +173,119 @@ useEffect(() => {
 ///////////////////////////////////////////////////////////////////////////////////////////
  
   return (
-    <div className="app-layout">
+    <div className="AuthX_MainLayout_77">
       {/* LEFT SIDE */}
-      <div className="slider-side">
-        <div className="led-border"></div>
-        <div className="slider-content">
+      <div className="AuthX_SliderWrapper_12">
+        <div className="AuthX_NeonEdge_88"></div>
+        <div className="AuthX_InnerSlider_45">
           {image.map((img,i)=>(
-            <img key={i} src={img} className="bg-img active" alt="slide"/>
+            <img key={i} src={img} className="AuthX_AssetImg_Active_09" alt="slide"/>
           ))}
-          <div className="dark-overlay"></div>
-          <div className="hero-text">
+          <div className="AuthX_ShadowMask_21"></div>
+          <div className="AuthX_HeroCaption_33">
             <h1>{step===1 ? t.loginlisr1 : step===3 ? t.loginlisr2 : t.loginlisr5}</h1>
             <p>{step===1 ? t.loginlisr3 : step===3 ? t.loginlisr4 : t.loginlisr6}</p>
           </div>
         </div>
       </div>
       {/* RIGHT SIDE */}
-      <div className={`form-side ${language==="ar"?"text-right":"text-left"}`}>
+      <div className={`AuthX_FormSide_54 ${language==="ar"?"AuthX_RTL_Align":"AuthX_LTR_Align"}`}>
         {/* ===== STEP 1 ===== */}
         {step===1 && (
-          <form className="form-container">
-            <div className="form-header">
-              <h2 className={language==="ar"?"text-right":"text-left"}>{t.loguplimn1}</h2>
-              <h4 className={language==="ar"?"text-right":"text-left"}>{t.loguplimn2}</h4>
+          <form className="AuthX_FormContainer_Core_62">
+            <div className="AuthX_HeaderSection_11">
+              <h2 className={language==="ar"?"AuthX_RTL_Align":"AuthX_LTR_Align"}>{t.loguplimn1}</h2>
+              <h4 className={language==="ar"?"AuthX_RTL_Align":"AuthX_LTR_Align"}>{t.loguplimn2}</h4>
             </div>
 
-            <div className="input-row">
+            <div className="AuthX_InputGrid_Row_22">
               <div>
-                <input type="text" name="nom" placeholder={t.inp1} onChange={handleChange}  className={errors.nom ? 'input-error' : ''}/>
-              {errors.nom && <span className="error-msg">{errors.nom}</span>}
+                <input type="text" name="nom" placeholder={t.inp1} onChange={handleChange}  className={errors.nom ? 'AuthX_Input_Status_Error' : ''}/>
+              {errors.nom && <span className="AuthX_ErrorMsg_Label">{errors.nom}</span>}
               </div>
               <div>
-                 <input type="text" name="prenom" placeholder={t.inp2} onChange={handleChange} className={errors.prenom ? 'input-error' : ''}/>
-              {errors.prenom && <span className="error-msg">{errors.prenom}</span>}
+                 <input type="text" name="prenom" placeholder={t.inp2} onChange={handleChange} className={errors.prenom ? 'AuthX_Input_Status_Error' : ''}/>
+              {errors.prenom && <span className="AuthX_ErrorMsg_Label">{errors.prenom}</span>}
               </div>
             </div>
-            <div className="input-row">
+            <div className="AuthX_InputGrid_Row_22">
               <div>
                 <input type="date" name="age" placeholder={t.inp3} alt='hdd'
-              className={errors.age?'input-error':''} onChange={handleChange} />
-              {errors.age && <span className="error-msg">{errors.age}</span>}<br />
-              {errors.age18 && <span className="error-msg">{errors.age18}</span>}
+              className={errors.age?'AuthX_Input_Status_Error':''} onChange={handleChange} />
+              {errors.age && <span className="AuthX_ErrorMsg_Label">{errors.age}</span>}<br />
+              {errors.age18 && <span className="AuthX_ErrorMsg_Label">{errors.age18}</span>}
               </div>
               <div>
                 <input type="text" name="paye" placeholder={t.inp4}
-                className={errors.paye?'input-error':''} onChange={handleChange} />
-              {errors.paye && <span className="error-msg">{errors.paye}</span>}
+                className={errors.paye?'AuthX_Input_Status_Error':''} onChange={handleChange} />
+              {errors.paye && <span className="AuthX_ErrorMsg_Label">{errors.paye}</span>}
               </div>
             </div>
 
-            <div className="radio-container">
+            <div className="AuthX_RadioFlex_Container_91">
               <label><input type="radio" name="sexe" value="Homme" onChange={handleChange}/> {t.inpsexeH}</label>
               <label><input type="radio" name="sexe" value="Femme" onChange={handleChange}/> {t.inpsexeF}</label>
             </div>
-            {errors.sexe && <span className="error-msg">{errors.sexe}</span>}
+            {errors.sexe && <span className="AuthX_ErrorMsg_Label">{errors.sexe}</span>}
             <div>
             <input type="email" name="email" placeholder={t.inp5} onChange={handleChange} style={{width:'100%'}} 
-             className={errors.email?'input-error':''}  id='hend'/>
-            {errors.email && <span className="error-msg">{errors.email}</span>}
+             className={errors.email?'AuthX_Input_Status_Error':''}  id='hend'/>
+            {errors.email && <span className="AuthX_ErrorMsg_Label">{errors.email}</span>}
 
             <input type="tel" name="tel" placeholder={t.inp6} onChange={handleChange} style={{width:'100%'}}
-            className={`errors.tel ? 'input-error':'' ${language==="ar"?"text-right":"text-left"}`} id='hend'/>
-            {errors.tel && <span className="error-msg">{errors.tel}</span>}
+            className={`${errors.tel ? 'AuthX_Input_Status_Error':''} ${language==="ar"?"AuthX_RTL_Align":"AuthX_LTR_Align"}`} id='hend'/>
+            {errors.tel && <span className="AuthX_ErrorMsg_Label">{errors.tel}</span>}
             </div>
-            <div className="file-upload-wrapper">
-              {preview && <div className="img-preview text-left "><img src={preview} alt="preview" /></div>}
-              <label htmlFor="photo" className={`file-label-modern ${errors.photo?'label-error':''}`}>
+            <div className="AuthX_UploadSection_44">
+              {preview && <div className="AuthX_ImgCircle_Preview AuthX_LTR_Align"><img src={preview} alt="preview" /></div>}
+              <label htmlFor="photo" className={`AuthX_Modern_FileLabel_71 ${errors.photo?'AuthX_Label_Invalid':''}`}>
                 <span>{formData.photo ? `${t.inpphoto2}` : `${t.inpphoto}`}</span>
               </label>
-              <input id="photo" type="file" hidden name="photo" onChange={handleChange} className={errors.photo?'input-error':''}/>
-              {errors.photo && <span className="error-msg">{errors.photo}</span>}
+              <input id="photo" type="file" hidden name="photo" onChange={handleChange} className={errors.photo?'AuthX_Input_Status_Error':''}/>
+              {errors.photo && <span className="AuthX_ErrorMsg_Label">{errors.photo}</span>}
             </div>
             <button onClick={async (e) => {
                 e.preventDefault(); 
                 const isValid = await validateStep1();
                 if (isValid) {setStep(2);}}}
-              className="submit-botona" type="button" disabled={loading}>
+              className="AuthX_PrimaryBtn_Action_10" type="button" disabled={loading}>
               {loading ? `${t.btnsuivant2}` : `${t.btnsuivant}`}
             </button>
 
-            <div className="toggle-auth">
+            <div className="AuthX_SwitcherLink_Container_19">
               <span>{t.check1} </span>
-              <button className="login-link-btn" onClick={()=>setStep(3)}>{t.check2}</button>
+              <button className="AuthX_TextLink_Btn_04" onClick={()=>setStep(3)}>{t.check2}</button>
             </div>
           </form>
         )}
 
         {/* ===== STEP 2 ===== */}
         {step===2 && (
-          <form className="form-container vvs" onSubmit={handleSubmitSignup}>
+          <form className="AuthX_FormContainer_Core_62 AuthX_Variant_Compact" onSubmit={handleSubmitSignup}>
             <h2 style={{marginBottom:"5%"}}>{t.creepass}</h2>
             <input type="password" name="password" placeholder={t.placepass} onChange={handleChange} />
             <input type="password" name="confirmPassword" placeholder={t.placepass2}  onChange={handleChange} />
-            <div className="terms-row">
-                      <label className="terms-row ">
+            <div className="AuthX_PolicyRow_Check_38">
+                      <label className="AuthX_PolicyRow_Check_38 ">
                         <input type="checkbox" required/>
-                        <span className="checkmark"></span>
+                        <span className="AuthX_CustomCheck_Box"></span>
                         {t.nesslwl} <Link to="/terms">{t.nesstani}</Link>
                       </label>
                     </div>
 
-            <button  className="submit-botona" disabled={loading}>{loading ? <div className="spinner">Loading...</div> : "Create account"}</button>
+            <button  className="AuthX_PrimaryBtn_Action_10" disabled={loading}>{loading ? <div className="AuthX_LoadingSpinner_Small">Loading...</div> : "Create account"}</button>
           </form>
         )}
         {/* ===== SIGN IN ===== */}
         {step===3 && (
-          <form className="form-container signin-mode" onSubmit={handleSubmitSignIn}>
+          <form className="AuthX_FormContainer_Core_62 AuthX_SignIn_Theme_02" onSubmit={handleSubmitSignIn}>
             <h2>{t.check2}</h2>
             <input type="email" name="email" placeholder={t.inp5} onChange={handleChangeSignIn}/>
-            <div className="password-wrapper">
-              <input type={showPassword ? "text" : "password"} id="inputStyle" name="password" placeholder={t.inppass}
-                onChange={handleChangeSignIn} className="password-input"/>
+            <div className="AuthX_PassWrapper_Relative_82">
+              <input type={showPassword ? "text" : "password"} id="AuthX_SpecialInput_Style" name="password" placeholder={t.inppass}
+                onChange={handleChangeSignIn} className="AuthX_Password_Input_Field"/>
               <span
-                className={`password-toggle-icon ${language==="ar"?"eyeright":"eyeleft"}`}
+                className={`AuthX_ToggleEye_Icon_63 ${language==="ar"?"AuthX_Eye_Right":"AuthX_Eye_Left"}`}
                 onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? (
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -302,21 +302,21 @@ useEffect(() => {
                 )}
               </span>
             </div>
-                {errors.signin && <span className="error-msg">{errors.signin}</span>}
-            <button className="submit-botona" disabled={loading}>
+                {errors.signin && <span className="AuthX_ErrorMsg_Label">{errors.signin}</span>}
+            <button className="AuthX_PrimaryBtn_Action_10" disabled={loading}>
               {loading ? `${t.signinbtn}` : `${t.signinbtn2}`}
             </button>
 
-            <div className="toggle-auth">
+            <div className="AuthX_SwitcherLink_Container_19">
               <span>{t.check3}</span>
-              <button className="login-link-btn" onClick={()=>setStep(1)}>
+              <button className="AuthX_TextLink_Btn_04" onClick={()=>setStep(1)}>
                 {t.check4}
               </button>
             </div>
           </form>
 
         )}
-         
+          
 
       </div>
     </div>
