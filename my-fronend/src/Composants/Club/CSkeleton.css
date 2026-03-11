@@ -1,0 +1,63 @@
+/* Container l-kbir bach i-copier l-grid dyal Club */
+.ks-app-wrapper {
+    background-color: #f5f7ff;
+    min-height: 100vh;
+    padding: 10px;width: 100%;
+}
+
+.ks-main-grid {
+    display: grid;
+    grid-template-columns: 200px 1fr 280px;
+    gap: 10px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/* Base Animation */
+.ks-base {
+    background-color: #e2e8f0;
+    background-image: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+    background-size: 200% 100%;
+    animation: ks-shimmer 1.5s infinite linear;
+    border-radius: 4px;
+}
+
+@keyframes ks-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* Cards & Elements */
+.ks-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border: 1px solid #e6e9f0;
+}
+
+.ks-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+.ks-footer { display: flex; justify-content: space-between; align-items: center; }
+.ks-nav-item { display: flex; align-items: center; gap: 12px; padding: 10px; }
+
+/* Sizes */
+.ks-circle-sm { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; }
+.ks-circle-md { width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; }
+.ks-text-xs { height: 8px; }
+.ks-text-sm { height: 10px; }
+.ks-text-md { height: 12px; }
+.ks-text-full { width: 100%; height: 12px; }
+
+.ks-input-mock { flex: 1; height: 38px; border-radius: 20px; }
+.ks-btn-mock { width: 80px; height: 32px; border-radius: 8px; }
+.ks-image-mock { width: 100%; height: 250px; border-radius: 12px; }
+
+/* Dark Mode */
+[data-theme='dark'] .ks-app-wrapper { background-color: #121212; }
+[data-theme='dark'] .ks-card { background: #1e1e1e; border-color: #333; }
+[data-theme='dark'] .ks-base {
+    background-color: #333 !important;
+    background-image: linear-gradient(90deg, #333 25%, #444 50%, #333 75%) !important;
+}
+
+.ks-loading-state { pointer-events: none; user-select: none; }

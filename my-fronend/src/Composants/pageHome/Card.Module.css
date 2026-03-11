@@ -1,0 +1,96 @@
+
+.canva-section {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr); /* 10 fractions = 10% each */
+  gap: 30px;
+  max-width: 100%;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+.canva-card {
+  border-radius: 28px;
+  padding: 50px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 260px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.canva-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 45px 80px rgba(0, 0, 0, 0.35);
+}
+
+.canva-card h2 {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.canva-card p {
+  font-size: 17px;color: white;
+  line-height: 1.6;font-size: larger;
+  max-width: 100%;
+  opacity: 1;
+}
+
+/* Gradients */
+.gradient-purple { background: linear-gradient(135deg, #ff3d3d, #ff8a00) ; }
+.gradient-orange { background: linear-gradient(135deg, #2563eb, #38bdf8); }
+.gradient-blue {background: linear-gradient(135deg, #0f766e, #14b8a6);}
+.gradient-teal { background: linear-gradient(135deg, #7c3aed, #ec4899); }
+
+/* =======================
+   Card widths (desktop)
+======================= */
+.canva-card:nth-child(1) { grid-column: span 7; } /* 70% */
+.canva-card:nth-child(2) { grid-column: span 3; } /* 30% */
+.canva-card:nth-child(3) { grid-column: span 3; } /* 30% */
+.canva-card:nth-child(4) { grid-column: span 7; } /* 70% */
+
+/* =======================
+   Media Queries
+======================= */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .canva-card:nth-child(1) { grid-column: span 3; } /* reverse */
+  .canva-card:nth-child(2) { grid-column: span 7; }
+  .canva-card:nth-child(3) { grid-column: span 7; }
+  .canva-card:nth-child(4) { grid-column: span 3; }
+
+  .canva-card {
+    padding: 40px;
+  }
+
+  .canva-card h2 { font-size: 28px; }
+  .canva-card p { font-size: 16px; max-width: 100%; }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .canva-section {
+    grid-template-columns: 1fr; /* stacked cards */
+    gap: 0px;
+  }
+
+  .canva-card {
+    grid-column: span 3;
+    padding: 30px;margin: 10px 0;
+    min-height: auto;
+  }
+
+  .canva-card h2 { font-size: 24px; }
+  .canva-card p { font-size: 15px; }
+
+  .canva-card:nth-child(1) { grid-column: span 3; } /* reverse */
+  .canva-card:nth-child(2) { grid-column: span 7; }
+  .canva-card:nth-child(3) { grid-column: span 7; }
+  .canva-card:nth-child(4) { grid-column: span 3; }
+}
+.text-left {text-align: left;direction: ltr; }
+.text-right { text-align: right;direction: rtl; }

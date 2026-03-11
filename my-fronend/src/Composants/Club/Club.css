@@ -1,0 +1,181 @@
+/* --- Variables & Themes --- */
+:root {
+  --clb-bg: #f5f7ff;
+  --clb-card-bg: #ffffff;
+  --clb-text-main: #333333;
+  --clb-text-meta: #6c757d;
+  --clb-border: #e6e9f0;
+  --clb-primary: #7c73e6;
+  --clb-primary-hover: #6a61cc;
+  --clb-nav-active-bg: #7c73e6;
+  --clb-nav-active-text: #ffffff;
+  --clb-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+[data-theme='dark'] {
+    --clb-bg: #121212;
+    --clb-card-bg: #1e1e1e;
+    --clb-text-main: #f0f0f0;
+    --clb-text-meta: #a0a0a0;
+    --clb-border: #333333;
+    --clb-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* --- Global Layout --- */
+.clb-app {
+  background-color: var(--clb-bg);
+  min-height: 100vh;height: max-content;
+  width: 100%;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--clb-text-main);
+  padding: 10px 0;
+}
+
+.clb-main-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr 280px;
+  gap: 10px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+/* --- FIX AVATARS (L-Moshkil dyal t-tsawr) --- */
+.clb-avatar-wrap {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+  background: var(--clb-border);
+  border: 1px solid var(--clb-border);
+}
+
+.clb-avatar-wrap.clb-size-md { width: 42px; height: 42px; }
+.clb-avatar-wrap.clb-size-sm { width: 32px; height: 32px; }
+
+.clb-avatar-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  display: block;margin: auto;
+}
+
+.clb-avatar-wrap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* --- Sidebar Navigation --- */
+.clb-left-section { display: flex; flex-direction: column; gap: 30px; }
+.clb-side-nav { display: flex; flex-direction: column; gap: 8px; position: sticky; top: 20px; }
+.clb-nav-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 18px;
+  border-radius: 12px; cursor: pointer; transition: all 0.2s ease;
+  color: var(--clb-text-main); font-weight: 500; text-decoration: none;
+}
+.clb-nav-item:hover { background-color: var(--clb-border); }
+.clb-nav-item.active { background-color: var(--clb-nav-active-bg); color: var(--clb-nav-active-text); box-shadow: var(--clb-shadow); }
+
+/* --- Create Post Card & Preview --- */
+.clb-create-card {
+  background-color: var(--clb-card-bg);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid var(--clb-border);
+  box-shadow: var(--clb-shadow);
+  margin-bottom: 10px;
+}
+
+.clb-create-header { display: flex; width: 100%; gap: 15px; align-items: center; margin-bottom: 15px; }
+.inp_club_add {
+  flex: 1; background-color: var(--clb-bg); border: 1px solid var(--clb-border);
+  color: var(--clb-text-main); padding: 12px 20px; border-radius: 25px; font-size: 15px; transition: border 0.2s;
+}
+.inp_club_add:focus { outline: none; border-color: var(--clb-primary); }
+
+.clb-post-preview {
+  position: relative; margin: 15px 0; border-radius: 12px; overflow: hidden; max-height: 300px;
+  border: 1px solid var(--clb-border);
+}
+.clb-post-preview img { width: 100%; height: 100%; object-fit: contain; }
+.clb-post-preview button {
+  position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6);
+  color: white; border: none; border-radius: 40%; width: 20px; height: 20px; cursor: pointer;
+}
+
+.clb-create-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--clb-border); padding-top: 15px; }
+.clb-option-btn { background: none; border: 1px solid var(--clb-border); padding: 8px 16px; border-radius: 8px; color: var(--clb-text-meta); cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; }
+.clb-btn-post { background-color: var(--clb-primary); color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+.clb-btn-post:hover { background-color: var(--clb-primary-hover); }
+.clb-btn-post:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* --- Post Card --- */
+.clb-post-card {
+  background-color: var(--clb-card-bg);
+  border-radius: 16px;
+  padding: 15px;
+  border: 1px solid var(--clb-border);
+  box-shadow: var(--clb-shadow);
+  margin-bottom: 10px;
+}
+
+.clb-post-head { display: flex; gap: 15px; align-items: start; }
+.clb-post-info { flex: 1; }
+.clb-meta-row { display: flex; justify-content: space-between; align-items: center; }
+.clb-author-name { font-weight: 700; font-size: 16px; color: var(--clb-text-main); }
+.clb-dots-menu { color: var(--clb-text-meta); cursor: pointer; font-weight: bold; }
+.clb-meta-sub { color: var(--clb-text-meta); font-size: 13px; margin-top: 2px; }
+
+.clb-post-content { margin-top: 15px; }
+.clb-post-content p { line-height: 1.6; font-size: 15px; color: var(--clb-text-main); margin-bottom: 15px; white-space: pre-wrap; }
+.clb-post-media { border-radius: 12px; overflow: hidden; border: 1px solid var(--clb-border); background: #000; }
+.clb-post-media img { width: 100%; max-height: 550px; object-fit: contain; display: block; }
+
+/* --- Actions & Buttons --- */
+.clb-post-actions-wrapper { margin-top: 15px; }
+.clb-post-actions { display: flex; gap: 15px; padding-top: 10px; border-top: 1px solid var(--clb-border); }
+.clb-action-btn { background: none; border: none; display: flex; align-items: center; gap: 8px; color: var(--clb-text-meta); cursor: pointer; font-size: 14px; padding: 8px 12px; border-radius: 8px; transition: background 0.2s; }
+.clb-action-btn:hover { background: var(--clb-bg); }
+.clb-action-btn.liked { color: #f43f5e; font-weight: 600; }
+.heart-icon svg { transition: transform 0.2s ease; }
+.clb-action-btn.liked .heart-icon svg { transform: scale(1.1); }
+
+/* --- Comments Section --- */
+.clb-comments-section { margin-top: 20px; padding: 15px; background: var(--clb-bg); border-radius: 12px; }
+.clb-comment-input-wrap { display: flex; gap: 10px; margin-bottom: 20px; }
+.clb-comment-input-wrap input { flex: 1; border: 1px solid var(--clb-border); border-radius: 20px; padding: 10px 18px; outline: none; font-size: 14px; }
+.clb-comment-item { display: flex; gap: 12px; margin-bottom: 15px; align-items: flex-start; }
+.clb-comment-bubble { background: var(--clb-card-bg); padding: 12px 16px; border-radius: 18px; flex: 1; border: 1px solid var(--clb-border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+.clb-comment-bubble b { font-size: 13px; display: block; margin-bottom: 4px; color: var(--clb-text-main); }
+.clb-comment-bubble p { margin: 0; font-size: 14px; line-height: 1.4; color: var(--clb-text-main); }
+
+/* --- Right Sidebar Widgets --- */
+.clb-widget-card { background: var(--clb-card-bg); border-radius: 16px; padding: 20px; border: 1px solid var(--clb-border); box-shadow: var(--clb-shadow); position: sticky; top: 20px; }
+.clb-widget-card h4 { margin-top: 0; margin-bottom: 20px; font-size: 17px; font-weight: 700; }
+.clb-club-item { display: flex; gap: 12px; align-items: center; margin-bottom: 18px; }
+.clb-item-info { flex: 1; display: flex; flex-direction: column; }
+.clb-item-name { font-weight: 600; font-size: 14px; color: var(--clb-text-main); }
+.clb-item-sub { font-size: 12px; color: var(--clb-text-meta); }
+.clb-btn-inline { background: var(--clb-primary); color: #fff; border: none; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+
+/* --- Load More Button --- */
+.clb-btn-showmore {
+  width: 100%; padding: 15px; margin: 20px 0; background: var(--clb-card-bg); border: 1px dashed var(--clb-primary);
+  color: var(--clb-primary); border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.2s;
+}
+.clb-btn-showmore:hover { background: var(--clb-primary); color: white; }
+
+/* --- Responsive --- */
+@media (max-width: 1100px) {
+  .clb-main-grid { grid-template-columns: 80px 1fr 280px; }
+  .clb-nav-item span { display: none; }
+}
+
+@media (max-width: 900px) {
+  .clb-main-grid { grid-template-columns: 1fr; }
+  .clb-left-section, .clb-right-section { display: none; }
+}

@@ -1,0 +1,204 @@
+/* --- 1. Global Reset & Variables --- */
+:root {
+  --header-height: 60px;
+  --sidebar-width-closed: 50px;
+  --sidebar-width-open: 240px;
+  --transition-speed: 0.35s;
+
+  /* Light Mode (Original) */
+  --bg-app: #f3f4f6;
+  --bg-navs: #ffffff;
+  --text-main: #111827;
+  --text-gray: #6b7280;
+  --border-color: #e5e7eb;
+  --accent-blue: #3b82f6;
+  --nav-hover: #f9fafb;
+}
+
+[data-theme='dark'] {
+  /* Dark Mode (True Neutral - Deep Gray/Black) */
+  --bg-app: #0a0a0a;        /* Background kbir ghameq */
+  --bg-navs: #171717;       /* Sidebar w Navbar (m-t-khache) */
+  --text-main: #ededed;     /* Kitaba biya m-m9adda */
+  --text-gray: #a3a3a3;     /* Kitaba gray */
+  --border-color: #262626;  /* Border r9iqa */
+  --nav-hover: #262626;     /* Background mli k-t-hoveri f l-dark */
+}
+body.dark-mode .nav-item {
+  color: #ffffff; /* Lon l-icon gha iwelli abiad f Dark Mode */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* --- 2. Main Layout Container --- */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-app);
+  transition: background-color 0.3s ease;
+}
+
+/* --- 3. Top Header Styling --- */
+.top-navbar {
+  height: var(--header-height);
+  background-color: var(--bg-navs);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;padding-right: 60px;
+  color: var(--text-main);
+  z-index: 1001; /* Foug l-sidebar mli y-kon fixed */
+  border-bottom: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.user-profile-mini img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent-blue);
+}
+
+.header-links {
+  display: flex;
+  gap: 30px;
+}
+
+.header-links a {
+  color: var(--text-gray);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.header-links a:hover, 
+.header-links a.active {
+  color: var(--text-main);
+}
+
+/* --- 4. Sidebar & Body Wrapper --- */
+.layout-body {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - var(--header-height));
+}
+
+.side-navbar {
+  width: var(--sidebar-width-closed);
+  background-color: var(--bg-navs);
+  transition: width var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+  overflow: hidden;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: calc(100vh - var(--header-height)); /* Matching l-header height */
+  top: var(--header-height);
+  padding-top: 15px;
+  border-right: 1px solid var(--border-color);
+}
+
+.side-navbar:hover {
+  width: var(--sidebar-width-open);
+}
+
+/* Sidebar Items */
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 12px;
+  color: var(--text-gray);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-item:hover {
+  background-color: var(--nav-hover);
+  color: var(--text-main);
+}
+
+/* Styling for React Router Active Link */
+.nav-item.active {
+  color: var(--accent-blue);
+  background-color: rgba(59, 130, 246, 0.1);
+  border-left: 4px solid var(--accent-blue);
+}
+
+.icon {
+  font-size: 20px;
+  min-width: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.label {
+  margin-left: 20px;
+  opacity: 0;
+  font-size: 15px;
+  transition: opacity 0.2s ease;
+  color: var(--text-main);
+}
+
+.side-navbar:hover .label {
+  opacity: 1;
+}
+
+/* --- 5. Main Content Area --- */
+.main-content {
+  display: flex;
+  flex: 1;
+  margin-left: var(--sidebar-width-closed);
+  background-color: var(--bg-app);
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease;
+}
+
+/* Custom Scrollbar for Dark Mode */
+.main-content::-webkit-scrollbar {
+  width: 6px;
+}
+.main-content::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+}
+/* Styling l-icon b shakl 3am */
+.icon-svg {
+  transition: color 0.3s ease;
+  color: var(--text-gray); 
+}
+
+/* L-lon mlli y-koun l-lien Active */
+.icon-click.active .icon-svg {
+  color: var(--accent-blue); /* Lon l-azraq mlli tcliki 3liha */
+}
+
+/* Dark Mode Logic */
+[data-theme='dark'] .icon-svg {
+  color: var(--text-gray); /* Lon l-gray l-dark li derna 9bel */
+}
+
+[data-theme='dark'] .icon-click:hover .icon-svg {
+  color: #ededed; /* Lon biad mlli t-hoveri f dark mode */
+}
+.notif-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: #ff4d4d; /* Lon rman */
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 5px;
+  border-radius: 50%;
+  min-width: 15px;
+  text-align: center;
+  border: 2px solid white; /* Bach t-frez mn l-icon */
+}

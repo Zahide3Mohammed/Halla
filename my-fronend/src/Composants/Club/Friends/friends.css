@@ -1,0 +1,25 @@
+.find-friends-container { padding: 20px; max-width: 900px; margin: auto; }
+.friends-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+    gap: 20px; 
+    margin-top: 20px;
+}
+.user-card { 
+    background: #fff; 
+    padding: 15px; 
+    border-radius: 10px; 
+    text-align: center; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+}
+.user-card img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
+.add-btn { 
+    margin-top: 10px; 
+    background: #007bff; 
+    color: #fff; 
+    border: none; 
+    padding: 8px 15px; 
+    border-radius: 5px; 
+    cursor: pointer; 
+}
+.add-btn:hover { background: #0056b3; }

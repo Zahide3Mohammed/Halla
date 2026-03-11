@@ -1,0 +1,103 @@
+.faq {
+  padding: 80px 20px;
+  background: #ffffff;
+}
+
+.faq__container {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Left side */
+.faq__intro h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #0f172a;
+}
+
+.lwla{
+  color: #ec4899 ;
+}
+.tania {
+  color: #2563eb;
+}
+.Talta{
+    color: #ff8a00;
+}
+  
+
+.faq__intro p {
+  margin-top: 20px;
+  color: #475569;
+  font-size: 1.1rem;
+}
+
+/* FAQ items */
+.faq__list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.faq__item {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 18px 22px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+.faq__item:hover {
+  border-color: rgb(168, 0, 0);;
+}
+
+.faq__question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq__question h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.faq__question span {
+  font-size: 1.4rem;
+  color: black;
+}
+
+/* Answer */
+.faq__answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.faq__item.active .faq__answer {
+  max-height: 200px;
+  margin-top: 12px;
+}
+
+.faq__answer p {
+  color: rgb(168, 0, 0);
+  line-height: 1.6;font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .faq__container {
+    grid-template-columns: 1fr;
+  }
+
+  .faq__intro h2 {
+    font-size: 2.4rem;
+  }
+}

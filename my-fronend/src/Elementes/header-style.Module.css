@@ -1,0 +1,109 @@
+
+.header-wrapperr {
+  width: 100%;height: max-content;
+  background: #0a0a0b; 
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.floating-headerr {
+  width: 100%;
+  padding: 12px 0;
+  transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+.floating-headerr.scrolledr {
+  width: 96%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 12px 25px;
+  background: rgba(15, 15, 18, 0.7); 
+  backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.header-containerr {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 4%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo Style */
+.header-logor a {
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: -1px;
+}
+
+.header-logor span {
+  color: #ff4757; /* Lon l-primary dyal l-footer */
+  text-shadow: 0 0 20px rgba(255, 71, 87, 0.3);
+}
+
+/* Actions Style */
+.header-actionsr {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.contact-linkr {
+  color: #a0a0a8;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.contact-linkr:hover {
+  color: #fff;
+}
+
+.btn-primary-pror {
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-primary-pror:hover {
+  background: #ff4757;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* Burger Menu Modern */
+.burger-menur {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.burger-menur .line {
+  width: 24px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+.burger-menur .line.short {
+  width: 16px;
+  background: #ff4757;
+}
+
+.burger-menur:hover .line.short {
+  width: 24px;
+}

@@ -1,0 +1,370 @@
+/* 1. Neutral Dark Palette (Professional & Deep) */
+:root {
+  /* Light Mode (Same as before but cleaner) */
+  --bg-page: #f9fafb;
+  --bg-card: #ffffff;
+  --text-main: #111827; /* Near black */
+  --text-sub: #6b7280;
+  --border-color: #e5e7eb;
+  --card-shadow: rgba(0, 0, 0, 0.03);
+  --input-bg: #f3f4f6;
+  --tab-border: #f3f4f6;
+}
+
+[data-theme='dark'] {
+  /* Dark Mode (True Neutral - No Blue Tint) */
+  --bg-page: #0a0a0a;       /* Black Deep (Hal m-t-khach) */
+  --bg-card: #171717;       /* Card k-t-ban ghadi l-gris l-ghameq bzaf */
+  --text-main: #ededed;     /* Off-white (bach may-drch f l-3in) */
+  --text-sub: #a3a3a3;      /* Muted gray */
+  --border-color: #262626;  /* Border r9iqa bzaf */
+  --card-shadow: rgba(0, 0, 0, 0.5);
+  --input-bg: #262626;      /* Input background */
+  --tab-border: #262626;
+}
+
+/* 2. Pro Tip: N-bdlo chwiya f l-card shadow f Dark Mode */
+[data-theme='dark'] .profile-header, 
+[data-theme='dark'] .stats-card, 
+[data-theme='dark'] .post-card,
+[data-theme='dark'] .settings-container {
+  box-shadow: 0 0 0 1px var(--border-color); /* Blast shadow, k-ndiro border r9iqa */
+}
+/* 1. Global Wrapper & Container */
+.settings-wrapper {
+  background-color: var(--bg-page);
+  min-height: 100vh;
+  display: flex;width: 100%;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10px 10px;
+  transition: all 0.3s ease;
+}
+
+.settings-container {
+  width: 80%;
+  background: var(--bg-card);
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 30px var(--card-shadow);
+  overflow: hidden;
+}
+
+/* 2. Header */
+.settings-header {
+  padding: 30px 40px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.settings-header h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.settings-header p {
+  font-size: 0.9rem;
+  color: var(--text-sub);
+  margin-top: 5px;
+}
+
+/* 3. Settings Rows */
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 40px;
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.2s;
+}
+
+.clickable { cursor: pointer; }
+.clickable:hover { background: rgba(0,0,0,0.02); }
+[data-theme='dark'] .clickable:hover { background: rgba(255,255,255,0.02); }
+
+.info-side {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: var(--text-sub);
+}
+
+.info-side h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.info-side p {
+  font-size: 0.85rem;
+  margin: 2px 0 0;
+}
+
+/* 4. Accordion & Inputs */
+.collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(0,0,0,0.01);
+  padding: 0 40px;
+}
+
+.settings-row-group.active .collapsible-content {
+  max-height: 400px;
+  padding: 30px 40px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-page);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+  border-color: #3b82f6;
+}
+
+.btn-save {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* 5. Avatar Preview */
+.avatar-uploader {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.avatar-uploader:hover {
+    transform: scale(1.1); /* تحرك خفيف فاش كتحط السوري */
+}
+
+/* الدائرة ديال الـ Preview */
+.avatar-preview {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: var(--border-color); /* أسود مطفي */
+    border: 2px dashed #ef4444; /* إطار ذهبي مقطع كيعطي ديكور ديال "Upload" */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* فاش كتحط السوري، الإطار كيولي خط متصل وكيدير Glow */
+.avatar-uploader:hover .avatar-preview {
+    border-style: solid;
+    border-color: #ef4445;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+}
+
+/* التنسيق ديال الصورة */
+.imgdyl {
+    width: 100%;margin: auto;
+    height: 100%;
+    object-fit: cover;
+    transition: filter 0.3s ease;
+}
+
+/* فاش كتحط السوري على الصورة، كتغمق شوية باش يبان الـ "Change" */
+.avatar-uploader:hover .imgdyl {
+    filter: brightness(0.7);
+}
+
+/* أيقونة الزائد (+) */
+.plus-icon {
+    font-size: 32px;
+    color: #ef4444;
+    font-weight: 200;
+    transition: all 0.3s ease;
+}
+
+.avatar-uploader:hover .plus-icon {
+    transform: rotate(90deg); /* كدور الزائد فاش كتحط السوري */
+    color: #ef4444;
+}
+
+/* الأنيميشن فاش كيكون الـ Upload خدام */
+.uploading-pulse {
+    border-style: solid;
+    animation: goldPulse 1.5s infinite;
+}
+
+@keyframes goldPulse {
+    0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+
+/* إضافة طبقة "Modifier" فوق الصورة فاش كتحط السوري */
+.avatar-preview::after {
+    content: "Changer";
+    position: absolute;
+    bottom: -30px; /* مخبي لتحت */
+    background: #ef4444;
+    color: #000;
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 4px 0;
+    transition: bottom 0.3s ease;
+}
+
+.avatar-uploader:hover .avatar-preview::after {
+    bottom: 0; /* كيطلع فاش كتحط السوري */
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* 6. Switch Style */
+.modern-switch {
+  position: relative;
+  width: 46px;
+  height: 24px;
+}
+.modern-switch input { opacity: 0; width: 0; height: 0; }
+.modern-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #cbd5e1;
+  transition: .4s;
+  border-radius: 34px;
+}
+.modern-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px; width: 18px;
+  left: 3px; bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .modern-slider { background-color: #ef4444; }
+input:checked + .modern-slider:before { transform: translateX(22px); }
+
+/* 7. Popup Overlay (Glassmorphism) */
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px); /* Effect dyal djaj */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+}
+
+.popup-content {
+  background: var(--bg-card);
+  padding: 32px;
+  border-radius: 24px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  border: 1px solid var(--border-color);
+}
+
+.popup-content h3 { color: var(--text-main); margin-bottom: 10px; }
+.popup-content p { color: var(--text-sub); font-size: 0.9rem; margin-bottom: 20px; }
+
+.popup-content input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-page);
+  color: var(--text-main);
+}
+
+.popup-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.confirm-btn {
+  flex: 1;
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  flex: 1;
+  background: var(--bg-page);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Danger Zone */
+.btn-delete {
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fee2e2;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-delete:hover { background: #ef4444; color: white; }
+
+.arrow-icon { transition: 0.3s; color: var(--text-sub); }
+.rotate { transform: rotate(180deg); }

@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700;900&display=swap');
+
+/* --- CSS VARIABLES (Light & Dark) --- */
+:root {
+    --bg-app: #f9fafb;
+    --bg-card: #ffffff;
+    --text-main: #111111;
+    --text-sub: #666666;
+    --border: #f0f0f0;
+    --shadow: rgba(0, 0, 0, 0.05);
+}
+
+/* Had l-class t-zad mlli t-koun dayer dark mode f l-app */
+[data-theme='dark']{
+        --bg-app: #0e1217;
+        --bg-card: #1c1f26;
+        --text-main: #ffffff;
+        --text-sub: #a9adc1;
+        --border: #2d323d;
+        --shadow: rgba(0, 0, 0, 0.3);
+}
+
+.canva-wrapper {
+    min-height: 100vh;width: 100%;
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    font-family: 'League Spartan', sans-serif;
+    position: relative;
+    padding: 60px 20px;
+    transition: background-color 0.3s ease;
+}
+
+.app-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Header */
+.app-header { text-align: center; margin-bottom: 50px; }
+.badge-ai { font-weight: 800; font-size: 0.75rem; padding: 6px 14px; border-radius: 30px; }
+.app-header h1 { font-size: 3.8rem; font-weight: 900; margin-top: 20px; }
+
+/* Search Bar Pill */
+.search-pill-wrapper { display: flex; justify-content: center; margin-bottom: 60px; }
+.pill-form {
+    background: var(--bg-card);
+    display: flex;
+    align-items: center;
+    padding: 8px 8px 8px 25px;
+    border-radius: 100px;
+    box-shadow: 0 10px 30px var(--shadow);
+    width: 100%;
+    max-width: 750px;
+    border: 1px solid var(--border);
+}
+
+.field { flex: 1; display: flex; align-items: center; gap: 12px; color: var(--text-sub); }
+.divider { border-left: 1px solid var(--border); padding-left: 20px; margin-left: 10px; }
+.field input, .field select {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    width: 100%;
+}
+
+.pill-btn {
+    border: none;
+    padding: 14px 35px;
+    border-radius: 50px;
+    color: white;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Grid Layout */
+.main-layout { display: grid; grid-template-columns: 1fr 300px; gap: 40px; }
+
+.hotel-card, .side-card {
+    background: var(--bg-card);
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 25px var(--shadow);
+    overflow: hidden;
+}
+
+.card-img { height: 200px; background-size: cover; background-position: center; position: relative; }
+.card-tag { position: absolute; top: 15px; left: 15px; background: white; color: #111; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; }
+.card-content { padding: 20px; }
+.card-content h3 { font-size: 1.3rem; margin: 0; }
+.card-content p { color: var(--text-sub); margin-top: 5px; }
+
+/* Sidebar */
+.side-card { padding: 25px; margin-bottom: 25px; }
+.side-card h3 { font-size: 0.8rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 1px; margin-bottom: 15px; }
+.w-flex { display: flex; align-items: center; gap: 15px; }
+.temp { font-size: 2.8rem; font-weight: 800; }
+
+/* Glow Background Decoration */
+.glow-effect {
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 600px; height: 600px;
+    filter: blur(150px);
+    opacity: 0.12;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 850px) {
+    .main-layout { grid-template-columns: 1fr; }
+    .pill-form { flex-direction: column; border-radius: 25px; padding: 20px; }
+    .divider { border-left: none; border-top: 1px solid var(--border); padding: 15px 0 0; width: 100%; margin: 10px 0; }
+    .pill-btn { width: 100%; justify-content: center; }
+}
+
+.spinner { width: 18px; height: 18px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }

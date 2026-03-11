@@ -1,0 +1,432 @@
+
+/* --- Logic dyal l-alwan (Dark Mode) --- */
+
+/* 1. L-khalfiya dyal l-page */
+[data-theme='dark'] .profile-page-wrapper {
+    background-color: #0a0a0a !important; /* Neutral Black */
+}
+
+/* 2. L-khalfiya dyal l-cards (Header, Stats, Posts) */
+[data-theme='dark'] .profile-header,
+[data-theme='dark'] .stats-card,
+[data-theme='dark'] .post-card {
+    background: #171717 !important; /* Grey ghameq */
+    border: 1px solid #262626 !important; /* Border r9iqa */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 3. L-alwan dyal l-kitaba */
+[data-theme='dark'] .user-name,
+[data-theme='dark'] .stats-title,
+[data-theme='dark'] .post-content h4,
+[data-theme='dark'] .tab-item.active,
+[data-theme='dark'] .label-text {
+    color: #ededed !important; /* Off-white */
+}
+
+[data-theme='dark'] .personality-desc,
+[data-theme='dark'] .metric-info,
+[data-theme='dark'] .post-content p,
+[data-theme='dark'] .tab-item {
+    color: #a3a3a3 !important; /* Muted Grey */
+}
+
+/* 4. Les Tabs w l-Borders */
+[data-theme='dark'] .profile-tabs {
+    border-top: 1px solid #262626 !important;
+}
+
+/* 5. Avatar w Progress Bar */
+[data-theme='dark'] .avatar-ring {
+    background: --active-color !important;
+    background: --active-color !important;/* Bach dima t-tba3 l-card */
+}
+
+[data-theme='dark'] .progress-bg {
+    background: --active-color !important;
+}
+
+/* 6. Skeleton Loading f Dark Mode */
+[data-theme='dark'] .skeleton {
+    background-color: #262626 !important;
+}
+
+[data-theme='dark'] .skeleton::after {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.03) 50%,
+        transparent
+    ) !important;
+}
+
+/* 7. Post Card Hover f Dark Mode */
+[data-theme='dark'] .post-card:hover {
+    border-color: #404040 !important;
+}
+
+.profile-page-wrapper {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  padding: 15px ;width: 100%;height: max-content;
+  font-family: 'Inter', sans-serif;
+}
+
+.profile-container {
+  display: flex;flex-direction: row-reverse;
+  gap: 15px;
+  width:100%; align-items: flex-start;
+  margin: 0 auto;
+}
+.ssh{
+  flex-direction: row;
+}
+
+/* Main Section Card */
+.profile-main {
+  display: flex;
+  flex-direction: column;flex: 1;
+  gap: 24px;
+}
+
+.profile-header {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+/* Cover & Avatar */
+.cover-wrapper {
+  position: relative;
+  height: 220px;
+}
+
+.cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-wrapper {
+  position: absolute;
+  bottom: -50px;
+  left: 40px;
+}
+.avatar-wrapper-ar{
+  position: absolute;
+  right: 40px;bottom: -50px;
+
+}
+
+.avatar-ring {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 4px solid white;
+  background: white;
+  position: relative;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.upload-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid white;
+  transition: transform 0.2s;
+}
+
+.upload-btn:hover { transform: scale(1.1); }
+
+/* Intro Text */
+.profile-intro {
+  padding: 60px 50px 20px;
+}
+
+.user-name {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+}
+
+.badge-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.personality-badge {
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.personality-desc {
+  color: #64748b;
+  line-height: 1.6;
+  max-width: 600px;
+  font-size: 0.95rem;
+}
+
+/* Tabs Navigation */
+.profile-tabs {
+  display: flex;
+  padding: 0 40px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.tab-item {
+  padding: 16px 24px;
+  background: none;
+  border: none;
+  color: #64748b;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+}
+
+.tab-item.active {
+  color: #1e293b;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--active-color);
+}
+
+/* Sidebar Stats Card */
+.stats-card {
+  background: white;
+  width: 100%;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  margin-bottom: 15px;
+}
+.profile-sidebar {
+  width: 300px;
+}
+
+
+.stats-title {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+
+.metric {
+  margin-bottom: 20px;
+}
+
+.metric-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.progress-bg {
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Posts Grid */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.post-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  transition: transform 0.3s;
+}
+
+.post-card:hover { transform: translateY(-5px); }
+
+.post-image img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.post-content {
+  padding: 16px;
+}
+
+.post-content h4 { margin: 0 0 8px; color: #1e293b; }
+.post-content p { font-size: 0.85rem; color: #64748b; margin: 0; }
+
+/* Responsive */
+@media (max-width: 992px) {
+  .profile-container { flex-direction: column;  }
+  .stats-card { width: 100%; }
+}
+
+@media (max-width: 600px) {
+  .posts-grid { grid-template-columns: 1fr; }
+  .avatar-wrapper { left: 50%; transform: translateX(-50%); }
+  .profile-intro { text-align: center; }
+  .badge-wrapper { justify-content: center; }
+}
+/* --- Skeleton Animation --- */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--border-color); /* Neutral gray background */
+  border-radius: 8px;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05) 20%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 80%,
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+/* Logic dyal l-Dark Mode: Shimmer k-y-welli ghameq */
+[data-theme='dark'] .skeleton::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.02) 20%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.02) 80%,
+    transparent
+  );
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.post-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.delete-post-overlay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.delete-post-overlay:hover {
+  transform: scale(1.1);
+  background: red;
+}
+
+.empty-posts {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: #888;
+  background: #f9f9f9;
+  border-radius: 12px;
+}
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 3 columns */
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.profile-post-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+}
+
+.post-media-wrapper img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.post-body-content {
+  padding: 15px;
+  flex-grow: 1;
+}
+
+.post-text {
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.del-btn {
+  float: right;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  opacity: 0.6;
+}
+
+.del-btn:hover { opacity: 1; color: red; }

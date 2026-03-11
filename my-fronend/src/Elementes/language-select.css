@@ -1,0 +1,12 @@
+.language-select {
+  padding: 6px 12px;width: 130px;text-align: center;
+  border-radius: 8px;height: 30px;
+  border: 0px solid #e5e7eb;
+  background: #ff4757;color: #fff;
+  font-size: 0.9rem;margin: 0px 25px;
+  cursor: pointer;
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.language-select:hover{
+  background: #fff;color: black;
+}
