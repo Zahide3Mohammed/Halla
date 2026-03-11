@@ -14,7 +14,7 @@
     min-height: 100vh;
     padding: 0;
     margin: 0;
-    overflow: hidden; /* لمنع ظهور شريط تمرير أفقي */
+    overflow-x: hidden; /* لمنع ظهور شريط تمرير أفقي */
 }
 /* ===== HEADER ===== */
 
