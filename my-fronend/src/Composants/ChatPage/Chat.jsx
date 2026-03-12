@@ -3,6 +3,7 @@ import axios from "axios";
 import "./Chat.css";
 import echo from "../group/echo";
 import { useAuth } from "../../context/AuthContext";
+
 /* ICONS */
 const IconSend = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
@@ -17,88 +18,73 @@ const IconImage = () => (
     <polyline points="21 15 16 10 5 21" />
   </svg>
 );
+
 export default function Chat() {
   const { user, token } = useAuth();
-  // les group dyle le user
   const [myGroups, setMyGroups] = useState([]);
-  // les group le khtrhom
   const [selectedGroup, setSelectedGroup] = useState(null);
-  
   const [messages, setMessages] = useState([]);
-  // le message le ktba le user
   const [input, setInput] = useState("");
-  // le image le aysfth le user
   const [selectedFile, setSelectedFile] = useState(null);
-  // dayl image
   const [previewUrl, setPreviewUrl] = useState(null);
 
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
-  // kola ma ja message jdida chta kyhbt l thta
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  /* LOAD GROUPS  min ktfth le page  kyjib le group dyla user mn laravel*/
+  /* LOAD GROUPS */
   useEffect(() => {
     axios.get("http://localhost:8000/api/my-completed-groups", {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => {
-// ou kihtha f myGroups
       setMyGroups(res.data);
       if (res.data.length > 0) {
         setSelectedGroup(res.data[0]);
       }
-
     });
-
   }, []);
 
- /* LOAD MESSAGES  hda kyjib le message par id min laravile*/
-useEffect(() => {
-  if (!selectedGroup) return;
+  /* LOAD MESSAGES & ECHO */
+  useEffect(() => {
+    if (!selectedGroup) return;
 
-  axios.get(`http://localhost:8000/api/groups/${selectedGroup.id}/messages`, {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-  .then(res => {
-    setMessages(res.data);
-    setTimeout(scrollToBottom, 100);
-  });
-// kychrk f channel dile group
-  const channel = echo.private(`chat.${selectedGroup.id}`);
-
-  channel.listen(".message.sent", (e) => {
-    setMessages((prev) => {
-      // 💡 الحل الذكي: كنقلبو واش الميساج ديجا كاين بـ ID ديالو
-      const isDuplicate = prev.some((msg) => msg.id === e.message.id);
-      
-      // إيلا كان الميساج جديد وماشي ديالي (أو حتى إيلا كان ديالي وما تزيدش بـ Axios لسبب ما)
-      if (!isDuplicate && String(e.message.user_id) !== String(user?.id)) {
-        setTimeout(scrollToBottom, 50);
-        return [...prev, e.message];
-      }
-      return prev;
+    axios.get(`http://localhost:8000/api/groups/${selectedGroup.id}/messages`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(res => {
+      setMessages(res.data);
+      setTimeout(scrollToBottom, 100);
     });
-  });
 
-  return () => {
-    channel.stopListening(".message.sent");
-    echo.leave(`chat.${selectedGroup.id}`);
-  };
-}, [selectedGroup?.id, user?.id, token]); // تأكد أن التوكن و ID داخلين هنا
+    const channel = echo.private(`chat.${selectedGroup.id}`);
 
-  /* IMAGE SELECT  arsal image  */
+    channel.listen(".message.sent", (e) => {
+      setMessages((prev) => {
+        const isDuplicate = prev.some((msg) => msg.id === e.message.id);
+        if (!isDuplicate && String(e.message.user_id) !== String(user?.id)) {
+          setTimeout(scrollToBottom, 50);
+          return [...prev, e.message];
+        }
+        return prev;
+      });
+    });
+
+    return () => {
+      channel.stopListening(".message.sent");
+      echo.leave(`chat.${selectedGroup.id}`);
+    };
+  }, [selectedGroup?.id, user?.id, token]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setSelectedFile(file);
     setPreviewUrl(URL.createObjectURL(file));
-
   };
-  /* SEND MESSAGE arsal message le db image text */
 
   const handleSend = async () => {
     if (!selectedGroup || (!input.trim() && !selectedFile)) return;
@@ -118,229 +104,125 @@ useEffect(() => {
           }
         }
       );
-
       setMessages(prev => [...prev, res.data]);
-
       setInput("");
       setSelectedFile(null);
       setPreviewUrl(null);
-
       setTimeout(scrollToBottom, 100);
-
     } catch (err) {
-
       console.error(err);
-
     }
-
   };
 
-
   return (
-    <div className="app-container">
-
+    <div className="AuthX_AppContainer_55">
       {/* LEFT SIDEBAR */}
-
-      <aside className="sidebar-left">
-
-        <h2 className="sidebar-title">Mes Chats</h2>
-
-        <div className="groups-list">
- {/*  afficher les group */}
+      <aside className="AuthX_SidebarLeft_55">
+        <h2 className="AuthX_SidebarTitle_55">Mes Chats</h2>
+        <div className="AuthX_GroupsList_55">
           {myGroups.map(group => (
             <div
               key={group.id}
-              className={`group-item ${selectedGroup?.id === group.id ? "active" : ""}`}
+              className={`AuthX_GroupItem_55 ${selectedGroup?.id === group.id ? "AuthX_Active_55" : ""}`}
               onClick={() => setSelectedGroup(group)}>
-              <img src={`http://localhost:8000/storage/${group.image_event}`} className="avatar-sm" alt="group"/>
-                 <div className="group-info">
-                <p className="name">{group.prenom}</p>
-                <p className="status">En ligne</p>
+              <img src={`http://localhost:8000/storage/${group.image_event}`} className="AuthX_AvatarSm_55" alt="group"/>
+              <div className="AuthX_GroupInfo_55">
+                <p className="AuthX_Name_55">{group.prenom}</p>
+                <p className="AuthX_Status_55">En ligne</p>
               </div>
-            </div>))}</div>
-</aside>
+            </div>
+          ))}
+        </div>
+      </aside>
 
       {/* CHAT WINDOW */}
-      <main className="chat-window">
-        <header className="chat-header">
-          <h3>{selectedGroup?.name || "Sélectionnez un chat"}</h3>
+      <main className="AuthX_ChatWindow_55">
+        <header className="AuthX_ChatHeader_55">
+          <h3 className="AuthX_HeaderTitle_55">{selectedGroup?.name || "Sélectionnez un chat"}</h3>
         </header>
-        <div className="messages-area">
-           {/* afficher le message */}
+        <div className="AuthX_MessagesArea_55">
           {messages.map(m => {
-             {/* thdid message dyli mn dyla  user akhour */}
-const isMe = m.user_id === user?.id;
-return (<div key={m.id}  className={`msg-row ${isMe ? "me" : "not-me"}`}>
-     {!isMe && (
-      <img src={  m.user?.photo ? `http://localhost:8000/storage/${m.user.photo}` 
-      : "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"}className="msg-avatar"alt="user"
-            // إضافة onerror باش إيلا كانت التصويرة فيها مشكل ما يبقاش الفراغ
+            const isMe = m.user_id === user?.id;
+            return (
+              <div key={m.id} className={`AuthX_MsgRow_55 ${isMe ? "AuthX_Me_55" : "AuthX_NotMe_55"}`}>
+                {!isMe && (
+                  <img src={m.user?.photo ? `http://localhost:8000/storage/${m.user.photo}` : "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"} 
+                    className="AuthX_MsgAvatar_55" alt="user"
                     onError={(e) => { e.target.src = "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"; }}
-                />
-            )}
-
-                <div className="msg-content">
-                  <div className="msg-bubble">
-                     {/* afiiche  image  f chat */}
+                  />
+                )}
+                <div className="AuthX_MsgContent_55">
+                  <div className="AuthX_MsgBubble_55">
                     {m.type === "image" && (
-                      <img src={`http://localhost:8000/storage/${m.file_path}`}className="chat-img" alt="sent"
-                      />
+                      <img src={`http://localhost:8000/storage/${m.file_path}`} className="AuthX_ChatImg_55" alt="sent" />
                     )}
-
-                    {m.content && <p>{m.content}</p>}
-
+                    {m.content && <p className="AuthX_MsgText_55">{m.content}</p>}
                   </div>
-
-                  <span className="msg-time">
-                     {/*time dyla message */}
-                    {new Date(m.created_at).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit"
-                    })}
+                  <span className="AuthX_MsgTime_55">
+                    {new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </span>
-
                 </div>
-
               </div>
-
             );
-
           })}
-
           <div ref={messagesEndRef} />
-
         </div>
 
         {/* INPUT */}
-
-        <div className="input-container">
-           {/*  image ktban 9ble mtsyft l image */}
-
+        <div className="AuthX_InputContainer_55">
           {previewUrl && (
-
-            <div className="image-preview">
-
-              <img src={previewUrl} alt="preview" />
-
-              <button
-                className="close-preview"
-                onClick={() => {
-                  setSelectedFile(null);
-                  setPreviewUrl(null);
-                }}
-              >
-                ×
-              </button>
-
+            <div className="AuthX_ImagePreview_55">
+              <img src={previewUrl} className="AuthX_PreviewImg_55" alt="preview" />
+              <button className="AuthX_ClosePreview_55" onClick={() => { setSelectedFile(null); setPreviewUrl(null); }}>×</button>
             </div>
-
           )}
-
-          <div className="input-pill">
-
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              style={{ display: "none" }}
-              accept="image/*"
-            />
-
-            <button
-              className="icon-btn"
-              onClick={() => fileInputRef.current.click()}
-            >
+          <div className="AuthX_InputPill_55">
+            <input type="file" ref={fileInputRef} onChange={handleFileChange} style={{ display: "none" }} accept="image/*" />
+            <button className="AuthX_IconBtn_55" onClick={() => fileInputRef.current.click()}>
               <IconImage />
             </button>
- {/* irsal b enter */}
             <input
               value={input}
+              className="AuthX_MainInput_55"
               onChange={(e) => setInput(e.target.value)}
-              
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               placeholder="Écrivez un message..."
             />
-
-            <button
-              onClick={handleSend}
-              className="btn-send"
-            >
+            <button onClick={handleSend} className="AuthX_BtnSend_55">
               <IconSend />
             </button>
-
           </div>
-
         </div>
-
       </main>
 
       {/* RIGHT SIDEBAR */}
-
-      <aside className="sidebar-right">
-        {/* sidebar affiche le group */}
-
+      <aside className="AuthX_SidebarRight_55">
         {selectedGroup && (
-
           <>
-            <div className="goal-card">
-              <span className="goal-label">
-                SUGGESTION DU JOUR
-              </span>
-
-              <div className="goal-content">
-
-                <div className="goal-icon">🎯</div>
-
-                <p>{selectedGroup.suggestion}</p>
-
+            <div className="AuthX_GoalCard_55">
+              <span className="AuthX_GoalLabel_55">SUGGESTION DU JOUR</span>
+              <div className="AuthX_GoalContent_55">
+                <div className="AuthX_GoalIcon_55">🎯</div>
+                <p className="AuthX_GoalText_55">{selectedGroup.suggestion}</p>
               </div>
-
             </div>
-
-            <div className="members-section">
-
-              <h4 className="section-title">
-                Membres ({selectedGroup.users?.length || 0})
-              </h4>
-
-              <div className="members-list">
-
+            <div className="AuthX_MembersSection_55">
+              <h4 className="AuthX_SectionTitle_55">Membres ({selectedGroup.users?.length || 0})</h4>
+              <div className="AuthX_MembersList_55">
                 {selectedGroup.users?.map(u => (
-
-                  <div key={u.id} className="member-item">
-
-                    <div className="avatar-wrapper">
-
-                      <img
-                        src={
-                          u.photo
-                            ? `http://localhost:8000/storage/${u.photo}`
-                            : "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
-                        }
-                        alt={u.prenom}
-                      />
-
-                      <span className="online-dot"></span>
-
+                  <div key={u.id} className="AuthX_MemberItem_55">
+                    <div className="AuthX_AvatarWrapper_55">
+                      <img src={u.photo ? `http://localhost:8000/storage/${u.photo}` : "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"} alt={u.prenom} className="AuthX_MemberImg_55" />
+                      <span className="AuthX_OnlineDot_55"></span>
                     </div>
-
-                    <span className="member-name">
-                      {u.nom} {u.prenom}
-                    </span>
-
+                    <span className="AuthX_MemberName_55">{u.nom} {u.prenom}</span>
                   </div>
-
                 ))}
-
               </div>
-
             </div>
           </>
-
         )}
-
       </aside>
-
     </div>
   );
 }

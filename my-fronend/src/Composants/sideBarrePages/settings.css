@@ -1,85 +1,99 @@
+/* settings.css */
 
-.link{
+.AuthX_SettingsMain_Container_44 {
+    padding: 20px;
+}
+
+.AuthX_SettingTitle_Text_44 {
+    color: #333;
+}
+
+.AuthX_DeleteAcc_Link_44 {
     font-size: large;
+    color: #e74c3c;
+    text-decoration: none;
+    cursor: pointer;
 }
 
-.link:hover {
-  color: #c0392b;
+.AuthX_DeleteAcc_Link_44:hover {
+    color: #c0392b;
+    text-decoration: underline;
 }
 
-/* Popup de confirmation */
-.popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-  padding: 25px 35px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-  z-index: 1000;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
+/* Popup Container (Overlay Logic) */
+.AuthX_PopupOverlay_Layer_44 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.popup h3 {
-  margin-bottom: 20px;
-  color: #333;
+/* Popup Box */
+.AuthX_ConfirmPopup_Box_44 {
+    background-color: #fff;
+    padding: 25px 35px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    animation: AuthX_FadeIn_44 0.3s ease;
+}
+
+@keyframes AuthX_FadeIn_44 {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.AuthX_ConfirmPopup_Box_44 h3 {
+    margin-bottom: 20px;
+    color: #333;
 }
 
 /* Input mot de passe */
-.popup input {
-  width: 80%;
-  padding: 10px 12px;
-  margin-bottom: 20px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 16px;
+.AuthX_PopupInput_Field_44 {
+    width: 80%;
+    padding: 10px 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Boutons popup */
-.popup button {
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 6px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
+.AuthX_PopupActions_Row_44 button {
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 6px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
-.popup button:first-of-type {
-  background-color: #e74c3c;
-  color: #fff;
+.AuthX_Btn_Danger_44 {
+    background-color: #e74c3c;
+    color: #fff;
 }
 
-.popup button:first-of-type:hover {
-  background-color: #c0392b;
+.AuthX_Btn_Danger_44:hover {
+    background-color: #c0392b;
 }
 
-.popup button:last-of-type {
-  background-color: #bdc3c7;
-  color: #2c3e50;
+.AuthX_Btn_Cancel_44 {
+    background-color: #bdc3c7;
+    color: #2c3e50;
 }
 
-.popup button:last-of-type:hover {
-  background-color: #95a5a6;
-}
-
-/* Overlay pour le popup */
-body::after {
-  content: '';
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.3);
-  z-index: 999;
-}
-
-.popup + body::after {
-  display: block;
+.AuthX_Btn_Cancel_44:hover {
+    background-color: #95a5a6;
 }

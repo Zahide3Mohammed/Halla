@@ -1,0 +1,277 @@
+/* Hero.Module.css */
+
+* {
+    margin: 0px; text-decoration: none;
+}
+
+.AuthX_HeroSection_Main_55 {
+    position: relative;
+    min-height: 103vh; width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    background: #0a0a0b;
+}
+
+.AuthX_Hero_BgSlider_22 {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.AuthX_SlideImg_Item_22 {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out, transform 6s linear;
+    transform: scale(1.1);
+}
+
+.AuthX_SlideImg_Item_22.AuthX_Active_Slide {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.AuthX_Hero_DarkOverlay_22 {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, #0a0a0b 95%);
+    z-index: 2;
+}
+
+.AuthX_Marquee_Container_88 {
+    position: absolute; 
+    z-index: 111; margin: 0 0px;
+    width: 100%;
+    overflow: hidden;
+    padding: 14px 0;
+}
+
+.AuthX_Marquee_Track_88 {
+    display: flex;
+    width: max-content;
+    animation: AuthX_Scroll_Anim 25s linear infinite;
+    will-change: transform;
+}
+
+.AuthX_Marquee_Track_88 span {
+    margin: 0 26px;
+    font-weight: 400;
+    font-size: 1.7rem;
+    color: whitesmoke;
+    white-space: nowrap;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.AuthX_Marquee_Track_88 span:hover {
+    transform: translateY(-3px);
+    color: rgb(168, 0, 0);
+}
+
+@keyframes AuthX_Scroll_Anim {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); } 
+}
+
+.AuthX_Asymmetric_Split_44 {
+    width: 88%; z-index: 500; margin: auto;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.AuthX_HeroGrid_Container_44 {
+    max-width: 100%;
+    margin: 0 auto; height: 400px;
+    display: grid;
+    grid-template-columns: 1.7fr 1.3fr; 
+    align-items: center; 
+}
+
+.AuthX_Font_Ar_Big {
+    font-size: clamp(6rem, 6vw, 5rem);
+}
+
+.AuthX_Font_En_Big {
+    font-size: clamp(5rem, 60vw, 5rem);
+}
+
+.AuthX_MainTitle_Text_11 {
+    font-weight: 800; width: max-content;
+    color: #fff; height: max-content;
+    line-height: 0.9;
+    margin: 0;
+    letter-spacing: -2px;
+}
+
+.AuthX_GlowText_Red {
+    background: #ff4757;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(255, 71, 87, 0.3));
+}
+
+.AuthX_HeroInfo_Side_11 {
+    display: flex;
+    flex-direction: column; height: max-content;
+    gap: 10px;
+}
+
+.AuthX_HeroDesc_Text_09 {
+    font-size: 1.35rem;
+    color: #d4d4d6;
+    line-height: 1.7;
+    max-width: 550px;
+}
+
+.AuthX_HeroActions_Box_09 {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.AuthX_CtaBtn_White {
+    width: max-content;
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 18px 25px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.AuthX_CtaBtn_White:hover {
+    background: #ff4757;
+    color: #fff;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(255, 71, 87, 0.3);
+}
+
+.AuthX_UserProof_Stack_07 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.AuthX_AvatarGroup_07 {
+    display: flex;
+    flex-direction: row-reverse; 
+}
+
+.AuthX_AvatarGroup_07 img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid #0a0a0b;
+    margin-right: -2px; 
+}
+
+.AuthX_UserCount_Label_07 {
+    font-size: 0.9rem;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.AuthX_HeroGrid_Container_44 {
+    height: auto;
+    min-height: 400px;
+    gap: 30px;
+}
+
+/* --- Tablets (max-width: 1024px) --- */
+@media (max-width: 1024px) {
+    .AuthX_Asymmetric_Split_44 {
+        width: 92%;
+        padding: 60px 0;
+    }
+
+    .AuthX_HeroGrid_Container_44 {
+        grid-template-columns: 1fr; 
+        text-align: center;
+        height: auto;
+    }
+
+    .AuthX_MainTitle_Text_11 {
+        width: 100%;
+        line-height: 1.1;
+        margin-bottom: 20px;
+    }
+
+    .AuthX_HeroInfo_Side_11 {
+        align-items: center;
+        text-align: center;
+    }
+
+    .AuthX_Font_Ar_Big, .AuthX_Font_En_Big {
+        font-size: clamp(3.5rem, 8vw, 5rem) !important;
+    }
+
+    .AuthX_HeroDesc_Text_09 {
+        font-size: 1.2rem;
+        margin: 0 auto;
+    }
+}
+
+/* --- Mobile Phones (max-width: 768px) --- */
+@media (max-width: 768px) {
+    .AuthX_HeroSection_Main_55 {
+        min-height: 100vh;
+    }
+
+    .AuthX_Font_Ar_Big, .AuthX_Font_En_Big {
+        font-size: 2.8rem !important;
+        letter-spacing: -1px;
+    }
+
+    .AuthX_HeroDesc_Text_09 {
+        font-size: 1.1rem;
+        line-height: 1.5;
+    }
+
+    .AuthX_Marquee_Track_88 span {
+        font-size: 1.2rem;
+        margin: 0 15px;
+    }
+
+    .AuthX_CtaBtn_White {
+        width: 100%; 
+        padding: 15px 20px;
+    }
+
+    .AuthX_UserProof_Stack_07 {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+/* --- Small Mobile (max-width: 480px) --- */
+@media (max-width: 480px) {
+    .AuthX_Font_Ar_Big, .AuthX_Font_En_Big {
+        font-size: 2.2rem !important;
+    }
+    
+    .AuthX_Asymmetric_Split_44 {
+        width: 95%;
+    }
+    .AuthX_WaveDivider_Bottom {
+        height: 5px;
+    }
+}
+
+.AuthX_WaveDivider_Bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    z-index: 3;
+}
+
+.AuthX_RTL_Align { text-align: right; direction: rtl; }
+.AuthX_LTR_Align { text-align: left; direction: ltr; }

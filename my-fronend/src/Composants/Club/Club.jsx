@@ -3,7 +3,7 @@ import axios from 'axios';
 import './Club.css';
 import { useAuth } from '../../context/AuthContext';
 import ClubSkeleton from './ClubSkeleton';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const API_URL = "http://localhost:8000/api";
 const STORAGE_URL = "http://localhost:8000/storage";
@@ -58,7 +58,7 @@ const Club = () => {
   // --- Profile Helpers ---
   const getProfileIcon = (variant, userPhoto) => {
     if (userPhoto) {
-      return <img src={`${STORAGE_URL}/${userPhoto}`} alt="Profile" className="clb-avatar-img" />;
+      return <img src={`${STORAGE_URL}/${userPhoto}`} alt="Profile" className="AuthX_AvatarImg_Main_55" />;
     }
     const icons = {
       Femme: (<svg viewBox="0 0 24 24" fill="#e2ab97"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>),
@@ -162,49 +162,49 @@ const Club = () => {
   if (loading && posts.length === 0) return <ClubSkeleton />;
 
   return (
-    <div className="clb-app clb-theme-light">
-      <div className="clb-main-grid">
+    <div className="AuthX_ClubApp_Wrapper_55 AuthX_ThemeLight_55">
+      <div className="AuthX_MainGrid_Layout_55">
 
         {/* --- Left Sidebar --- */}
-        <aside className="clb-left-section">
-          <nav className="clb-side-nav">
-            <div className="clb-nav-item active"><Icons.Feed /> <span>Feed</span></div>
-            <div className="clb-nav-item"><Icons.Explore /><span>Explore</span></div>
-            <Link to='/Find-Friends' className="clb-nav-item"><Icons.Clubs /> <span>Find Friends</span></Link>
-            <div className="clb-nav-item"><Icons.Settings /><span>Settings</span></div>
+        <aside className="AuthX_LeftNav_Aside_55">
+          <nav className="AuthX_SideNav_Menu_55">
+            <div className="AuthX_NavItem_Link_55 active"><Icons.Feed /> <span>Feed</span></div>
+            <div className="AuthX_NavItem_Link_55"><Icons.Explore /><span>Explore</span></div>
+            <Link to='/Find-Friends' className="AuthX_NavItem_Link_55"><Icons.Clubs /> <span>Find Friends</span></Link>
+            <div className="AuthX_NavItem_Link_55"><Icons.Settings /><span>Settings</span></div>
           </nav>
         </aside>
 
         {/* --- Main Feed --- */}
-        <main className="clb-feed-section">
+        <main className="AuthX_FeedSection_Core_55">
           
           {/* Create Post Area */}
-          <div className="clb-create-card">
-            <div className="clb-create-header">
-              <div className="clb-avatar-wrap clb-size-md">
+          <div className="AuthX_CreatePost_Card_55">
+            <div className="AuthX_CreatePost_Header_55">
+              <div className="AuthX_Avatar_Wrap_55 AuthX_SizeMd_55">
                 {getProfileIcon(user?.sexe, user?.photo)}
               </div>
               <input 
-                className='inp_club_add'
+                className='AuthX_PostInput_Control_55'
                 placeholder={`What's on your mind, ${user?.prenom || 'Friend'}?`}
                 value={newPostContent} 
                 onChange={(e) => setNewPostContent(e.target.value)} />
             </div>
 
             {previewUrl && (
-              <div className="clb-post-preview">
+              <div className="AuthX_PostPreview_Media_55">
                 <img src={previewUrl} alt="Preview" />
-                <button className="remove-preview" onClick={() => {setSelectedImage(null); setPreviewUrl(null);}}>✕</button>
+                <button className="AuthX_RemoveMedia_Btn_55" onClick={() => {setSelectedImage(null); setPreviewUrl(null);}}>✕</button>
               </div>
             )}
 
-            <div className="clb-create-footer">
-              <label className="clb-option-btn">
+            <div className="AuthX_CreatePost_Footer_55">
+              <label className="AuthX_Option_Btn_55">
                 <Icons.Media /> Media
                 <input type="file" hidden onChange={handleImageChange} accept="image/*" />
               </label>
               <button 
-                className="clb-btn-post" 
+                className="AuthX_PostSubmit_Btn_55" 
                 onClick={handleCreatePost}
                 disabled={isSubmitting || (!newPostContent && !selectedImage)}>
                 {isSubmitting ? 'Posting...' : 'Post'}
@@ -213,47 +213,47 @@ const Club = () => {
           </div>
 
           {/* Posts List */}
-          <div className="clb-posts-list">
+          <div className="AuthX_PostsList_Stack_55">
             {posts.map((post) => (
-              <article key={post.id} className="clb-post-card">
-                <div className="clb-post-head">
-                  <div className="clb-avatar-wrap clb-size-md">
+              <article key={post.id} className="AuthX_PostItem_Card_55">
+                <div className="AuthX_PostItem_Head_55">
+                  <div className="AuthX_Avatar_Wrap_55 AuthX_SizeMd_55">
                     {getProfileIcon(post.user?.sexe, post.user?.photo)}
                   </div>
-                  <div className="clb-post-info">
-                    <div className="clb-meta-row">
-                      <span className="clb-author-name">{post.user?.nom} {post.user?.prenom}</span>
-                      <span className="clb-dots-menu">...</span>
+                  <div className="AuthX_PostItem_Info_55">
+                    <div className="AuthX_Meta_Row_55">
+                      <span className="AuthX_AuthorName_Txt_55">{post.user?.nom} {post.user?.prenom}</span>
+                      <span className="AuthX_Dots_Menu_55">...</span>
                     </div>
-                    <div className="clb-meta-row clb-meta-sub">
+                    <div className="AuthX_Meta_Row_55 AuthX_MetaSub_55">
                       <span>{formatRelativeTime(post.created_at)}</span>
                     </div>
                   </div>
                 </div>
                 
-                <div className="clb-post-content">
+                <div className="AuthX_PostItem_Content_55">
                   <p>{post.content}</p>
                   {post.media_url && (
-                    <div className="clb-post-media">
+                    <div className="AuthX_PostItem_Media_55">
                       <img src={`${STORAGE_URL}/${post.media_url}`} alt="Post Media" />
                     </div>
                   )}
                 </div> 
 
-                <div className="clb-post-actions-wrapper">
-                  <div className="clb-post-actions">
-                    <button className={`clb-action-btn ${post.is_liked ? 'liked' : ''}`} onClick={() => handleLike(post.id)}>
-                      <span className="heart-icon"><Icons.Heart filled={post.is_liked}/></span>
+                <div className="AuthX_PostActions_Wrapper_55">
+                  <div className="AuthX_PostActions_Flex_55">
+                    <button className={`AuthX_Action_Btn_55 ${post.is_liked ? 'liked' : ''}`} onClick={() => handleLike(post.id)}>
+                      <span className="AuthX_HeartIcon_Wrap_55"><Icons.Heart filled={post.is_liked}/></span>
                       <span>{post.likes_count || 0}</span>
                     </button>
-                    <button className="clb-action-btn" onClick={() => toggleComments(post.id)}>
+                    <button className="AuthX_Action_Btn_55" onClick={() => toggleComments(post.id)}>
                       <Icons.Comment /> <span>{post.comments_count || 0}</span>
                     </button>
                   </div>
    
                   {activeComments[post.id] && (
-                    <div className="clb-comments-section">
-                      <div className="clb-comment-input-wrap">
+                    <div className="AuthX_CommentsSection_Box_55">
+                      <div className="AuthX_CommentInput_Wrap_55">
                         <input 
                           placeholder="Write a comment..." 
                           value={commentTexts[post.id] || ''}
@@ -261,13 +261,13 @@ const Club = () => {
                           onKeyPress={(e) => e.key === 'Enter' && handleSendComment(post.id)}
                         />
                       </div>
-                      <div className="clb-comments-list">
+                      <div className="AuthX_CommentsList_Stack_55">
                         {activeComments[post.id].map(c => (
-                          <div key={c.id} className="clb-comment-item">
-                            <div className="clb-avatar-wrap clb-size-sm">
+                          <div key={c.id} className="AuthX_CommentItem_Row_55">
+                            <div className="AuthX_Avatar_Wrap_55 AuthX_SizeSm_55">
                               {getProfileIcon(c.user?.sexe, c.user?.photo)}
                             </div>
-                            <div className="clb-comment-bubble">
+                            <div className="AuthX_CommentBubble_Txt_55">
                               <b>{c.user?.nom} {c.user?.prenom}</b>
                               <p>{c.body}</p>
                             </div>
@@ -281,7 +281,7 @@ const Club = () => {
             ))}
 
             {nextPageUrl && (
-              <button className="clb-btn-showmore" onClick={() => fetchPosts(nextPageUrl)} disabled={loading}>
+              <button className="AuthX_ShowMore_Btn_55" onClick={() => fetchPosts(nextPageUrl)} disabled={loading}>
                 {loading ? 'Loading...' : 'Show More Posts'}
               </button>
             )}
@@ -289,17 +289,17 @@ const Club = () => {
         </main>
 
         {/* --- Right Sidebar --- */}
-        <aside className="clb-right-section">
-          <div className="clb-widget-card">
+        <aside className="AuthX_RightWidgets_Aside_55">
+          <div className="AuthX_WidgetCard_Box_55">
             <h4>Suggested Clubs</h4>
-            <div className="clb-widget-list">
-              <div className="clb-club-item">
-                 <div className="clb-avatar-wrap clb-size-md" style={{background: '#e0e7ff', color: '#6366f1', fontWeight: 'bold'}}>M</div>
-                 <div className="clb-item-info">
-                    <span className="clb-item-name">Maroc Trip</span>
-                    <span className="clb-item-sub">1.9k members</span>
+            <div className="AuthX_WidgetList_Stack_55">
+              <div className="AuthX_ClubItem_Row_55">
+                 <div className="AuthX_Avatar_Wrap_55 AuthX_SizeMd_55" style={{background: '#e0e7ff', color: '#6366f1', fontWeight: 'bold'}}>M</div>
+                 <div className="AuthX_ItemInfo_Col_55">
+                    <span className="AuthX_ItemName_Txt_55">Maroc Trip</span>
+                    <span className="AuthX_ItemSub_Txt_55">1.9k members</span>
                  </div>
-                 <button className="clb-btn-inline">Join</button>
+                 <button className="AuthX_JoinInline_Btn_55">Join</button>
               </div>
             </div>
           </div>

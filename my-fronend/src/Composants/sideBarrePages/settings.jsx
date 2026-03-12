@@ -34,25 +34,32 @@ export default function Settings2tghf() {
 
   return (
     <>
-    <div className="sup">
-    <h1>Gistion de compter</h1><br></br>
-    <Link to="" onClick={() => setShow(true)}  className="link"> Supprimer mon compte</Link>
+    <div className="AuthX_SettingsMain_Container_44">
+      <h1 className="AuthX_SettingTitle_Text_44">Gestion de compte</h1><br></br>
+      <Link to="" onClick={() => setShow(true)} className="AuthX_DeleteAcc_Link_44"> 
+        Supprimer mon compte
+      </Link>
     
       {show && (
-        <div className="popup">
-          <h3>Confirmez la suppression de votre compte :</h3>
-          <input
-            type="password"
-            placeholder="Votre password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+        <div className="AuthX_PopupOverlay_Layer_44">
+          <div className="AuthX_ConfirmPopup_Box_44">
+            <h3>Confirmez la suppression de votre compte :</h3>
+            <input
+              type="password"
+              placeholder="Votre password"
+              value={password}
+              className="AuthX_PopupInput_Field_44"
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
-          <button onClick={confirmDelete}>Confirmer</button>
-          <button onClick={() => setShow(false)}>Annuler</button>
+            <div className="AuthX_PopupActions_Row_44">
+              <button className="AuthX_Btn_Danger_44" onClick={confirmDelete}>Confirmer</button>
+              <button className="AuthX_Btn_Cancel_44" onClick={() => setShow(false)}>Annuler</button>
+            </div>
+          </div>
         </div>
       )}
-      </div>
+    </div>
     </>
   );
 }

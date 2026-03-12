@@ -5,23 +5,22 @@ import { useNavigate } from 'react-router-dom';
 import echo from './echo';
 
 function Group() {
- const [availableGroups, setAvailableGroups] = useState([]); // السمية بقات هي هي
+ const [availableGroups, setAvailableGroups] = useState([]); 
   const [activeTab, setActiveTab] = useState('evente'); 
   const navigate = useNavigate();
   const [errors, setErrors] = useState({})
   const [filterColor, setFilterColor] = useState(null);
-  const [activeGroup, setActiveGroup] = useState(null); // null كتعني عرض كلشي
-  // زيد هاد السطر مع الـ states الآخرين لفوق
+  const [activeGroup, setActiveGroup] = useState(null); 
 const [serverError, setServerError] = useState("");
 
   const [form, setForm] = useState({
     name: "",
-    type_group: "Même color", // بدلها باش تطابق الـ Option والـ Controller
+    type_group: "Même color", 
     start_date: "",
     start_time: "",
     end_time: "",
     suggestion: "",
-    nationality_type: "same", // بدلها لـ same
+    nationality_type: "same", 
     lieu_event: "",
     image_event: null 
 });
@@ -39,7 +38,6 @@ const [serverError, setServerError] = useState("");
   const fetchGroups = async () => {
     try {
       const res = await axios.get("http://localhost:8000/api/groups");
-      // تصحيح: استخدام setAvailableGroups اللي عرفناها لفوق
       setAvailableGroups(res.data.filter(g => g.users_count < 5));
     } catch (err) {
       console.error("خطأ في جلب المجموعات", err);
@@ -49,7 +47,6 @@ const [serverError, setServerError] = useState("");
   const createGroup = async () => {
   const currentToken = sessionStorage.getItem("token");
   const data = new FormData();
-  // تأكد أن الحقول عامرة قبل الإرسال
   data.append("name", form.name || "");
   data.append("type_group", form.type_group);
   data.append("start_date", form.start_date || "");
@@ -65,26 +62,20 @@ const [serverError, setServerError] = useState("");
     const response = await axios.post("http://localhost:8000/api/groups", data, {
       headers: {
         'Authorization': `Bearer ${currentToken}`,
-        'Accept': 'application/json', // ضروري باش Laravel يجاوبك بـ JSON ماشي HTML
+        'Accept': 'application/json',
       }
     });
     alert("Succès!");
     setActiveTab('evente');
     fetchGroups();
   } catch (err) {
-    console.log("Full Error Response:", err.response?.data);
-    
     const serverErrors = err.response?.data?.errors;
     if (serverErrors) {
-        // كنجيبو أول خطأ ونحطوه في الـ State
         const firstError = Object.values(serverErrors)[0][0];
         setServerError(firstError);
     } else {
-        // إذا كان خطأ عام (مثلاً 500 أو 401)
         setServerError(err.response?.data?.message || "Erreur de connexion au serveur");
     }
-    
-    // إخفاء الخطأ أوتوماتيكياً بعد 5 ثواني (اختياري)
     setTimeout(() => setServerError(""), 5000);
 }
 };
@@ -99,7 +90,7 @@ const [serverError, setServerError] = useState("");
       const updatedGroup = response.data.group;
 
       if (updatedGroup && updatedGroup.users_count >= 5) {
-setActiveGroup(res.data.group);
+        setActiveGroup(updatedGroup); 
       } else {
         fetchGroups();
       }
@@ -107,75 +98,54 @@ setActiveGroup(res.data.group);
       alert(error.response?.data?.message || "فشل الانضمام");
     }
   };
-  if (activeGroup) {
-    return <Chat 
-             groupId={activeGroup.id} 
-             groupName={activeGroup.name} 
-             suggestion={activeGroup.suggestion} 
-             onBack={() => setActiveGroup(null)} 
-           />;
-}
 
   useEffect(() => { fetchGroups(); }, []);
-  // partie chat
+  
   const [messages,setMessages] = useState([
-
-{type:"ai",text:"Ils peuvent vous aider with Suggestion du jou."},
-{type:"ai",text:"Indiquez-moi simplement l'heure et le lieu."}
-]);
+    {type:"ai",text:"Ils peuvent vous aider with Suggestion du jou."},
+    {type:"ai",text:"Indiquez-moi simplement l'heure et le lieu."}
+  ]);
 
 const [input,setInput] = useState("");
 
 const sendMessage = () => {
-
 if(!input) return;
-
 setMessages([
 ...messages,
 {type:"user",text:input},
 {type:"ai",text:"Merci ! Je vais vous proposer une suggestion."}
 ]);
-
 setInput("");
-
 };
-// partie websocite
+
 useEffect(() => {
-    // التسمع للقناة العمومية
     echo.channel('groups-channel')
       .listen('.group.added', (data) => {
-        console.log("جروب جديد وصل:", data.group);
-        
-        // إضافة الجروب الجديد في أول القائمة
         setAvailableGroups((prev) => [data.group, ...prev]);
       });
-
-    // تنظيف الاتصال عند مغادرة الصفحة
     return () => {
       echo.leaveChannel('groups-channel');
     };
   }, []);
 
   return (
-    <div className="sketch-app-container">
-      <div className="main-content">
+    <div className="sketch-app-container_grp">
+      <div className="main-content_grp">
         {activeTab === 'evente' ? (
-          /* --- STUPE 1: واجهة العرض (كل شيء أخضر وبالبحث) --- */
-          <div className="evente">
-            {/* الهيدر مع البحث والتبويبات داخل قسم الـ Evente فقط */}
-            <div className="sketch-header">
-              <div className="search-wrapper">
-                <input type="text" placeholder="Recherche par lieu" className="sketch-search-input" />
+          <div className="evente_grp">
+            <div className="sketch-header_grp">
+              <div className="search-wrapper_grp">
+                <input type="text" placeholder="Recherche par lieu" className="sketch-search-input_grp" />
               </div>
-              <div className="tab-buttons">
+              <div className="tab-buttons_grp">
                 <button 
-                  className={`tab-btn ${activeTab === 'evente' ? 'active-green' : ''}`}
+                  className={`tab-btn_grp ${activeTab === 'evente' ? 'active-green_grp' : ''}`}
                   onClick={() => setActiveTab('evente')}
                 >
                   Evente
                 </button>
                 <button 
-                  className={`tab-btn ${activeTab === 'create' ? 'active-pink' : ''}`}
+                  className={`tab-btn_grp ${activeTab === 'create' ? 'active-pink_grp' : ''}`}
                   onClick={() => setActiveTab('create')}
                 >
                   creer Group
@@ -183,91 +153,87 @@ useEffect(() => {
               </div>
             </div>
 
-           <div className="filter-tags">
-         <span className="tiny-label" style={{ cursor: 'pointer', fontWeight: !filterColor ? 'bold' : 'normal' }} onClick={() => setFilterColor(null)} >All
-          </span>{['red', 'green', 'yellow', 'blue', 'purple'].map(color => ( <button key={color}  className={`color-tag ${color} ${filterColor === color ? 'selected-border' : ''}`} onClick={() => setFilterColor(color)}
+           <div className="filter-tags_grp">
+         <span className="tiny-label_grp" style={{ cursor: 'pointer', fontWeight: !filterColor ? 'bold' : 'normal' }} onClick={() => setFilterColor(null)} >All
+          </span>{['red', 'green', 'yellow', 'blue', 'purple'].map(color => ( <button key={color}  className={`color-tag_grp ${color} ${filterColor === color ? 'selected-border_grp' : ''}`} onClick={() => setFilterColor(color)}
           >
            {color}
             </button>
-           ))}
-                 </div>
+            ))}
+                  </div>
 
-            <div className="evente-grid">
-              <div className="cards-scrollable">
+            <div className="evente-grid_grp">
+              <div className="cards-scrollable_grp">
                {availableGroups
-    .filter(group => !filterColor || group.creator?.color === filterColor) // الفلتر السحري
-    .map(group => (
-                  <div className="sketch-card-horizontal" key={group.id}>
-                    <div className="card-image-section"><img src={`http://localhost:8000/storage/${group.image_event}`} alt="Group Event" onError={(e) => e.target.src = "https://via.placeholder.com/150"} /></div>
-                    <div className="card-info-section">
-                      <h3 className="group-name-title">{group.name}</h3>
-                      <p className="suggestion-label">Suggestion du jour:{group.suggestion}</p>
-                      <div className="meta-row">
-                        <div className="meta-data">
+                .filter(group => !filterColor || group.creator?.color === filterColor)
+                .map(group => (
+                  <div className="sketch-card-horizontal_grp" key={group.id}>
+                    <div className="card-image-section_grp"><img src={`http://localhost:8000/storage/${group.image_event}`} alt="Group Event" onError={(e) => e.target.src = "https://via.placeholder.com/150"} /></div>
+                    <div className="card-info-section_grp">
+                      <h3 className="group-name-title_grp">{group.name}</h3>
+                      <p className="suggestion-label_grp">Suggestion du jour:{group.suggestion}</p>
+                      <div className="meta-row_grp">
+                        <div className="meta-data_grp">
                           <p>date: {group.start_date}</p>
                           <p>derur: {group.start_time}</p>
                           <p>lieu: {group.lieu_event}</p>
                         </div>
-                        <div className="meta-action">
-                          <span className="count-label"> 👥 {group.users_count}/5</span>
-                          <button className="rejoindre-btn-green" onClick={() => joinGroup(group.id)}>Rejoindre</button>
+                        <div className="meta-action_grp">
+                          <span className="count-label_grp"> 👥 {group.users_count}/5</span>
+                          <button className="rejoindre-btn-green_grp" onClick={() => joinGroup(group.id)}>Rejoindre</button>
                         </div>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="map-sidebar">
-                <div className="sketch-map-placeholder">map</div>
+              <div className="map-sidebar_grp">
+                <div className="sketch-map-placeholder_grp">map</div>
               </div>
             </div>
           </div>
         ) : (
-          /* --- STUPE 2: واجهة الإنشاء (بدون الهيدر الأخضر) --- */
-          <div className="create-view animate-fade">
-            {/* هنا يمكن إضافة زر بسيط للعودة أو تبويبات بسيطة إذا أردت، لكن حالياً هي "نقية" كما طلبت */}
-            <h1 className="create-title-pink">Créer un groupe</h1>
-            <div className="create-layout-split">
-              <div className="form-column">
-                <div className="sketch-field">
+          <div className="create-view_grp animate-fade_grp">
+            <h1 className="create-title-pink_grp">Créer un groupe</h1>
+            <div className="create-layout-split_grp">
+              <div className="form-column_grp">
+                <div className="sketch-field_grp">
                   <label>Nom du groupe</label>
-                  <input name="name" onChange={handleChange} className="sketch-input" />
-                  {errors.name && <span className="error-text">{errors.name[0]}</span>}
+                  <input name="name" onChange={handleChange} className="sketch-input_grp" />
+                  {errors.name && <span className="error-text_grp">{errors.name[0]}</span>}
                 </div>
-                <div className="sketch-field">
+                <div className="sketch-field_grp">
                   <label>type group:</label>
-                  <select name="type_group" onChange={handleChange} className="sketch-input">
+                  <select name="type_group" onChange={handleChange} className="sketch-input_grp">
                     <option  value={"Même color"}>Même personnalité</option>
                     <option value={"color different"}>Personnage de Changeur</option>
                   </select>
-                  
-      {errors.type_group && <span className="error-text">{errors.type_group[0]}</span>}
-
+                  {errors.type_group && <span className="error-text_grp">{errors.type_group[0]}</span>}
                 </div>
-                <div className="sketch-field">
+                <div className="sketch-field_grp">
                   <label>Date de début</label>
-                  <input type="date" name="start_date" onChange={handleChange} className="sketch-input" />
+                  <input type="date" name="start_date" onChange={handleChange} className="sketch-input_grp" />
                 </div>
-                <div className="field-row-time">
-                  <label>Heure de début</label> <input type="time" name="start_time" onChange={handleChange} className="small-input" />
-                  <label>heure de fin</label> <input type="time" name="end_time" onChange={handleChange} className="small-input" />
+                <div className="field-row-time_grp">
+                  <label>Heure de début</label> <input type="time" name="start_time" onChange={handleChange} className="small-input_grp" />
+                  <label>heure de fin</label> <input type="time" name="end_time" onChange={handleChange} className="small-input_grp" />
                 </div>
-                <div className="sketch-field">
+                <div className="sketch-field_grp">
                   <label>Suggestion du jour:</label>
-                  <textarea name="suggestion" onChange={handleChange} className="sketch-textarea"></textarea>
+                  <textarea name="suggestion" onChange={handleChange} className="sketch-textarea_grp"></textarea>
                 </div>
-                <div className="sketch-field">
+                <div className="sketch-field_grp">
                   <label>Type de nationalité</label>
-                  <select name="nationality_type" onChange={handleChange} className="sketch-input">
+                  <select name="nationality_type" onChange={handleChange} className="sketch-input_grp">
                     <option value={'same'}>Même nationalité</option>
                     <option value={'different'}>nationalités différentes</option>
                   </select>
                 </div>
-                <div className="sketch-field">
+                <div className="sketch-field_grp">
                   <label>Lieu de l'événement</label>
-                  <input name="lieu_event" onChange={handleChange} className="sketch-input" />
+                  <input name="lieu_event" onChange={handleChange} className="sketch-input_grp" />
                 </div>
-              <div className="sketch-field">
+              <div className="sketch-field_grp">
       <label>Image de l'événement</label>
   <input 
     type="file" 
@@ -275,66 +241,56 @@ useEffect(() => {
     name="image_event" 
         accept="image/*"
               onChange={handleChange}
-                 style={{ display: 'none' }} // إخفاء حقل الإدخال الافتراضي البشع
+                 style={{ display: 'none' }} 
   />
-  <label htmlFor="event-image-upload" className="big-plus-upload">
+  <label htmlFor="event-image-upload" className="big-plus-upload_grp">
     {form.image_event ? (
-      <span className="file-name-ready">✅ {form.image_event.name}</span>
+      <span className="file-name-ready_grp">✅ {form.image_event.name}</span>
     ) : (
       "+"
     )}
   </label>
 </div>
 {serverError && (
-    <div className="error-message-banner">
+    <div className="error-message-banner_grp">
         ⚠️ {serverError}
     </div>
 )}
-                <div className="form-actions-bottom">
-                  <button className="btn-annuler-pink" onClick={() => setActiveTab('evente')}>Annuler</button>
-                  <button className="btn-cree-green" onClick={createGroup}>crée</button>
+                <div className="form-actions-bottom_grp">
+                  <button className="btn-annuler-pink_grp" onClick={() => setActiveTab('evente')}>Annuler</button>
+                  <button className="btn-cree-green_grp" onClick={createGroup}>crée</button>
                 </div>
               </div>
 
-              <div className="ai-column">
-                <div className="ai-box-wrapper">
-                  <h1 className="ai-title">Conseil en IA</h1><div className="ai-suggestion-box-sketch">
-      <div className="ai-chat-simulation">
+              <div className="ai-column_grp">
+                <div className="ai-box-wrapper_grp">
+                  <h1 className="ai-title_grp">Conseil en IA</h1><div className="ai-suggestion-box-sketch_grp">
+      <div className="ai-chat-simulation_grp">
                  {messages.map((msg,i)=>(
-               <div key={i} className={msg.type === "ai" ? "ai-msg" : "user-msg"}>
-             {msg.type === "ai" && <div className="ai-avatar">🤖</div>}
-             <div className={msg.type === "ai" ? "bubble-grey" : "bubble-white"}>
+               <div key={i} className={msg.type === "ai" ? "ai-msg_grp" : "user-msg_grp"}>
+             {msg.type === "ai" && <div className="ai-avatar_grp">🤖</div>}
+             <div className={msg.type === "ai" ? "bubble-grey_grp" : "bubble-white_grp"}>
           {msg.text}
 </div>
-
 </div>
 ))}
-
 </div>
-                   <div className="ai-input-bar"> <input value={input} onChange={(e)=>setInput(e.target.value)}placeholder="Ask AI..."/><button onClick={sendMessage}>➤</button></div>
+                   <div className="ai-input-bar_grp"> <input value={input} onChange={(e)=>setInput(e.target.value)}placeholder="Ask AI..."/><button onClick={sendMessage}>➤</button></div>
                   </div>
                 </div>
                 
-                <h3 className="h3">Rejoignez un groupe aléatoire</h3>
-               <div className="random-group-box-sketch">
- 
-  <div className="group-icon">🎲</div>
-
- 
-
+                <h3 className="h3_grp">Rejoignez un groupe aléatoire</h3>
+               <div className="random-group-box-sketch_grp">
+  <div className="group-icon_grp">🎲</div>
   <p>
     Vous pouvez rejoindre un groupe aléatoire de personnes ayant la même personnalité que vous.
   </p>
-
-  <div className="group-users">
+  <div className="group-users_grp">
    <span>👥 {availableGroups.users_count}/5</span>
   </div>
- 
-
-  <button className="btn-rejoin-large">
+  <button className="btn-rejoin-large_grp">
     🎲 Rejoindre le groupe
   </button>
-
 </div>
               </div>
             </div>

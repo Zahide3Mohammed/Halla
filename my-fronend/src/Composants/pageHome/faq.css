@@ -1,9 +1,11 @@
-.faq {
+/* faq.css */
+
+.AuthX_FaqSection_Wrapper_33 {
   padding: 80px 20px;
   background: #ffffff;
 }
 
-.faq__container {
+.AuthX_FaqMain_Container_33 {
   max-width: 1200px;
   margin: auto;
   display: grid;
@@ -13,38 +15,39 @@
 }
 
 /* Left side */
-.faq__intro h2 {
+.AuthX_FaqIntro_Box_33 h2 {
   font-size: 3rem;
   font-weight: 700;
   line-height: 1.1;
   color: #0f172a;
 }
 
-.lwla{
+.AuthX_Color_Pink_01 {
   color: #ec4899 ;
 }
-.tania {
+
+.AuthX_Color_Blue_02 {
   color: #2563eb;
 }
-.Talta{
-    color: #ff8a00;
-}
-  
 
-.faq__intro p {
+.AuthX_Color_Orange_03 {
+  color: #ff8a00;
+}
+
+.AuthX_FaqIntro_Box_33 p {
   margin-top: 20px;
   color: #475569;
   font-size: 1.1rem;
 }
 
 /* FAQ items */
-.faq__list {
+.AuthX_FaqList_Accord_33 {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-.faq__item {
+.AuthX_FaqItem_Row_33 {
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   padding: 18px 22px;
@@ -53,51 +56,55 @@
   background: #fff;
 }
 
-.faq__item:hover {
-  border-color: rgb(168, 0, 0);;
+.AuthX_FaqItem_Row_33:hover {
+  border-color: rgb(168, 0, 0);
 }
 
-.faq__question {
+.AuthX_FaqQuest_Header_33 {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.faq__question h4 {
+.AuthX_FaqQuest_Header_33 h4 {
   font-size: 1.1rem;
   font-weight: 700;
   color: #0f172a;
 }
 
-.faq__question span {
+.AuthX_FaqQuest_Header_33 span {
   font-size: 1.4rem;
   color: black;
 }
 
 /* Answer */
-.faq__answer {
+.AuthX_FaqAnsw_Body_33 {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.35s ease;
 }
 
-.faq__item.active .faq__answer {
+.AuthX_FaqItem_Row_33.AuthX_State_Active .AuthX_FaqAnsw_Body_33 {
   max-height: 200px;
   margin-top: 12px;
 }
 
-.faq__answer p {
+.AuthX_FaqAnsw_Body_33 p {
   color: rgb(168, 0, 0);
-  line-height: 1.6;font-weight: 500;
+  line-height: 1.6;
+  font-weight: 500;
 }
 
 /* Responsive */
 @media (max-width: 900px) {
-  .faq__container {
+  .AuthX_FaqMain_Container_33 {
     grid-template-columns: 1fr;
   }
 
-  .faq__intro h2 {
+  .AuthX_FaqIntro_Box_33 h2 {
     font-size: 2.4rem;
   }
 }
+
+.AuthX_LTR_Align { text-align: left; direction: ltr; }
+.AuthX_RTL_Align { text-align: right; direction: rtl; }

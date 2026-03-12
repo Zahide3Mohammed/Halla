@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import './login.Module.css';
+import './login.css';
 import { useLanguage } from '../Elementes/LanguageContext';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -9,23 +9,19 @@ import { translationsLogin } from '../Elementes/translations/translationsLogin';
 const image = ["./chta.png"];
 
 export default function Login() {
-  // parte logout
-const location = useLocation();
+
+  const location = useLocation();
 useEffect(() => {
   if (location.state?.signin) {
     setStep(3);
   }
 }, [location.state]);
 
-
+  const [errors, setErrors] = useState({});
+  const [preview, setPreview] = useState(null);
   const { language } = useLanguage();
   const t = translationsLogin[language];
-  
   const [showPassword, setShowPassword] = useState(false);
-  const toggleVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
   const [loading, setLoading] = useState(false);
   const { loginContext } = useAuth();
   const [step, setStep] = useState(1);
@@ -48,8 +44,7 @@ useEffect(() => {
   password: ''
 });
 
-  const [errors, setErrors] = useState({});
-  const [preview, setPreview] = useState(null);
+
 
 //================== Handle Change =====================
   const handleChangeSignIn = (e) => {
