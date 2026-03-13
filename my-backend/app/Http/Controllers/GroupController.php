@@ -115,4 +115,61 @@ class GroupController extends Controller
 
     return response()->json($groups);
 }
+
+
+public function getPendingGroup()
+{
+    $user = auth()->user();
+    
+    // كنقلبو على كروب مديور اليوم، نوعو نفس اللون، وفيه قل من 5، ومولاه عندو نفس لون المستخدم
+    $group = Group::withCount('users')
+        ->where('type_group', 'Même color')
+        ->whereDate('created_at', now()->toDateString())
+        ->whereHas('creator', function($q) use ($user) {
+            $q->where('color', $user->color);
+        })
+        ->having('users_count', '<', 5)
+        ->latest()
+        ->first();
+
+    return response()->json(['group' => $group]);
+}
+
+public function joinRandomOrCreate()
+{
+    $user = auth()->user();
+    $today = now()->toDateString();
+
+    $group = Group::withCount('users')
+        ->where('type_group', 'Même color')
+        ->whereDate('created_at', $today)
+        ->whereHas('creator', function($q) use ($user) {
+            $q->where('color', $user->color);
+        })
+        ->having('users_count', '<', 5)
+        ->first();
+
+    if ($group) {
+        if (!$group->users()->where('user_id', $user->id)->exists()) {
+            $group->users()->attach($user->id);
+        }
+    } else {
+        $group = Group::create([
+            'name' => "Salon " . ucfirst($user->color ?? 'Amis'),
+            'type_group' => 'Même color',
+            'creator_id' => $user->id,
+            'start_date' => $today,
+            'start_time' => now()->format('H:i'),
+            'end_time' => now()->addHours(2)->format('H:i'),
+            'lieu_event' => 'Online',
+            'nationality_type' => 'same',
+            'suggestion' => 'Faisons connaissance !'
+        ]);
+        $group->users()->attach($user->id);
+    }
+
+    broadcast(new \App\Events\GroupCreated($group->load('creator')->loadCount('users')))->toOthers();
+
+    return response()->json(['group' => $group->loadCount('users')]);
+}
 }
