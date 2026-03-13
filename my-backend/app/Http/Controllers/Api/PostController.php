@@ -192,4 +192,8 @@ class PostController extends Controller
 
         return response()->json(['message' => 'Request sent successfully!']);
     }
+    public function getUserPosts($id) 
+    {
+    return Post::where('user_id', $id)->orderBy('created_at', 'desc')->get();
+    }
 }

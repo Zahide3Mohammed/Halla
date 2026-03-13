@@ -20,6 +20,7 @@ class AuthController extends Controller
             'age' => 'required|date',
             'paye' => 'required|string|max:255',
             'sexe' => 'required|string|max:10',
+            'role' => 'required|string|in:user,guide,cooperative', // زدنا الـ validation ديال الـ role
             'email' => 'required|email|unique:users,email',
             'tel' => 'required|string|max:20',
             'password' => 'required|string|min:6',
@@ -32,6 +33,7 @@ class AuthController extends Controller
         $user->age = $request->age;
         $user->paye = $request->paye;
         $user->sexe = $request->sexe;
+        $user->role = $request->role; // حفظ الـ role الجديد
         $user->email = $request->email;
         $user->tel = $request->tel;
         $user->password = Hash::make($request->password);
@@ -39,25 +41,21 @@ class AuthController extends Controller
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
             $filename = time().'_'.$file->getClientOriginalName();
-
-            // store image
-           
             $file->storeAs('photos', $filename, 'public');
-
-
-            // save path relative to storage
             $user->photo = 'photos/'.$filename;
         }
 
         $user->save();
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json(['message' => 'User registered successfully',
-         'user' => $user,
-         'token' => $token
-         ]);
+        return response()->json([
+            'message' => 'User registered successfully',
+            'user' => $user,
+            'token' => $token
+        ]);
     }
-    // controler de login
+
+//--------------------------------------------------------------------------
     public function login(Request $request)
     {
         $user = User::where('email', $request->email)->first();
@@ -173,6 +171,24 @@ class AuthController extends Controller
 
             return response()->json([
                 'message' => 'Account deleted successfully'
+            ]);
+        }
+        public function getProfile($id)
+        {
+            $user = User::find($id);
+
+            if (!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+            return response()->json([
+                'id' => $user->id,
+                'nom' => $user->nom,
+                'prenom' => $user->prenom,
+                'photo' => $user->photo,
+                'color' => $user->color,
+                'role' => $user->role,
+                'paye' => $user->paye,
+                'age' => $user->age,   
             ]);
         }
     }

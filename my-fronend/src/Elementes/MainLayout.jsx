@@ -114,8 +114,8 @@ const MainLayout = () => {
                         </NavLink>
                     </div>
                 </div>
-                <NavLink to="/home" end className="AuthX_IconClick_55"><HomeIcon /></NavLink>
-                <NavLink to="/HallaClub" className="AuthX_IconClick_55"><ClubIcon /></NavLink>
+                <NavLink to="/home" end className="AuthX_IconClick_55"><ClubIcon /></NavLink>
+                <NavLink to="/HallaClub" className="AuthX_IconClick_55"><HomeIcon /></NavLink>
                 <NavLink to="/chat" className="AuthX_IconClick_55"><ChatIcon /></NavLink>
                 <NavLink to="/Groups" className="AuthX_IconClick_55"><GroupIcon /></NavLink>
             </header>

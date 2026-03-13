@@ -218,7 +218,9 @@ const Club = () => {
               <article key={post.id} className="AuthX_PostItem_Card_55">
                 <div className="AuthX_PostItem_Head_55">
                   <div className="AuthX_Avatar_Wrap_55 AuthX_SizeMd_55">
+                    <Link to={`/profile/${post.user_id}`} className="user-avatar-link">
                     {getProfileIcon(post.user?.sexe, post.user?.photo)}
+                    </Link>
                   </div>
                   <div className="AuthX_PostItem_Info_55">
                     <div className="AuthX_Meta_Row_55">
