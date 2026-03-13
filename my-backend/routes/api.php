@@ -60,7 +60,9 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/my-completed-groups', [GroupController::class, 'getMyGroups']);
 Route::get('/groups/{groupId}/messages', [MessageController::class, 'fetchMessages']);
-    Route::post('/groups/{groupId}/messages', [MessageController::class, 'store']);
+Route::get('/groups/pending', [GroupController::class, 'getPendingGroup']);
+    Route::post('/groups/random-join', [GroupController::class, 'joinRandomOrCreate']);
+Route::post('/groups/{groupId}/messages', [MessageController::class, 'store']);
 });
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
