@@ -58,11 +58,13 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 // chat 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/my-completed-groups', [GroupController::class, 'getMyGroups']);
+Route::get('/my-current-salon', [GroupController::class, 'getPendingGroup']);
+Route::get('/my-completed-groups', [GroupController::class, 'getMyGroups']);
 Route::get('/groups/{groupId}/messages', [MessageController::class, 'fetchMessages']);
 Route::get('/groups/pending', [GroupController::class, 'getPendingGroup']);
-    Route::post('/groups/random-join', [GroupController::class, 'joinRandomOrCreate']);
+Route::post('/groups/random-join', [GroupController::class, 'joinRandomOrCreate']);
 Route::post('/groups/{groupId}/messages', [MessageController::class, 'store']);
 });
-Broadcast::routes(['middleware' => ['auth:sanctum']]);
+
+
 

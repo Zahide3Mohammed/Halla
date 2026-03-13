@@ -31,8 +31,9 @@ class GroupController extends Controller
 
     $today = now()->toDateString();
     
-    $exist = Group::where('creator_id', auth()->id())
+   $exist = Group::where('creator_id', auth()->id())
                   ->whereDate('created_at', $today)
+                  ->where('name', 'NOT LIKE', 'Salon %') // كيتجاهل الصالونات العشوائية
                   ->first();
 
     if ($exist) {
@@ -98,8 +99,14 @@ class GroupController extends Controller
         // 4. إتمام عملية الانضمام بنجاح
         $group->users()->attach($user->id);
 
-        return response()->json(["message" => "تم الانضمام بنجاح"]);
-    }
+$group->loadCount('users');
+    $group->load('creator'); 
+   broadcast(new \App\Events\GroupCreated($group));
+
+    return response()->json([
+        "message" => "تم الانضمام بنجاح",
+        "group" => $group // صيفط الجروب باش الـ React يقدّر يخدم بيه
+    ]);    }
    public function getMyGroups() {
     $user = auth()->user();
     
@@ -115,47 +122,37 @@ class GroupController extends Controller
 
     return response()->json($groups);
 }
-
-
-public function getPendingGroup()
-{
-    $user = auth()->user();
-    
-    // كنقلبو على كروب مديور اليوم، نوعو نفس اللون، وفيه قل من 5، ومولاه عندو نفس لون المستخدم
-    $group = Group::withCount('users')
-        ->where('type_group', 'Même color')
-        ->whereDate('created_at', now()->toDateString())
-        ->whereHas('creator', function($q) use ($user) {
-            $q->where('color', $user->color);
-        })
-        ->having('users_count', '<', 5)
-        ->latest()
-        ->first();
-
-    return response()->json(['group' => $group]);
-}
-
+// parte  Rejoignez un groupe aléatoire
 public function joinRandomOrCreate()
 {
     $user = auth()->user();
     $today = now()->toDateString();
+    $userColor = $user->color;
 
-    $group = Group::withCount('users')
+    if (!$userColor) {
+        return response()->json(["message" => "يرجى تحديد لون شخصيتك أولاً"], 400);
+    }
+
+    // 1. البحث عن صالون متاح
+    $group = Group::where('name', 'LIKE', 'Salon %')
         ->where('type_group', 'Même color')
         ->whereDate('created_at', $today)
-        ->whereHas('creator', function($q) use ($user) {
-            $q->where('color', $user->color);
+        ->whereHas('creator', function($q) use ($userColor) {
+            $q->where('color', $userColor);
         })
+        ->withCount('users')
         ->having('users_count', '<', 5)
         ->first();
 
     if ($group) {
+        // إذا وجدناه، نتحقق من العضوية
         if (!$group->users()->where('user_id', $user->id)->exists()) {
             $group->users()->attach($user->id);
         }
     } else {
+        // 2. إنشاء صالون جديد إذا لم يوجد
         $group = Group::create([
-            'name' => "Salon " . ucfirst($user->color ?? 'Amis'),
+            'name' => "Salon " . ucfirst($userColor),
             'type_group' => 'Même color',
             'creator_id' => $user->id,
             'start_date' => $today,
@@ -163,13 +160,38 @@ public function joinRandomOrCreate()
             'end_time' => now()->addHours(2)->format('H:i'),
             'lieu_event' => 'Online',
             'nationality_type' => 'same',
-            'suggestion' => 'Faisons connaissance !'
+            'suggestion' => 'Recherche automatique : Amusez-vous !',
         ]);
         $group->users()->attach($user->id);
     }
 
-    broadcast(new \App\Events\GroupCreated($group->load('creator')->loadCount('users')))->toOthers();
+    // 🔥 التعديل الضروري 1: إعادة تحميل الحساب والبيانات قبل الإرسال
+    $group->load('creator');
+    $group->loadCount('users'); // هادي هي اللي كتخلي React يشوف 1/5، 2/5 إلخ
 
-    return response()->json(['group' => $group->loadCount('users')]);
+    // 🔥 التعديل الضروري 2: إرسال الحدث
+    // استعمل broadcast()->toOthers() باش التحديث يوصل لكلشي
+broadcast(new \App\Events\GroupCreated($group));
+
+    return response()->json([
+        "message" => "تم الانضمام للصالون",
+        "group" => $group // دابا الجروب غادي يمشي بـ users_count صحيح لـ React
+    ]);
 }
+public function getPendingGroup()
+{
+    $user = auth()->user();
+
+    $group = $user->groups()
+        ->where('name', 'like', 'Salon%')
+        ->withCount('users')
+        ->latest()
+        ->first();
+
+    return response()->json([
+        'group' => $group
+    ]);
+}
+
+
 }

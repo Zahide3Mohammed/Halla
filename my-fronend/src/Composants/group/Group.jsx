@@ -12,8 +12,7 @@ function Group() {
   const [filterColor, setFilterColor] = useState(null);
   const [activeGroup, setActiveGroup] = useState(null); 
 const [serverError, setServerError] = useState("");
-const [pendingGroup, setPendingGroup] = useState(null);
-const [user, setUser] = useState(null); // باش نعرفو لون المستخدم
+const [pendingRandomGroup, setPendingRandomGroup] = useState(null);
 
   const [form, setForm] = useState({
     name: "",
@@ -40,7 +39,12 @@ const [user, setUser] = useState(null); // باش نعرفو لون المستخ
   const fetchGroups = async () => {
     try {
       const res = await axios.get("http://localhost:8000/api/groups");
-      setAvailableGroups(res.data.filter(g => g.users_count < 5));
+      // 🔥 تحديث: تصفية المجموعات باش ميبانوش "Salons" ويكون العدد أقل من 5
+      const filtered = res.data.filter(g => 
+        g.users_count < 5 && 
+        !g.name.startsWith("Salon")
+      );
+      setAvailableGroups(filtered);
     } catch (err) {
       console.error("خطأ في جلب المجموعات", err);
     }
@@ -65,6 +69,7 @@ const [user, setUser] = useState(null); // باش نعرفو لون المستخ
       headers: {
         'Authorization': `Bearer ${currentToken}`,
         'Accept': 'application/json',
+        'Content-Type': 'multipart/form-data',
       }
     });
     alert("Succès!");
@@ -85,7 +90,8 @@ const [user, setUser] = useState(null); // باش نعرفو لون المستخ
     try {
       const token = sessionStorage.getItem('token'); 
       const response = await axios.post(`http://localhost:8000/api/groups/${id}/join`, {}, {
-        headers: { Authorization: `Bearer ${token}`, Accept: "application/json" }
+        headers: { Authorization: `Bearer ${token}`, 
+        Accept: "application/json" }
       });
 
       alert("تم الانضمام!");
@@ -101,7 +107,6 @@ const [user, setUser] = useState(null); // باش نعرفو لون المستخ
     }
   };
 
-  useEffect(() => { fetchGroups(); }, []);
   
   const [messages,setMessages] = useState([
     {type:"ai",text:"Ils peuvent vous aider with Suggestion du jou."},
@@ -120,54 +125,91 @@ setMessages([
 setInput("");
 };
 
-useEffect(() => {
-    fetchPending();
-    
-    const channel = echo.channel('groups-channel')
-      .listen('.group.added', (data) => {
-        // تحديث قائمة المجموعات العادية
-        setAvailableGroups((prev) => {
-            const exists = prev.find(g => g.id === data.group.id);
-            if (exists) {
-                return prev.map(g => g.id === data.group.id ? data.group : g);
-            }
-            return [data.group, ...prev].filter(g => g.users_count < 5);
-        });
 
-        // تحديث الـ "Salon" إيلا كان هو نفس الكروب
-        setPendingGroup(prev => {
-            if (prev && prev.id === data.group.id) {
-                return data.group.users_count >= 5 ? null : data.group;
-            }
-            return prev;
+  // parte Rejoignez un groupe aléatoire
+  const joinRandomGroup = async () => {
+  try {
+    const token = sessionStorage.getItem('token');
+    const response = await axios.post("http://localhost:8000/api/groups/random-join", {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    
+    const group = response.data.group;
+ setPendingRandomGroup(group);
+
+    // إيلا كمل الجروب (5/5) ديه نيشان للشات
+    if (group.users_count >= 5) {
+      navigate(`/chat/${group.id}`);
+    } else {
+      // إيلا مزال، تقدر تخليه يتسنى أو تطلع ليه ميساج
+      setActiveGroup(group); 
+    }
+  } catch (error) {
+    alert(error.response?.data?.message || "Error");
+  }
+};
+useEffect(() => {
+    const channel = echo.channel('groups-channel')
+        .listen('.group.added', (data) => {
+            const updatedGroup = data.group;
+
+            // 1. تحديث قائمة المجموعات (Evente Tab)
+            setAvailableGroups((prev) => {
+                // إيلا كان صالون، ما يبانش في القائمة العامة
+                if (updatedGroup.name.startsWith("Salon")) {
+                    return prev.filter(g => g.id !== updatedGroup.id);
+                }
+
+                // إيلا كمل 5، نحيدوه من القائمة
+                if (updatedGroup.users_count >= 5) {
+                    return prev.filter(g => g.id !== updatedGroup.id);
+                }
+
+                // تحديث المجموعة إيلا كانت ديجا كاين أو زيادتها
+                const index = prev.findIndex(g => g.id === updatedGroup.id);
+                if (index > -1) {
+                    const newGroups = [...prev];
+                    newGroups[index] = updatedGroup;
+                    return newGroups;
+                }
+                return [updatedGroup, ...prev];
+            });
+
+            // 2. تحديث الصالون العشوائي (Pending Group)
+            setPendingRandomGroup(prev => {
+                if (prev && prev.id === updatedGroup.id) {
+                    // إيلا وصل 5، التوجيه للشات
+                    if (updatedGroup.users_count >= 5) {
+                        setTimeout(() => navigate(`/chat/${updatedGroup.id}`), 1000);
+                    }
+                    return { ...updatedGroup }; // تحديث مع الحفاظ على المرجعية
+                }
+                return prev;
+            });
         });
-      });
 
     return () => echo.leaveChannel('groups-channel');
+}, [navigate]);
+
+const fetchMyCurrentSalon = async () => {
+  try {
+    const token = sessionStorage.getItem('token');
+    // هاد الـ Route خاصك تزيدو في Laravel يجيب آخر صالون دخل ليه اليوزر اليوم ومزال ما كملش
+    const res = await axios.get("http://localhost:8000/api/my-current-salon", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (res.data.group) {
+      setPendingRandomGroup(res.data.group);
+    }
+  } catch (err) {
+    console.log("No active salon found");
+  }
+};
+
+useEffect(() => {
+  fetchGroups();
+  fetchMyCurrentSalon(); // عيط ليها هنا
 }, []);
-
-  // parter Rejoignez un groupe aléatoire
-  const fetchPending = async () => {
-    try {
-        const token = sessionStorage.getItem('token');
-        const res = await axios.get("http://localhost:8000/api/groups/pending", {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        setPendingGroup(res.data.group);
-    } catch (err) { console.error(err); }
-};
-
-const joinRandom = async () => {
-    try {
-        const token = sessionStorage.getItem('token');
-        const res = await axios.post("http://localhost:8000/api/groups/random-join", {}, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        fetchPending();
-        fetchGroups();
-    } catch (err) { alert("Erreur"); }
-};
-
   return (
     <div className="sketch-app-container_grp">
       <div className="main-content_grp">
@@ -219,8 +261,7 @@ const joinRandom = async () => {
                           <p>lieu: {group.lieu_event}</p>
                         </div>
                         <div className="meta-action_grp">
-                          <span className="count-label_grp"> 👥 {group.users_count}/5</span>
-                          <button className="rejoindre-btn-green_grp" onClick={() => joinGroup(group.id)}>Rejoindre</button>
+<span className="count-label_grp"> 👥 {group.users_count ?? 0}/5</span>                          <button className="rejoindre-btn-green_grp" onClick={() => joinGroup(group.id)}>Rejoindre</button>
                         </div>
                       </div>
                     </div>
@@ -319,28 +360,30 @@ const joinRandom = async () => {
                   </div>
                 </div>
                 
-        <h3 className="h3_grp">Rejoignez un groupe aléatoire</h3>
+               <h3 className="h3_grp">Rejoignez un groupe aléatoire</h3>
 <div className="random-group-box-sketch_grp">
-    <div className="group-icon_grp">🎲</div>
-    
-    {pendingGroup ? (
-        <>
-            <p>Un groupe de votre couleur est en formation !</p>
-            <div className="group-users_grp">
-                <span>👥 {pendingGroup.users_count}/5</span>
-            </div>
-            <button className="btn-rejoin-large_grp" onClick={() => joinGroup(pendingGroup.id)}>
-                🎲 Rejoindre le salon
-            </button>
-        </>
-    ) : (
-        <>
-            <p>Aucun salon actif. Soyez le premier à lancer le groupe !</p>
-            <button className="btn-rejoin-large_grp" onClick={joinRandom}>
-                🎲 Créer un salon
-            </button>
-        </>
-    )}
+  <div className="group-icon_grp">
+    {pendingRandomGroup?.users_count >= 5 ? "🚀" : "🎲"}
+  </div>
+  <p>
+    {pendingRandomGroup 
+      ? `Vous êtes dans le salon "${pendingRandomGroup.name}".`
+      : "Vous pouvez rejoindre un groupe aléatoire de personnes ayant la même personnalité que vous."
+    }
+  </p>
+  
+  <div className="group-users_grp">
+   <span className={pendingRandomGroup?.users_count >= 5 ? "text-success" : ""}>
+        👥 {pendingRandomGroup?.users_count || 0}/5
+    </span>
+  </div>
+
+  <button 
+    className="btn-rejoin-large_grp" 
+    onClick={joinRandomGroup} // 🔥 ربط الدالة بالزر
+disabled={pendingRandomGroup !== null}  >
+    {pendingRandomGroup ? "En attente..." : "🎲 Rejoindre le groupe"}
+  </button>
 </div>
               </div>
             </div>

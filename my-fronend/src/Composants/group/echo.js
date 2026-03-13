@@ -13,9 +13,8 @@ const echo = new Echo({
     enabledTransports: ['ws'],
     authEndpoint: 'http://localhost:8000/api/broadcasting/auth',
     auth: {
-        headers: {
-            Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-            Accept: 'application/json',
+      headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`, // تأكد أن التوكن كاين هنا
         },
     },
 });

@@ -21,8 +21,7 @@ class GroupCreated implements ShouldBroadcast // تأكد من وجود Implemen
     {
         // هنا كنحملو البيانات اللي باغي يصيفطها السيرفر لـ React
         // جيب الـ creator والـ users_count باش الـ Card تبان كاملة
-        $this->group = $group->load('creator')->loadCount('users');
-    }
+$this->group = $group->fresh(['creator'])->loadCount('users');    }
 
     /**
      * القناة اللي غادي يتسمع ليها كاع الناس (Public)
@@ -41,4 +40,5 @@ class GroupCreated implements ShouldBroadcast // تأكد من وجود Implemen
     {
         return 'group.added';
     }
+    
 }
