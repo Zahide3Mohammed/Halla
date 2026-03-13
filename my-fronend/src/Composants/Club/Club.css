@@ -180,3 +180,12 @@
   .AuthX_MainGrid_Layout_55 { grid-template-columns: 1fr; }
   .AuthX_LeftNav_Aside_55, .AuthX_RightWidgets_Aside_55 { display: none; }
 }
+.user-avatar-link {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.user-avatar-link:hover {
+    transform: scale(1.1); /* تكبر التصويرة شوية ملي يتحط عليها الماوس */
+    cursor: pointer;
+}

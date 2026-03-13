@@ -1,4 +1,3 @@
-
 *{
     box-sizing: border-box;
 }
@@ -87,7 +86,10 @@
 .row, .AuthX_InputGrid_Row_22 { display: flex; gap: 10px; margin-bottom: 0px; }
 .input-group { flex: 1; }
 .AuthX_InputGrid_Row_22 div{width: 100%;border: 0px solid;}
-.AuthX_FormSide_54 input:not([type="radio"]):not([type="checkbox"]) {
+
+/* تعديل الـ Select والـ Input ليتشابهوا تماماً */
+.AuthX_FormSide_54 input:not([type="radio"]):not([type="checkbox"]),
+.AuthX_FormSide_54 select {
     width: 100%;
     margin-bottom: 10px;
     padding: 12px 15px;
@@ -95,6 +97,20 @@
     border-radius: 8px;
     background: hsl(354, 100%, 96%);
     transition: 0.3s;
+    font-family: inherit;
+    font-size: 14px;
+    color: #333;
+}
+
+/* ستايل خاص بالـ select باش نحيدو الشكل القديم */
+.AuthX_FormSide_54 select {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff4757' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 15px;
 }
 
 .AuthX_FormSide_54 :focus {
@@ -135,7 +151,7 @@
 /* --- TABLET & SMALL DESKTOPS --- */
 @media (max-width: 1100px) {
     .AuthX_FormContainer_Core_62 {
-        max-width: 90%; /* K-n-3tiw l-massa7a kbar f-tablets */
+        max-width: 90%; 
     }
     .AuthX_HeroCaption_33 h1 {
         font-size: 2.2rem;
@@ -145,15 +161,15 @@
 /* --- MOBILE & TABLET PORTRAIT (Max 900px) --- */
 @media (max-width: 900px) {
     .AuthX_MainLayout_77 {
-        flex-direction: column; /* I-welli slider l-foq w form l-teħt */
+        flex-direction: column; 
         margin: 0;
     }
 
     .AuthX_SliderWrapper_12 {
         flex: none;
-        height: 300px; /* Sgherna l-houl d-slider bach n-khlliw blassa l-form */
+        height: 300px; 
         width: 100%;
-        clip-path: none; /* Hiyedna l-mayla bach t-ban tswira kamla f-mobile */
+        clip-path: none; 
     }
 
     .AuthX_InnerSlider_45 {
@@ -166,7 +182,7 @@
 
     .AuthX_FormSide_54 {
         width: 100%;
-        padding: 30px 20px; /* Sgherna l-padding f-jnabe d-tillafoat */
+        padding: 30px 20px; 
     }
 
     .AuthX_FormContainer_Core_62 {
@@ -394,7 +410,7 @@ width: 400px;
     border: 3px solid rgba(255,255,255,0.3);
     border-radius: 50%;
     border-top: 3px solid #fff;
-    width: 20px; height: 20px;
+    width: 20px; height: 50px;
     animation: spinX 1s linear infinite;
     margin: auto;
 }

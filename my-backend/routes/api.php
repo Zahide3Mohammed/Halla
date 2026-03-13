@@ -15,6 +15,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/personalitytest', [AuthController::class, 'personalitytest']);
 Route::post('/check-email', [AuthController::class, 'checkEmail']);
+Route::get('/user-profile/{id}', [AuthController::class, 'getProfile']);
+Route::get('/user-posts/{id}', [PostController::class, 'getUserPosts']);
 
 Route::middleware('auth:sanctum')->post('/delete-account', [AuthController::class, 'deleteAccount']);
 Route::middleware('auth:sanctum')->post('/change-password', [AuthController::class, 'changePassword']);
@@ -34,7 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/posts/{id}/toggle-like', [PostController::class, 'toggleLike']);
     Route::get('/my-liked-posts', [PostController::class, 'getLikedPosts']);
 
-   // بدل {post} بـ {id} باش تطابق مع الـ Axios اللي عندك
+
 Route::get('/posts/{id}/comments', [CommentController::class, 'index']);
 Route::post('/posts/{id}/comments', [CommentController::class, 'store']);
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);

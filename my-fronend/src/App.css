@@ -1,0 +1,33 @@
+:root {
+    --sb-track: transparent;
+    --sb-thumb: rgba(155, 155, 155, 0.3); 
+    --sb-thumb-hover: #ff4757; 
+}
+::-webkit-scrollbar {
+    width: 6px;  
+    height: 6px; 
+}
+::-webkit-scrollbar-track {
+    background: var(--sb-track);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb);
+    border-radius: 20px; 
+    transition: background 0.3s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--sb-thumb-hover);
+    cursor: pointer;
+}
+@supports (scrollbar-width: thin) {
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--sb-thumb) var(--sb-track);
+    }
+}
+.hide-scrollbar-initially::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+.hide-scrollbar-initially:hover::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb);
+}

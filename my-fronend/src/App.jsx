@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
 import { ProtectedRoute } from "./context/ProtectRoute";
+import './App.css'
 import Login from "./Pages/Login";
 import Home from "./Pages/Home";
 import TermsJourney from "./Elementes/terms";
@@ -19,6 +20,7 @@ import Notifications from "./Composants/sideBarrePages/Notification";
 import PostDetails from "./Composants/Club/PostDetails";
 import HotelAIFinder from "./Composants/accueil/accueil";
 import Group from "./Composants/group/Group";
+import UserProfile from "./Pages/othersProfile";
 
 
 export default function App() {
@@ -47,7 +49,7 @@ export default function App() {
               <Route path="/Groups" element={<ProtectedRoute ><Group /></ProtectedRoute>} />
               <Route path='/Find-Friends' element={<ProtectedRoute ><FindFriends /></ProtectedRoute>}/>
               <Route path="/post/:id" element={<PostDetails />} />
-              <Route path="/profile/:id" element={<Profile />} />
+              <Route path="/profile/:id" element={<UserProfile />} />
             </Route>
              
     </Routes>

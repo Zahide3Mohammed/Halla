@@ -73,8 +73,8 @@
   overflow-y: auto; overflow-x: hidden; transition: background-color 0.3s ease;
 }
 
-.AuthX_IconSvg_55 { transition: color 0.3s ease; color: var(--ax-text-gray-55); }
-.AuthX_IconClick_55.active .AuthX_IconSvg_55 { color: var(--accent-blue); }
+.AuthX_IconClick_55 {color: var(--ax-text-gray-55); }
+.AuthX_IconClick_55.active , .AuthX_IconSvg_55 { color: var(--accent-blue); }
 
 .AuthX_NotifBadge_55 {
   position: absolute; top: -2px; right: -2px; background-color: #ff4d4d;
