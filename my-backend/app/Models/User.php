@@ -28,7 +28,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    
+//=========================================================================
     protected function casts(): array
     {
         return [
@@ -36,17 +36,23 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
+//=========================================================================
     public function posts()
     {
         return $this->hasMany(Post::class);
     }
+//=========================================================================
     public function groups(){
+        return $this->belongsToMany(Group::class);
+    }
+//=========================================================================
 
- return $this->belongsToMany(Group::class);
-
-}
-public function messages() {
-    return $this->hasMany(Message::class);
-}
+    public function messages() {
+        return $this->hasMany(Message::class);
+    }
+//=========================================================================
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id');
+    }
 }

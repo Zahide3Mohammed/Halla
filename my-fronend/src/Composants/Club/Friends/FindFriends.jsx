@@ -15,13 +15,13 @@ const FindFriends = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUsers(res.data);
-        setLoading(false);
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching users", err);
+      } finally {
         setLoading(false);
       }
     };
-    fetchUsers();
+    if (token) fetchUsers();
   }, [token]);
 
   const sendFriendRequest = async (userId) => {
@@ -29,34 +29,40 @@ const FindFriends = () => {
       await axios.post(`http://localhost:8000/api/friend-request/${userId}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      // Men b3d ma nsifto request, n-7iydou had l-user mn l-list
-      setUsers(users.filter(u => u.id !== userId));
-      alert("Friend request sent!");
+      setUsers(prevUsers => prevUsers.filter(u => u.id !== userId));
     } catch (err) {
-      console.error("Error sending request", err);
+      alert(err.response?.data?.message || "Error");
     }
   };
 
-  if (loading) return <div>Loading suggestions...</div>;
-
   return (
     <div className="find-friends-container">
-      <h2>Find New Friends</h2>
+      <h2 className="title-grp">Find New Friends</h2>
       <div className="friends-grid">
-        {users.map(u => (
-          <div key={u.id} className="user-card">
-            <img 
-              src={u.photo ? `http://localhost:8000/storage/${u.photo}` : '/default-avatar.png'} 
-              alt={u.nom} 
-            />
-            <h4>{u.nom} {u.prenom}</h4>
-            <button onClick={() => sendFriendRequest(u.id)} className="add-btn">
-              Add Friend
-            </button>
-          </div>
-        ))}
-        {users.length === 0 && <p>No new suggestions found.</p>}
+        {loading ? (
+          // Skeleton placeholders باش ما يتزعزعش الستيل
+          [1, 2, 3, 4].map(n => <div key={n} className="user-card skeleton"></div>)
+        ) : (
+          users.map(u => (
+            <div key={u.id} className="user-card">
+              <div className="image-wrapper">
+                <img 
+                  src={u.photo ? (u.photo.startsWith('http') ? u.photo : `http://localhost:8000/storage/${u.photo}`) : '/default-avatar.png'} 
+                  alt={`${u.nom}`} 
+                  className="user-img"
+                />
+              </div>
+              <div className="user-info">
+                <h4>{u.nom} {u.prenom}</h4>
+                <button onClick={() => sendFriendRequest(u.id)} className="add-btn">
+                  Add Friend
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
+      {!loading && users.length === 0 && <p className="empty-msg">No suggestions found.</p>}
     </div>
   );
 };

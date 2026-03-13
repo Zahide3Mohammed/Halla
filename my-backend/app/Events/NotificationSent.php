@@ -1,34 +1,32 @@
 <?php
-
 namespace App\Events;
 
+use App\Models\Notification;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow; 
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NewNotification implements ShouldBroadcastNow
+class NotificationSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
-    public $userId;
+    public $notification;
 
-    public function __construct($message, $userId)
+    public function __construct(Notification $notification)
     {
-        $this->message = $message;
-        $this->userId = $userId;
+        $this->notification = $notification->load('sender');
     }
 
     public function broadcastOn()
     {
-        return new PrivateChannel('notifications.' . $this->userId);
+        return new PrivateChannel('App.Models.User.' . $this->notification->receiver_id);
     }
 
     public function broadcastAs()
     {
-        return 'notification.received';
+        return 'NotificationSent';
     }
 }

@@ -45,7 +45,7 @@ Route::post('/posts/{id}/comments', [CommentController::class, 'store']);
     
     Route::get('/posts/{id}', [PostController::class, 'show']);
     Route::get('/find-friends', [PostController::class, 'suggestUsers']);
-    Route::post('/friend-request/{id}', [PostController::class, 'sendRequest']);
+    Route::post('/friend-request/{friend_id}', [PostController::class, 'sendRequest']);
 });
  // routes de composent de groups
  Route::get('/groups',[GroupController::class,'index']);

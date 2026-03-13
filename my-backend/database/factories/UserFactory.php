@@ -26,7 +26,7 @@ class UserFactory extends Factory
             'prenom' => $this->faker->firstName(),
             'age' => $this->faker->date(),
             'paye' => $this->faker->country(),
-            'sexe' => $this->faker->randomElement(['Homme','female']),
+            'sexe' => $this->faker->randomElement(['Homme','Femme']),
             'tel' => $this->faker->phoneNumber(),
             'email' => $this->faker->unique()->safeEmail(),
             'password' => Hash::make('123123'),
