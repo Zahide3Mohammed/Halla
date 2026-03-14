@@ -1,131 +1,168 @@
 .AuthX_AppContainer_55 {
+  --user-main-hover: color-mix(in srgb, var(--user-main-color), rgb(255, 255, 255) 90%);
+  --user-light-bg: color-mix(in srgb, var(--user-main-color), transparent 80%);
+  --user-border-alpha: color-mix(in srgb, var(--user-main-color), transparent 70%);
+  
   display: flex;
-  height: 90vh;
-  width: 100%;
-  background: #f6f7fb;
-  font-family: Inter, sans-serif;
+  height: 90dvh;
+  background-color: #f8fafc;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow: hidden;
 }
 
-/* LEFT SIDEBAR */
-.AuthX_SidebarLeft_55 {
-  width: 260px;
-  background: white;
-  border-right: 1px solid #eee;
-  padding: 20px;
+/* --- TABS BUTTONS --- */
+.AuthX_TabButtons_55 {
   display: flex;
-  flex-direction: column;
-  margin-right: 10px;
-}
-
-.AuthX_SidebarTitle_55 {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 20px;
-}
-
-.AuthX_GroupsList_55 {
-  display: flex;
-  flex-direction: column;
+  padding: 0 10px 10px;
   gap: 10px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
-.AuthX_GroupItem_55 {
+.AuthX_TabBtn_55 {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  background: #f1f5f9;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 0.85rem;
+}
+
+.AuthX_TabBtn_55.active {
+  background: var(--user-main-color);
+  color: white;
+}
+
+/* --- HEADER PROFILE --- */
+.AuthX_HeaderProfile_55 {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: 0.2s;
+  gap: 12px;
 }
 
-.AuthX_GroupItem_55:hover { background: #f6f6f6; }
-.AuthX_Active_55 { background: #fff3eb; }
-
-.AuthX_AvatarSm_55 {
+.AuthX_HeaderAvatar_55 {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 10px;
   object-fit: cover;
 }
 
-.AuthX_Name_55 { font-weight: 600; font-size: 14px; margin: 0; }
-.AuthX_Status_55 { font-size: 12px; color: #888; margin: 0; }
-
-/* CHAT WINDOW */
-.AuthX_ChatWindow_55 {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: white;
+/* --- باقي الستايل ديالك بدون تغيير --- */
+.AuthX_SidebarLeft_55 {
+  width: 280px;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  display: flex; flex-direction: column;
+  padding: 20px 0;
+ }
+.AuthX_SidebarTitle_55 { 
+  padding: 0 20px 20px; font-size: 1.25rem; font-weight: 700; color: #1e293b; 
 }
-
+.AuthX_GroupsList_55 { flex: 1; overflow-y: auto; padding: 10px; }
+.AuthX_GroupItem_55 { display: flex; align-items: center; padding: 12px; margin-bottom: 8px; border-radius: 16px; cursor: pointer; transition: all 0.2s ease; }
+.AuthX_GroupItem_55:hover { background-color: #f1f5f9; }
+.AuthX_Active_55 { background-color: var(--user-light-bg) !important; border-left: 4px solid var(--user-main-color) !important; }
+.AuthX_AvatarSm_55 { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; margin-right: 12px; }
+.AuthX_Name_55 { font-weight: 600; font-size: 0.95rem; margin: 0; }
+.AuthX_Status_55 { font-size: 0.8rem; color: #22c55e; margin: 0; }
+.AuthX_ChatWindow_55 { flex: 1; display: flex; flex-direction: column; background: #fff; }
 .AuthX_ChatHeader_55 {
-  padding: 18px 24px;
-  border-bottom: 1px solid #eee;
-  background-color: #ff6b00;
-  border-radius: 10px 10px 0px 0px;
-  color: #eee;
+  padding: 10px 25px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #fff; 
+  backdrop-filter: blur(10px);
 }
-
-.AuthX_HeaderTitle_55 { margin: 0; font-weight: 700; }
-
-.AuthX_MessagesArea_55 {
+.AuthX_MessagesArea_55 { 
   flex: 1;
+  overflow: hidden;
+  padding: 15px;
   overflow-y: auto;
-  padding: 30px;
+  background-image:radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 20px 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding-bottom: 80px;
+  gap: 15px;
 }
-
-.AuthX_MsgRow_55 { display: flex; gap: 12px; max-width: 65%; }
-.AuthX_Me_55 { align-self: flex-end; flex-direction: row-reverse; }
-
+.AuthX_MsgRow_55 {
+  display: flex;width: 10%;
+  align-items: flex-end;
+  gap: 0px;
+}
+.AuthX_Me_55 { 
+  align-self: flex-end;
+  flex-direction: row-reverse
+}
+.AuthX_NotMe_55 { align-self: flex-start; }
 .AuthX_MsgAvatar_55 {
-  width: 36px;
-  height: 36px;
+  width: 32px; 
+  height: 32px; 
   border-radius: 50%;
-  margin-right: 10px;
-  margin-top: 10px;
 }
-
-.AuthX_MsgBubble_55 { padding: 14px 18px; border-radius: 20px; font-size: 14px; line-height: 1.5; }
-.AuthX_NotMe_55 .AuthX_MsgBubble_55 { background: #f2f2f2; color: #333; border-bottom-left-radius: 6px; }
-.AuthX_Me_55 .AuthX_MsgBubble_55 { background: #ff6b00; color: white; border-bottom-right-radius: 6px; }
-
-.AuthX_ChatImg_55 { max-width: 100%; border-radius: 10px; margin-bottom: 5px; }
-.AuthX_MsgText_55 { margin: 0; }
-.AuthX_MsgTime_55 { font-size: 11px; color: #999; margin-top: 4px; display: block; }
-
-/* INPUT */
-.AuthX_InputContainer_55 { padding: 16px 24px; border-top: 1px solid #eee; background: white; }
-.AuthX_InputPill_55 { display: flex; align-items: center; gap: 10px; background: #f1f2f5; border-radius: 30px; padding: 8px 14px; }
-.AuthX_MainInput_55 { flex: 1; border: none; outline: none; background: transparent; padding: 8px; font-size: 14px; }
-
-.AuthX_IconBtn_55 { background: none; border: none; cursor: pointer; color: #777; }
-.AuthX_BtnSend_55 { width: 45px; height: 38px; border-radius: 50%; background: #ff6b00; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-
-/* RIGHT SIDEBAR */
-.AuthX_SidebarRight_55 { width: 300px; background: #fafafa; border-left: 1px solid #eee; padding: 20px; overflow-y: auto; }
-.AuthX_GoalCard_55 { background: #fff3eb; padding: 20px; border-radius: 20px; margin-bottom: 25px; }
-.AuthX_GoalLabel_55 { font-size: 11px; font-weight: 700; color: #ff6b00; }
-.AuthX_GoalContent_55 { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-.AuthX_GoalIcon_55 { font-size: 24px; }
-.AuthX_GoalText_55 { margin: 0; font-size: 14px; }
-
-.AuthX_MembersSection_55 { margin-top: 10px; }
-.AuthX_SectionTitle_55 { font-size: 14px; font-weight: 700; margin-bottom: 15px; }
-.AuthX_MembersList_55 { display: flex; flex-direction: column; gap: 15px; }
-.AuthX_MemberItem_55 { display: flex; align-items: center; gap: 15px; position: relative; }
-
-.AuthX_AvatarWrapper_55 { position: relative; width: 38px; height: 38px; flex-shrink: 0; }
-.AuthX_AvatarWrapper_55 img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-.AuthX_OnlineDot_55 { position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: #2ecc71; border-radius: 50%; border: 2px solid white; }
-.AuthX_MemberName_55 { font-size: 14px; color: #333; }
-
-/* Preview */
-.AuthX_ImagePreview_55 { position: relative; margin-bottom: 10px; }
-.AuthX_PreviewImg_55 { max-width: 120px; border-radius: 10px; }
-.AuthX_ClosePreview_55 { position: absolute; top: -5px; left: 105px; border: none; background: red; color: white; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; }
+.AuthX_MsgBubble_55 {
+  padding: 12px 16px;
+  border-radius: 18px;
+  width: max-content;max-width: 300px;
+  font-size: 0.95rem;
+  line-height: 1.4; }
+.AuthX_Me_55 .AuthX_MsgBubble_55 {
+  background: var(--user-main-color) !important;
+  background: linear-gradient(135deg, var(--user-main-color), var(--user-main-hover)) !important;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.AuthX_NotMe_55 .AuthX_MsgBubble_55 {
+  background: #f1f5f9;
+  color: #1e293b;
+  border-bottom-left-radius: 4px;
+}
+.AuthX_ChatImg_55 { 
+  max-width: 250px; border-radius: 10px; margin-bottom: 5px; 
+}
+.AuthX_MsgTime_55 {
+  font-size: 0.7rem;
+  color: #64748b;
+  margin-top: 4px;
+  display: block; 
+}
+.AuthX_InputContainer_55 { 
+  padding:5px; background: #fff; border-top: 1px solid #f1f5f9; 
+}
+.AuthX_MsgText_55{
+  color: black;
+}
+.AuthX_InputPill_55 {
+  display: flex;
+  align-items: center;
+  background: #f1f5f9;
+  padding: 8px 15px; border-radius: 30px; gap: 5px; 
+  border: 1px solid transparent; }
+.AuthX_InputPill_55:focus-within { border-color: var(--user-main-color); background: #fff; }
+.AuthX_MainInput_55 { flex: 1; background: transparent; border: none; outline: none; padding: 10px; }
+.AuthX_IconBtn_55 { background: none; border: none; color: #64748b; cursor: pointer; }
+.AuthX_IconBtn_55:hover { color: var(--user-main-color); }
+.AuthX_BtnSend_55 { 
+  background: var(--user-main-color) !important; 
+  border: none; 
+  width: 40px !important;  
+  height: 40px !important;
+  border-radius: 50%; display: flex; 
+  align-items: center; 
+  justify-content: center; cursor: pointer;
+}
+.AuthX_BtnSend_55:hover { background: #64748b !important; }
+.AuthX_SidebarRight_55 { width: 280px; background: #fff; border-left: 1px solid #e2e8f0; padding: 20px; display: flex; flex-direction: column; gap: 25px; }
+.AuthX_GoalCard_55 { background: var(--user-light-bg) !important; padding: 15px; border-radius: 16px; border: 1px solid var(--user-border-alpha); }
+.AuthX_GoalLabel_55 { font-size: 0.7rem; font-weight: 800; color: rgb(97, 97, 97); }
+.AuthX_MemberItem_55 { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.AuthX_MemberImg_55 {
+  width: 35px;
+  height: 35px; 
+  border-radius: 50%;
+  object-fit: cover;
+}
+.AuthX_OnlineDot_55 { width: 10px; height: 10px; background: #22c55e; border: 2px solid #fff; border-radius: 50%; position: absolute; bottom: 0; right: 0; }
+.AuthX_AvatarWrapper_55 { position: relative; }
+.AuthX_PreviewImg_55 { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; }
+.AuthX_ClosePreview_55 { position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; }

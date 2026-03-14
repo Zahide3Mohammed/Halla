@@ -4,13 +4,7 @@ import "./Chat.css";
 import echo from "../group/echo";
 import { useAuth } from "../../context/AuthContext";
 
-/* ICONS */
-const IconSend = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-    <path d="m22 2-7 20-4-9-9-4Z" />
-    <path d="M22 2 11 13" />
-  </svg>
-);
+
 const IconImage = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -27,6 +21,7 @@ export default function Chat() {
   const [input, setInput] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [activeTab, setActiveTab] = useState("amis"); // 'amis' or 'groups'
 
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
@@ -35,7 +30,6 @@ export default function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-//============================= Load groups ===================================================================================
   useEffect(() => {
     axios.get("http://localhost:8000/api/my-completed-groups", {
       headers: { Authorization: `Bearer ${token}` }
@@ -48,7 +42,6 @@ export default function Chat() {
     });
   }, []);
 
-//============================== Load Messages ==================================================================================
   useEffect(() => {
     if (!selectedGroup) return;
 
@@ -78,71 +71,82 @@ export default function Chat() {
       echo.leave(`chat.${selectedGroup.id}`);
     };
   }, [selectedGroup?.id, user?.id, token]);
-//================================================================================================================
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setSelectedFile(file);
     setPreviewUrl(URL.createObjectURL(file));
-
-  };
-//================================================================================================================
- const handleSend = async () => {
-  if (!selectedGroup || (!input.trim() && !selectedFile)) return;
-  const optimisticMessage = {
-    id: Date.now(),
-    message: input,
-    user_id: user?.id,
-    user: user, 
-    image: previewUrl,
-    created_at: new Date().toISOString(),
-    isSending: true, 
   };
 
-  setMessages(prev => [...prev, optimisticMessage]);
-  const currentInput = input; 
-  setInput("");
-  setSelectedFile(null);
-  setPreviewUrl(null);
-  setTimeout(scrollToBottom, 50);
+  const handleSend = async () => {
+    if (!selectedGroup || (!input.trim() && !selectedFile)) return;
+    const optimisticMessage = {
+      id: Date.now(),
+      message: input,
+      user_id: user?.id,
+      user: user, 
+      image: previewUrl,
+      created_at: new Date().toISOString(),
+      isSending: true, 
+    };
 
-  // 3. دابا نصيفطو الـ FormData بصح للسيرفر
-  const formData = new FormData();
-  formData.append("message", currentInput);
-  if (selectedFile) {
-    formData.append("image", selectedFile);
-  }
+    setMessages(prev => [...prev, optimisticMessage]);
+    const currentInput = input; 
+    setInput("");
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    setTimeout(scrollToBottom, 50);
 
-  try {
-    const res = await axios.post(
-      `http://localhost:8000/api/groups/${selectedGroup.id}/messages`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data"
+    const formData = new FormData();
+    formData.append("message", currentInput);
+    if (selectedFile) {
+      formData.append("image", selectedFile);
+    }
+
+    try {
+      const res = await axios.post(
+        `http://localhost:8000/api/groups/${selectedGroup.id}/messages`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data"
+          }
         }
-      }
-    );
-    setMessages(prev => 
-      prev.map(msg => msg.id === optimisticMessage.id ? res.data : msg)
-    );
-    
-  } catch (err) {
-    console.error(err);
-    setMessages(prev => prev.filter(msg => msg.id !== optimisticMessage.id));
-    setInput(currentInput);
-    alert(language === "ar" ? "فشل إرسال الرسالة" : "Échec de l'envoi");
-  }
-};
+      );
+      setMessages(prev => 
+        prev.map(msg => msg.id === optimisticMessage.id ? res.data : msg)
+      );
+    } catch (err) {
+      console.error(err);
+      setMessages(prev => prev.filter(msg => msg.id !== optimisticMessage.id));
+      setInput(currentInput);
+    }
+  };
+
   return (
-    <div className="AuthX_AppContainer_55">
+    <div className="AuthX_AppContainer_55"
+    style={{"--user-main-color": user?.color || "#6366f1"}}>
+
       {/* LEFT SIDEBAR */}
       <aside className="AuthX_SidebarLeft_55">
         <h2 className="AuthX_SidebarTitle_55">Mes Chats</h2>
+        
+        {/* Buttons Amis/Groups */}
+        <div className="AuthX_TabButtons_55">
+          <button 
+            className={`AuthX_TabBtn_55 ${activeTab === 'amis' ? 'active' : ''}`}
+            onClick={() => setActiveTab('amis')}>Amis</button>
+          <button 
+            className={`AuthX_TabBtn_55 ${activeTab === 'groups' ? 'active' : ''}`}
+            onClick={() => setActiveTab('groups')}>Groupes</button>
+        </div>
+
         <div className="AuthX_GroupsList_55">
-          {myGroups.map(group => (
+          {myGroups
+            .filter(g => activeTab === 'amis' ? g.type === 'private' : g.type !== 'private')
+            .map(group => (
             <div
               key={group.id}
               className={`AuthX_GroupItem_55 ${selectedGroup?.id === group.id ? "AuthX_Active_55" : ""}`}
@@ -150,7 +154,7 @@ export default function Chat() {
               <img src={`http://localhost:8000/storage/${group.image_event}`} className="AuthX_AvatarSm_55" alt="group"/>
               <div className="AuthX_GroupInfo_55">
                 <p className="AuthX_Name_55">{group.prenom}</p>
-                <p className="AuthX_Status_55">En ligne</p>
+                <p className="AuthX_Status_55">{activeTab === 'amis' ? 'En ligne' : `${group.users?.length || 0} membres`}</p>
               </div>
             </div>
           ))}
@@ -160,8 +164,14 @@ export default function Chat() {
       {/* CHAT WINDOW */}
       <main className="AuthX_ChatWindow_55">
         <header className="AuthX_ChatHeader_55">
-          <h3 className="AuthX_HeaderTitle_55">{selectedGroup?.name || "Sélectionnez un chat"}</h3>
+          {selectedGroup && (
+            <div className="AuthX_HeaderProfile_55">
+              <img src={`http://localhost:8000/storage/${selectedGroup.image_event}`} className="AuthX_HeaderAvatar_55" alt="profile" />
+              <h3 className="AuthX_HeaderTitle_55">{selectedGroup.prenom || "Chat"}</h3>
+            </div>
+          )}
         </header>
+
         <div className="AuthX_MessagesArea_55">
           {messages.map(m => {
             const isMe = m.user_id === user?.id;
@@ -211,7 +221,10 @@ export default function Chat() {
               placeholder="Écrivez un message..."
             />
             <button onClick={handleSend} className="AuthX_BtnSend_55">
-              <IconSend />
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                <path d="m22 2-7 20-4-9-9-4Z" />
+                <path d="M22 2 11 13" />
+              </svg>
             </button>
           </div>
         </div>
