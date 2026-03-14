@@ -35,7 +35,7 @@ export default function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  /* LOAD GROUPS */
+//============================= Load groups ===================================================================================
   useEffect(() => {
     axios.get("http://localhost:8000/api/my-completed-groups", {
       headers: { Authorization: `Bearer ${token}` }
@@ -48,7 +48,7 @@ export default function Chat() {
     });
   }, []);
 
-  /* LOAD MESSAGES & ECHO */
+//============================== Load Messages ==================================================================================
   useEffect(() => {
     if (!selectedGroup) return;
 
@@ -78,42 +78,64 @@ export default function Chat() {
       echo.leave(`chat.${selectedGroup.id}`);
     };
   }, [selectedGroup?.id, user?.id, token]);
+//================================================================================================================
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setSelectedFile(file);
     setPreviewUrl(URL.createObjectURL(file));
+
+  };
+//================================================================================================================
+ const handleSend = async () => {
+  if (!selectedGroup || (!input.trim() && !selectedFile)) return;
+  const optimisticMessage = {
+    id: Date.now(),
+    message: input,
+    user_id: user?.id,
+    user: user, 
+    image: previewUrl,
+    created_at: new Date().toISOString(),
+    isSending: true, 
   };
 
-  const handleSend = async () => {
-    if (!selectedGroup || (!input.trim() && !selectedFile)) return;
-    const formData = new FormData();
-    formData.append("message", input);
-    if (selectedFile) {
-      formData.append("image", selectedFile);
-    }
-    try {
-      const res = await axios.post(
-        `http://localhost:8000/api/groups/${selectedGroup.id}/messages`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data"
-          }
+  setMessages(prev => [...prev, optimisticMessage]);
+  const currentInput = input; 
+  setInput("");
+  setSelectedFile(null);
+  setPreviewUrl(null);
+  setTimeout(scrollToBottom, 50);
+
+  // 3. دابا نصيفطو الـ FormData بصح للسيرفر
+  const formData = new FormData();
+  formData.append("message", currentInput);
+  if (selectedFile) {
+    formData.append("image", selectedFile);
+  }
+
+  try {
+    const res = await axios.post(
+      `http://localhost:8000/api/groups/${selectedGroup.id}/messages`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data"
         }
-      );
-      setMessages(prev => [...prev, res.data]);
-      setInput("");
-      setSelectedFile(null);
-      setPreviewUrl(null);
-      setTimeout(scrollToBottom, 100);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
+      }
+    );
+    setMessages(prev => 
+      prev.map(msg => msg.id === optimisticMessage.id ? res.data : msg)
+    );
+    
+  } catch (err) {
+    console.error(err);
+    setMessages(prev => prev.filter(msg => msg.id !== optimisticMessage.id));
+    setInput(currentInput);
+    alert(language === "ar" ? "فشل إرسال الرسالة" : "Échec de l'envoi");
+  }
+};
   return (
     <div className="AuthX_AppContainer_55">
       {/* LEFT SIDEBAR */}

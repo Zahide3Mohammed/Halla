@@ -67,6 +67,6 @@ Route::get('/groups/pending', [GroupController::class, 'getPendingGroup']);
 Route::post('/groups/random-join', [GroupController::class, 'joinRandomOrCreate']);
 Route::post('/groups/{groupId}/messages', [MessageController::class, 'store']);
 });
-
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 
