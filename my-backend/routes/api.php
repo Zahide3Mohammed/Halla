@@ -66,3 +66,4 @@ Route::post('/groups/{groupId}/messages', [MessageController::class, 'store']);
 });
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
+
