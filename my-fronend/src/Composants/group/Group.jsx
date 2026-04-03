@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect ,useCallback} from "react";
 import axios from "axios";
 import "./Group.css";
 import { useNavigate } from 'react-router-dom';
 import echo from './echo';
+import MapComponent from './MapComponent';
 
 function Group() {
  const [availableGroups, setAvailableGroups] = useState([]); 
@@ -14,17 +15,20 @@ function Group() {
 const [serverError, setServerError] = useState("");
 const [pendingRandomGroup, setPendingRandomGroup] = useState(null);
 
-  const [form, setForm] = useState({
+
+ const [form, setForm] = useState({
     name: "",
-    type_group: "Même color", 
+    type_group: "Même color",
     start_date: "",
     start_time: "",
     end_time: "",
     suggestion: "",
-    nationality_type: "same", 
+    nationality_type: "same",
     lieu_event: "",
-    image_event: null 
-});
+    latitude: null, // حقل جديد
+    longitude: null, // حقل جديد
+    image_event: null
+  });
 
 
   const handleChange = (e) => {
@@ -35,6 +39,7 @@ const [pendingRandomGroup, setPendingRandomGroup] = useState(null);
       setForm({ ...form, [name]: value });
     }
   };
+
 
   const fetchGroups = async () => {
     try {
@@ -61,6 +66,8 @@ const [pendingRandomGroup, setPendingRandomGroup] = useState(null);
   data.append("suggestion", form.suggestion || "");
   data.append("nationality_type", form.nationality_type);
   data.append("lieu_event", form.lieu_event || "");
+  data.append("latitude", form.latitude || "");
+    data.append("longitude", form.longitude || "");
   if (form.image_event) {
     data.append("image_event", form.image_event);
   }
@@ -115,14 +122,37 @@ const [pendingRandomGroup, setPendingRandomGroup] = useState(null);
 
 const [input,setInput] = useState("");
 
-const sendMessage = () => {
-if(!input) return;
-setMessages([
-...messages,
-{type:"user",text:input},
-{type:"ai",text:"Merci ! Je vais vous proposer une suggestion."}
-]);
-setInput("");
+const sendMessage = async () => {
+  if (!input) return;
+  
+  const userMsg = { type: "user", text: input };
+  setMessages(prev => [...prev, userMsg]);
+  setInput("");
+
+  // loading state
+  setMessages(prev => [...prev, { type: "ai", text: "..." }]);
+
+  try {
+    const token = sessionStorage.getItem("token");
+    const res = await axios.post(
+      "http://localhost:8000/api/ai/suggest",
+      { message: input },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    // بدل loading بالجواب الحقيقي
+    setMessages(prev => [
+      ...prev.slice(0, -1),
+      { type: "ai", text: res.data.reply }
+    ]);
+  } catch (err) {
+  console.log("ERROR:", err.response?.data); // ← زيد هادا
+  console.log("STATUS:", err.response?.status);
+  setMessages(prev => [
+    ...prev.slice(0, -1),
+    { type: "ai", text: "Erreur de connexion. Réessayez." }
+  ]);
+}
 };
 
 
@@ -210,6 +240,20 @@ useEffect(() => {
   fetchGroups();
   fetchMyCurrentSalon(); // عيط ليها هنا
 }, []);
+const MOROCCAN_CITIES = [
+  { name: "Fès", lat: 34.0331, lng: -5.0003 },
+  { name: "Casablanca", lat: 33.5731, lng: -7.5898 },
+  { name: "Rabat", lat: 34.0209, lng: -6.8416 },
+  { name: "Marrakech", lat: 31.6295, lng: -7.9811 },
+  { name: "Tanger", lat: 35.7595, lng: -5.8340 },
+  { name: "Agadir", lat: 30.4278, lng: -9.5981 },
+  { name: "Meknès", lat: 33.8935, lng: -5.5473 },
+  { name: "Oujda", lat: 34.6867, lng: -1.9114 },
+  { name: "Kénitra", lat: 34.2610, lng: -6.5802 },
+  { name: "Tétouan", lat: 35.5785, lng: -5.3684 },
+  { name: "Safi", lat: 32.2994, lng: -9.2372 },
+  { name: "El Jadida", lat: 33.2316, lng: -8.5007 }
+];
   return (
     <div className="sketch-app-container_grp">
       <div className="main-content_grp">
@@ -245,32 +289,36 @@ useEffect(() => {
                   </div>
 
             <div className="evente-grid_grp">
-              <div className="cards-scrollable_grp">
-               {availableGroups
-                .filter(group => !filterColor || group.creator?.color === filterColor)
-                .map(group => (
-                  <div className="sketch-card-horizontal_grp" key={group.id}>
-                    <div className="card-image-section_grp"><img src={`http://localhost:8000/storage/${group.image_event}`} alt="Group Event" onError={(e) => e.target.src = "https://via.placeholder.com/150"} /></div>
-                    <div className="card-info-section_grp">
-                      <h3 className="group-name-title_grp">{group.name}</h3>
-                      <p className="suggestion-label_grp">Suggestion du jour:{group.suggestion}</p>
-                      <div className="meta-row_grp">
-                        <div className="meta-data_grp">
-                          <p>date: {group.start_date}</p>
-                          <p>derur: {group.start_time}</p>
-                          <p>lieu: {group.lieu_event}</p>
-                        </div>
-                        <div className="meta-action_grp">
-<span className="count-label_grp"> 👥 {group.users_count ?? 0}/5</span>                          <button className="rejoindre-btn-green_grp" onClick={() => joinGroup(group.id)}>Rejoindre</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="map-sidebar_grp">
-                <div className="sketch-map-placeholder_grp">map</div>
-              </div>
+            <div className="cards-scrollable_grp">
+  {availableGroups
+    .filter(group => !filterColor || group.creator?.color === filterColor)
+    .map(group => (
+      <div className="sketch-card-horizontal_grp" key={group.id}>
+        <div className="card-image-section_grp">
+          <img src={`http://localhost:8000/storage/${group.image_event}`} alt="Group Event" onError={(e) => e.target.src = "https://via.placeholder.com/150"} />
+        </div>
+        <div className="card-info-section_grp">
+          <p className="suggestion-label_grp">Suggestion: {group.suggestion}</p>
+          <h3 className="group-name-title_grp">{group.name}</h3>
+          <div className="meta-data_grp">
+            <p>📅 {group.start_date}</p>
+            <p>⏱ {group.start_time}</p>
+            <p>📍 {group.lieu_event}</p>
+          </div>
+          <div className="meta-action_grp">
+            <span className="count-label_grp">👥 {group.users_count ?? 0}/5</span>
+            <button className="rejoindre-btn-green_grp" onClick={() => joinGroup(group.id)}>Rejoindre</button>
+          </div>
+        </div>
+      </div>
+    ))}
+</div>
+            <div className="map-sidebar_grp">
+   <div className="sketch-map-placeholder_grp" style={{ height: '400px', width: '100%' }}>
+      {/* صيفط الـ groups هنا */}
+      <MapComponent groups={availableGroups} /> 
+   </div>
+</div>
             </div>
           </div>
         ) : (
@@ -310,10 +358,34 @@ useEffect(() => {
                     <option value={'different'}>nationalités différentes</option>
                   </select>
                 </div>
-                <div className="sketch-field_grp">
-                  <label>Lieu de l'événement</label>
-                  <input name="lieu_event" onChange={handleChange} className="sketch-input_grp" />
-                </div>
+               <div className="sketch-field_grp">
+  <label>Lieu de l'événement (Ville)</label>
+  <select 
+    name="lieu_event" 
+    className="sketch-input_grp"
+    value={form.lieu_event} // باش يبقى الـ select شاد القيمة
+    onChange={(e) => {
+      const selectedCityName = e.target.value;
+      const cityData = MOROCCAN_CITIES.find(c => c.name === selectedCityName);
+
+      if (cityData) {
+        setForm(prev => ({
+          ...prev,
+          lieu_event: cityData.name,
+          latitude: cityData.lat,
+          longitude: cityData.lng
+        }));
+      }
+    }}
+  >
+    <option value="">-- Choisir une ville --</option>
+    {MOROCCAN_CITIES.map((city) => (
+      <option key={city.name} value={city.name}>
+        {city.name}
+      </option>
+    ))}
+  </select>
+</div>
               <div className="sketch-field_grp">
       <label>Image de l'événement</label>
   <input 

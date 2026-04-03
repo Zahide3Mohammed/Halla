@@ -15,12 +15,15 @@ class GroupController extends Controller
         // كنقولو ليه جيب المجموعات مع المنشئ ديالهم وعدد المستخدمين
     return Group::with('creator')->withCount('users')->get();
     }
-   public function store(Request $request)
+  public function store(Request $request)
 {
     $request->validate([
         'name' => 'required|string|max:100',
         'type_group' => 'required|in:Même color,color different',
         'lieu_event' => 'required|string|max:255',
+        // 🔥 زيد هاد الجوج في الـ Validation
+        'latitude' => 'required|numeric', 
+        'longitude' => 'required|numeric',
         'start_date' => 'required|date',
         'start_time' => 'required',
         'end_time' => 'required',
@@ -31,16 +34,17 @@ class GroupController extends Controller
 
     $today = now()->toDateString();
     
-   $exist = Group::where('creator_id', auth()->id())
+    $exist = Group::where('creator_id', auth()->id())
                   ->whereDate('created_at', $today)
-                  ->where('name', 'NOT LIKE', 'Salon %') // كيتجاهل الصالونات العشوائية
+                  ->where('name', 'NOT LIKE', 'Salon %')
                   ->first();
 
     if ($exist) {
         return response()->json(["message" => "لقد قمت بإنشاء مجموعة بالفعل اليوم"], 400);
     }
 
-    $data = $request->all();
+    // هاد السطر كياخد كاع البيانات بما فيها latitude و longitude
+    $data = $request->all(); 
     $data['creator_id'] = auth()->id();
 
     if ($request->hasFile('image_event')) {
@@ -48,11 +52,10 @@ class GroupController extends Controller
         $data['image_event'] = $path;
     }
 
-    $group = Group::create($data);
+    $group = Group::create($data); // دابا غيتسجلو حيت ولاو ف الـ data
     $group->users()->attach(auth()->id());
 
-    // 🔥 السطر السحري: إرسال الحدث لكل المستخدمين
-    // استعملنا load و loadCount باش البيانات تمشي كاملة للـ React
+    // تأكد بلي صيفطي البيانات كاملة للـ Broadcast باش الخريطة تتحدث عند لخرين
     broadcast(new \App\Events\GroupCreated($group->load('creator')->loadCount('users')))->toOthers();
 
     return response()->json([
@@ -150,20 +153,21 @@ public function joinRandomOrCreate()
             $group->users()->attach($user->id);
         }
     } else {
-        // 2. إنشاء صالون جديد إذا لم يوجد
-        $group = Group::create([
-            'name' => "Salon " . ucfirst($userColor),
-            'type_group' => 'Même color',
-            'creator_id' => $user->id,
-            'start_date' => $today,
-            'start_time' => now()->format('H:i'),
-            'end_time' => now()->addHours(2)->format('H:i'),
-            'lieu_event' => 'Online',
-            'nationality_type' => 'same',
-            'suggestion' => 'Recherche automatique : Amusez-vous !',
-        ]);
-        $group->users()->attach($user->id);
-    }
+    $group = Group::create([
+        'name' => "Salon " . ucfirst($userColor),
+        'type_group' => 'Même color',
+        'creator_id' => $user->id,
+        'start_date' => $today,
+        'start_time' => now()->format('H:i'),
+        'end_time' => now()->addHours(2)->format('H:i'),
+        'lieu_event' => 'Fès (Online)', // مثلا
+        'latitude' => 34.0331,  // زيد قيمة افتراضية للصالونات
+        'longitude' => -5.0003, // باش يبانو ف الخريطة
+        'nationality_type' => 'same',
+        'suggestion' => 'Recherche automatique : Amusez-vous !',
+    ]);
+    $group->users()->attach($user->id);
+}
 
     // 🔥 التعديل الضروري 1: إعادة تحميل الحساب والبيانات قبل الإرسال
     $group->load('creator');

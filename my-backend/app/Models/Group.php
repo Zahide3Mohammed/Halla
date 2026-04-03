@@ -17,7 +17,9 @@ class Group extends Model
     "suggestion",
     "nationality_type",
     "creator_id",
-    "lieu_event",   // ضروري تزيد هادي
+    "lieu_event", 
+    'latitude',   // ضروري يكون هنا
+    'longitude', // ضروري تزيد هادي
     "image_event"   // و هادي
 ];
     public function users(){

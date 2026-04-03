@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Broadcast;
+use App\Http\Controllers\AiController;
 
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -65,5 +66,7 @@ Route::get('/groups/pending', [GroupController::class, 'getPendingGroup']);
 Route::post('/groups/{groupId}/messages', [MessageController::class, 'store']);
 });
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
+// routes/api.php
+Route::post('/ai/suggest', [AiController::class, 'suggest'])->middleware('auth:sanctum');
 
 
