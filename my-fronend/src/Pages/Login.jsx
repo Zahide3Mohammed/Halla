@@ -132,7 +132,7 @@ export default function Login() {
     try {
       const res = await axios.post("http://localhost:8000/api/login", credentials);
       loginContext(res.data.user, res.data.token);
-      navigate('/Profile');
+      navigate('/HallaClub');
     } catch (err) {
       setErrors({ signin: err.response?.data?.message || "Erreur login" });
     }
@@ -300,7 +300,7 @@ export default function Login() {
             </button>
             <div className="AuthX_SwitcherLink_Container_19">
               <span>{t.check3}</span>
-              <button type="button" className="AuthX_TextLink_Btn_04" onClick={() => setStep(1)}>
+              <button  className="AuthX_TextLink_Btn_04" onClick={() => setStep(1)}>
                 {t.check4}
               </button>
             </div>

@@ -21,6 +21,7 @@ import PostDetails from "./Composants/Club/PostDetails";
 import HotelAIFinder from "./Composants/accueil/accueil";
 import Group from "./Composants/group/Group";
 import UserProfile from "./Pages/othersProfile";
+import { Analytics } from "@vercel/analytics/react"
 
 
 export default function App() {
@@ -51,6 +52,7 @@ export default function App() {
               <Route path="/post/:id" element={<PostDetails />} />
               <Route path="/profile/:id" element={<UserProfile />} />
             </Route>
+            <Analytics />
              
     </Routes>
     </BrowserRouter>  

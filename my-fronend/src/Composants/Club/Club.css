@@ -186,6 +186,78 @@
 }
 
 .user-avatar-link:hover {
-    transform: scale(1.1); /* تكبر التصويرة شوية ملي يتحط عليها الماوس */
+    transform: scale(1.1); 
     cursor: pointer;
+}
+/*-------------------------------- Mobile Responsive (Phones) ---------------------------------------------- */
+@media (max-width: 600px) {
+  .AuthX_ClubApp_Wrapper_55 {
+    padding: 5px 0;
+  }
+  .AuthX_MainGrid_Layout_55 {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 0 8px;
+  }
+  .AuthX_LeftNav_Aside_55, 
+  .AuthX_RightWidgets_Aside_55 {
+    display: none;
+  }
+  .AuthX_CreatePost_Card_55 {
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+
+  .AuthX_PostInput_Control_55 {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+
+  .AuthX_Option_Btn_55 {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .AuthX_PostItem_Card_55 {
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+
+  .AuthX_AuthorName_Txt_55 {
+    font-size: 15px;
+  }
+
+  .AuthX_PostItem_Content_55 p {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .AuthX_PostItem_Media_55 img {
+    max-height: 400px;
+  }
+  .AuthX_PostActions_Flex_55 {
+    justify-content: space-between;
+    gap: 5px;
+  }
+
+  .AuthX_Action_Btn_55 {
+    padding: 8px 5px;
+    font-size: 13px;
+    flex: 1;
+    justify-content: center;
+  }
+  .AuthX_CommentsSection_Box_55 {
+    padding: 10px;
+    margin-top: 15px;
+  }
+
+  .AuthX_CommentBubble_Txt_55 {
+    padding: 10px;
+  }
+  .AuthX_Avatar_Wrap_55.AuthX_SizeMd_55 { 
+    width: 36px; 
+    height: 36px; 
+  }
 }

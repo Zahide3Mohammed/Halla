@@ -166,3 +166,87 @@
 .AuthX_AvatarWrapper_55 { position: relative; }
 .AuthX_PreviewImg_55 { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; }
 .AuthX_ClosePreview_55 { position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; }
+/* ============================================================
+   --- FINAL MOBILE RESPONSIVE (AuthX App) ---
+   ============================================================ */
+
+
+
+/* تعديلات للأجهزة الصغيرة بزاف */
+@media (max-width: 400px) {
+  .AuthX_MsgBubble_55 {
+    max-width: 92%;
+  }
+  
+  .AuthX_Option_Btn_55 {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}
+/* --- Mobile Responsive Fix (بلا ما نبدل ليك الستايل ديالك) --- */
+@media (max-width: 850px) {
+  
+  /* 1. السايدبار اللي فيه لستة ديال المجموعات */
+  .AuthX_SidebarLeft_55 {
+    position: fixed;
+    left: -280px; /* كيبقى مخبي في الجنب */
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+    transition: left 0.3s ease-in-out;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+  }
+
+  /* هاد الكلاص غاتزيدو للسايدبار بالـ JS باش يتحل */
+  .AuthX_SidebarLeft_55.active_mobile {
+    left: 0;
+  }
+
+  /* 2. السايدبار ديال اليمن (Members/Goals) غانخبوه باش نربحو الاتساع */
+  .AuthX_SidebarRight_55 {
+    display: none;
+  }
+
+  /* 3. منطقة الشات تاخد العرض كامل */
+  .AuthX_ChatWindow_55 {
+    width: 100%;
+    flex: none;
+  }
+
+  /* 4. تصحيح مشكل الـ 10% اللي كان عندك في الـ Row */
+  .AuthX_MsgRow_55 {
+    width: 100% !important; /* باش الرسالة تقدر تمشي لليمن ولا ليسر */
+  }
+
+  /* 5. فقاعة الرسالة (Bubble) */
+  .AuthX_MsgBubble_55 {
+    max-width: 85%; /* باش تجي باينة مزيان في التلفون */
+  }
+
+  /* 6. الـ Overlay (الخلفية اللي كتغطي الشات ملي كيتحل المنيو) */
+  .AuthX_MobileOverlay_55 {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 999;
+    display: none;
+  }
+
+  .AuthX_MobileOverlay_55.show {
+    display: block;
+  }
+
+  /* زر المنيو (Hamburger) خاصك تزيدو في الهيدر ودير ليه هاد الستايل */
+  .AuthX_MobileToggle_Btn {
+    display: block !important;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 10px;
+  }
+}
+
+/* هاد الزر خبوه في الـ Desktop */
+.AuthX_MobileToggle_Btn {
+  display: none;
+}

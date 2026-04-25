@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 
-// مركز افتراضي (فاس مثلاً) باش الماب ما تخرجش في البحر
 const mapCenter = { lat: 34.0331, lng: -5.0003 };
 
 function MapComponent({ groups }) {
@@ -17,15 +16,11 @@ function MapComponent({ groups }) {
   return (
     <GoogleMap
       mapContainerStyle={{ width: '100%', height: '100%' }}
-      // جرب تبدل السنتر لـ mapCenter باش يركز على بلاصة فيها الـ Satellite باين
       center={mapCenter} 
       zoom={12}
       options={{ 
-        // ❌ حيد disableDefaultUI أو ردها false باش يبانو الأزرار
         disableDefaultUI: false, 
-        // ✅ فعل هادي باش ترجع الزر ديال Map/Satellite
         mapTypeControl: true,
-        // ستايل اختياري باش تحيد الـ POIs (الحوانت والقهوات) وتبقى الخريطة نقية
         styles: [
           { featureType: "poi", stylers: [{ visibility: "off" }] }
         ]
