@@ -8,7 +8,6 @@ use App\Models\Message;
 class MessageController extends Controller
 {
     public function fetchMessages($groupId) {
-        // تأكد أن الموديل Message خدام
         return Message::where('group_id', $groupId)
                       ->with('user:id,prenom,photo')
                       ->oldest()
@@ -29,9 +28,9 @@ public function store(Request $request, $groupId) {
         $path = $request->file('image')->store('chat_images', 'public');
         $message->file_path = $path;
         $message->type = 'image';
-        $message->content = $request->message; // يقدر يصيفط نص مع الصورة
+        $message->content = $request->message; 
     } else {
-        $message->content = $request->message; // Emojis كيتسيفاو هنا عادي
+        $message->content = $request->message;
         $message->type = 'text';
     }
 

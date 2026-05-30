@@ -10,12 +10,13 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Broadcast;
 use App\Http\Controllers\AiController;
-
+use App\Http\Controllers\HotelController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/personalitytest', [AuthController::class, 'personalitytest']);
 Route::post('/check-email', [AuthController::class, 'checkEmail']);
+Route::post('/recommendations', [HotelController::class, 'getRecommendations']);
 
 Route::middleware('auth:sanctum')->post('/delete-account', [AuthController::class, 'deleteAccount']);
 Route::middleware('auth:sanctum')->post('/change-password', [AuthController::class, 'changePassword']);
@@ -35,7 +36,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/posts/{id}/toggle-like', [PostController::class, 'toggleLike']);
     Route::get('/my-liked-posts', [PostController::class, 'getLikedPosts']);
 
-   // بدل {post} بـ {id} باش تطابق مع الـ Axios اللي عندك
 Route::get('/posts/{id}/comments', [CommentController::class, 'index']);
 Route::post('/posts/{id}/comments', [CommentController::class, 'store']);
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
@@ -48,11 +48,7 @@ Route::post('/posts/{id}/comments', [CommentController::class, 'store']);
     Route::get('/find-friends', [PostController::class, 'suggestUsers']);
     Route::post('/friend-request/{friend_id}', [PostController::class, 'sendRequest']);
 });
- // routes de composent de groups
- Route::get('/groups',[GroupController::class,'index']);
-
-// routes/api.php
-
+Route::get('/groups',[GroupController::class,'index']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/groups', [GroupController::class, 'store']);
     Route::post('/groups/{id}/join', [GroupController::class, 'join']);
