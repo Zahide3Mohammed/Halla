@@ -197,5 +197,21 @@ public function getPendingGroup()
     ]);
 }
 
+public function myCurrentSalon(Request $request)
+{
+    try {
+        $user = $request->user();
 
+        $group = $user->groups()
+            ->withCount('users')           // ✅ هاد السطر ضروري أولاً
+            ->having('users_count', '<', 5) // ✅ دابا يخدم
+            ->latest()
+            ->first();
+
+        return response()->json(['group' => $group]);
+
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
 }
