@@ -145,9 +145,8 @@ export default function Chat() {
         }
     };
 
-    return (
-        <div className="AuthX_AppContainer_55" style={{"--user-main-color": user?.color || "#6366f1"}}>
-            
+return (
+       <div className="AuthX_AppContainer_55" style={{"--user-main-color": user?.color || "#6366f1"}}>       
             {/* LEFT SIDEBAR: Navigation */}
             <aside className="AuthX_SidebarLeft_55">
                 <h2 className="AuthX_SidebarTitle_55">Mes Chats</h2>

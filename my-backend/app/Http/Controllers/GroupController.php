@@ -11,8 +11,6 @@ class GroupController extends Controller
 {
     public function index()
     {
-       
-        // كنقولو ليه جيب المجموعات مع المنشئ ديالهم وعدد المستخدمين
     return Group::with('creator')->withCount('users')->get();
     }
   public function store(Request $request)
@@ -21,7 +19,6 @@ class GroupController extends Controller
         'name' => 'required|string|max:100',
         'type_group' => 'required|in:Même color,color different',
         'lieu_event' => 'required|string|max:255',
-        // 🔥 زيد هاد الجوج في الـ Validation
         'latitude' => 'required|numeric', 
         'longitude' => 'required|numeric',
         'start_date' => 'required|date',
@@ -33,17 +30,13 @@ class GroupController extends Controller
     ]);
 
     $today = now()->toDateString();
-    
     $exist = Group::where('creator_id', auth()->id())
                   ->whereDate('created_at', $today)
                   ->where('name', 'NOT LIKE', 'Salon %')
                   ->first();
-
     if ($exist) {
         return response()->json(["message" => "لقد قمت بإنشاء مجموعة بالفعل اليوم"], 400);
     }
-
-    // هاد السطر كياخد كاع البيانات بما فيها latitude و longitude
     $data = $request->all(); 
     $data['creator_id'] = auth()->id();
 
@@ -51,13 +44,9 @@ class GroupController extends Controller
         $path = $request->file('image_event')->store('groups_images', 'public');
         $data['image_event'] = $path;
     }
-
-    $group = Group::create($data); // دابا غيتسجلو حيت ولاو ف الـ data
+    $group = Group::create($data); 
     $group->users()->attach(auth()->id());
-
-    // تأكد بلي صيفطي البيانات كاملة للـ Broadcast باش الخريطة تتحدث عند لخرين
     broadcast(new \App\Events\GroupCreated($group->load('creator')->loadCount('users')))->toOthers();
-
     return response()->json([
         "message" => "تم إنشاء المجموعة بنجاح",
         "group" => $group
@@ -65,26 +54,18 @@ class GroupController extends Controller
 }
     public function join($id)
     {
-        // جلب المجموعة مع بيانات المنشئ للتحقق من اللون
         $group = Group::with('creator')->findOrFail($id);
         $user = auth()->user(); 
-
-        // 1. التحقق من السعة (الحد الأقصى 5 أشخاص)
         if ($group->users()->count() >= 5) {
             return response()->json(["message" => "المجموعة ممتلئة"], 400);
         }
-
-        // 2. التحقق من عدم التكرار
         if ($group->users()->where('user_id', $user->id)->exists()) {
             return response()->json(["message" => "أنت عضو بالفعل في هذه المجموعة"], 400);
         }
-
-        // 3. منطق فحص لون الشخصية (Personality Color)
-        $creatorColor = $group->creator->color; // لون الشخص الذي أنشأ المجموعة
-        $userColor = $user->color;             // لون الشخص الذي يريد الانضمام الآن
+        $creatorColor = $group->creator->color; 
+        $userColor = $user->color;            
 
         if ($group->type_group === 'Même color') {
-            // شرط: يجب أن يكون اللون متطابقاً
             if ($userColor !== $creatorColor) {
                 return response()->json([
                     "message" => "عذراً، هذه المجموعة مخصصة لأصحاب اللون $creatorColor فقط"
@@ -112,16 +93,13 @@ $group->loadCount('users');
     ]);    }
    public function getMyGroups() {
     $user = auth()->user();
-    
-    // كنجيبو المجموعات اللي اليوزر عضو فيها
-    $groups = $user->groups()
+        $groups = $user->groups()
                    ->withCount('users')
                    ->with('users:id,nom,prenom,photo') // 🔥 هادي ضرورية باش يبانو الأعضاء في React
                    ->get()
                    ->filter(function($group) {
-                       // كنخليو غير المجموعات اللي مكمولة (5 أعضاء)
                        return $group->users_count == 5;
-                   })->values(); // values() باش نعاودو نرتبو الـ Array
+                   })->values(); 
 
     return response()->json($groups);
 }
