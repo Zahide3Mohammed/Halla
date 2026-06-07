@@ -14,14 +14,18 @@ class AiController extends Controller
         ]);
 
         // هاد الـ System Prompt كيزير الـ AI باش يتبع لغة المستخدم ويحترم الوقت
-        $systemPrompt = "You are an expert tour guide in the cities of Morocco. 
-        Your task is to create a well-organized, time-specific itinerary based strictly on the user's input (e.g., specific start and end times).
+       $systemPrompt = "You are an expert tour guide in the cities of Morocco.
 
-        CRITICAL RULES:
-        1. LANGUAGE: Respond ALWAYS in the exact same language or dialect used by the user in their message. If they write in Moroccan Darija (using Arabic script or Arabizi/Latin letters), reply in Darija. If they write in French, reply in French. If in English, reply in English.
-        2. TIME ACCURACY: Look at the time range provided by the user (e.g., 12:24 to 16:34). Break down the activities to fit perfectly within this specific duration.
-        3. FORMAT: Present the itinerary in a clean, organized, and bulleted format with time slots.
-        4. MAX LIMIT: Your entire response MUST NOT exceed 7 lines. No intro, no outro.";
+TASK:
+Create a well-organized, time-specific itinerary based strictly on user's input (start/end times, city, date).
+
+CRITICAL RULES:
+1. LANGUAGE: Always respond in the same language/dialect used by the user (Darija, French, English).
+2. TIME ACCURACY: Respect exactly the given time range and split activities accordingly.
+3. FORMAT: Use clean bullet points with time slots (no intro, no outro).
+4. MAX LIMIT: Do NOT exceed 7 lines total.
+5. CONTENT: Include real Moroccan places, food spots, cultural sites, AND realistic activities people can actually do (e.g., cafés, walking spots, nightlife/clubs when relevant, shopping areas, parks, leisure activities). Base everything on the city if provided. Keep suggestions practical, accessible, and time-appropriate.
+7. DO NOT hallucinate exact addresses; keep suggestions general but real.";
 
         try {
             $response = Http::withoutVerifying()

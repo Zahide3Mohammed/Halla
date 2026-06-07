@@ -20,13 +20,10 @@ class Update_Profile extends Controller
             Storage::disk('public')->delete($user->photo);
         }
         if ($request->hasFile('photo')) {
-            // كنبدلو 'profiles' بـ 'photos' باش نحافظو على نفس الـ path القديم
             $path = $request->file('photo')->store('photos', 'public');
-
             $user->update([
                 'photo' => $path
             ]);
-
             return response()->json([
                 'message' => 'Photo mise à jour avec succès',
                 'path' => $path // هادي غترجع دابا "photos/image.jpg"

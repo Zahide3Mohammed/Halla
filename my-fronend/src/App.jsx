@@ -57,7 +57,8 @@ export default function App() {
               <Route path="/post/:id" element={<PostDetails />} />
               <Route path="/profile/:id" element={<UserProfile />} />
             </Route>
-           
+
+
     </Routes>
     </BrowserRouter>  
   </>
