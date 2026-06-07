@@ -2,17 +2,17 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../Elementes/LanguageContext";
 import { translationsLayout } from "../Elementes/translations/translationsLayout";
-import axios from "axios"; // Zadna axios
+import axios from "axios"; 
 import "./Profile.Module.css";
 import { Link } from "react-router";
 
 export default function Profile() {
-  const { user, token } = useAuth(); // Zadna token hna
+  const { user, token } = useAuth();
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [t3t,setT3t] =useState();
   const { language } = useLanguage();
   const [loading, setLoading] = useState(true);
-  const [myPosts, setMyPosts] = useState([]); // State jdid l-posts
+  const [myPosts, setMyPosts] = useState([]); 
   const t = translationsLayout[language];
 
   useEffect(() => {
