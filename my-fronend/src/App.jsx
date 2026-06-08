@@ -24,6 +24,8 @@ import UserProfile from "./Pages/othersProfile";
 import { Analytics } from "@vercel/analytics/react"
 
 
+
+
 export default function App() {
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -33,6 +35,9 @@ export default function App() {
   return <>   
    <BrowserRouter> 
   <GlobalLoader /> 
+   <Analytics />
+             
+
   <Routes>
       <Route path="/" element={<Home /> } />
       <Route path="/Login" element={<Login />} />
@@ -52,6 +57,8 @@ export default function App() {
               <Route path="/post/:id" element={<PostDetails />} />
               <Route path="/profile/:id" element={<UserProfile />} />
             </Route>
+
+
     </Routes>
     </BrowserRouter>  
   </>
