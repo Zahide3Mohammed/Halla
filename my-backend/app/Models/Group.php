@@ -18,15 +18,14 @@ class Group extends Model
     "nationality_type",
     "creator_id",
     "lieu_event", 
-    'latitude',   // ضروري يكون هنا
-    'longitude', // ضروري تزيد هادي
-    "image_event"   // و هادي
+    'latitude',  
+    'longitude', 
+    "image_event"
 ];
     public function users(){
-
         return $this->belongsToMany(User::class);
-
     }
+    
     public function creator(){
     return $this->belongsTo(User::class,'creator_id');
 }
