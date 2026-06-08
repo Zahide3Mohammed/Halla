@@ -8,6 +8,13 @@ app = Flask(__name__)
 try:
     with open('model.pkl', 'rb') as f:
         model = pickle.load(f)
+        print(type(model))
+        print(model[0])
+        print(model[1])
+        print(model[2])
+        print(model[3])
+
+        
 except Exception as e:
     print(f"CRITICAL ERROR LOADING MODEL: {str(e)}")
 
@@ -17,6 +24,7 @@ def predict():
         data = request.get_json()
         print("\n=== DATA RECEIVED FROM LARAVEL ===")
         print(data)
+      
         
         city = data.get('city', 'Marrakech')
         

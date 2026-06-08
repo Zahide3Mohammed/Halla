@@ -1,4 +1,4 @@
-import { useState, useEffect ,useCallback} from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import "./Group.css";
 import { useNavigate } from 'react-router-dom';
@@ -6,17 +6,16 @@ import echo from './echo';
 import MapComponent from './MapComponent';
 
 function Group() {
- const [availableGroups, setAvailableGroups] = useState([]); 
+  const [availableGroups, setAvailableGroups] = useState([]); 
   const [activeTab, setActiveTab] = useState('evente'); 
   const navigate = useNavigate();
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState({});
   const [filterColor, setFilterColor] = useState(null);
   const [activeGroup, setActiveGroup] = useState(null); 
-const [serverError, setServerError] = useState("");
-const [pendingRandomGroup, setPendingRandomGroup] = useState(null);
+  const [serverError, setServerError] = useState("");
+  const [pendingRandomGroup, setPendingRandomGroup] = useState(null);
 
-
- const [form, setForm] = useState({
+  const [form, setForm] = useState({
     name: "",
     type_group: "Même color",
     start_date: "",
@@ -25,11 +24,10 @@ const [pendingRandomGroup, setPendingRandomGroup] = useState(null);
     suggestion: "",
     nationality_type: "same",
     lieu_event: "",
-    latitude: null, // حقل جديد
-    longitude: null, // حقل جديد
+    latitude: null,
+    longitude: null,
     image_event: null
   });
-
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -40,11 +38,9 @@ const [pendingRandomGroup, setPendingRandomGroup] = useState(null);
     }
   };
 
-
   const fetchGroups = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/groups");
-      // 🔥 تحديث: تصفية المجموعات باش ميبانوش "Salons" ويكون العدد أقل من 5
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/groups`);
       const filtered = res.data.filter(g => 
         g.users_count < 5 && 
         !g.name.startsWith("Salon")
@@ -56,49 +52,54 @@ const [pendingRandomGroup, setPendingRandomGroup] = useState(null);
   };
 
   const createGroup = async () => {
-  const currentToken = sessionStorage.getItem("token");
-  const data = new FormData();
-  data.append("name", form.name || "");
-  data.append("type_group", form.type_group);
-  data.append("start_date", form.start_date || "");
-  data.append("start_time", form.start_time || "");
-  data.append("end_time", form.end_time || "");
-  data.append("suggestion", form.suggestion || "");
-  data.append("nationality_type", form.nationality_type);
-  data.append("lieu_event", form.lieu_event || "");
-  data.append("latitude", form.latitude || "");
+    const currentToken = sessionStorage.getItem("token");
+    const data = new FormData();
+    data.append("name", form.name || "");
+    data.append("type_group", form.type_group);
+    data.append("start_date", form.start_date || "");
+    data.append("start_time", form.start_time || "");
+    data.append("end_time", form.end_time || "");
+    data.append("suggestion", form.suggestion || "");
+    data.append("nationality_type", form.nationality_type);
+    data.append("lieu_event", form.lieu_event || "");
+    data.append("latitude", form.latitude || "");
     data.append("longitude", form.longitude || "");
-  if (form.image_event) {
-    data.append("image_event", form.image_event);
-  }
-  try {
-    const response = await axios.post("http://localhost:8000/api/groups", data, {
-      headers: {
-        'Authorization': `Bearer ${currentToken}`,
-        'Accept': 'application/json',
-        'Content-Type': 'multipart/form-data',
-      }
-    });
-    alert("Succès!");
-    setActiveTab('evente');
-    fetchGroups();
-  } catch (err) {
-    const serverErrors = err.response?.data?.errors;
-    if (serverErrors) {
-        const firstError = Object.values(serverErrors)[0][0];
-        setServerError(firstError);
-    } else {
-        setServerError(err.response?.data?.message || "Erreur de connexion au serveur");
+    if (form.image_event) {
+      data.append("image_event", form.image_event);
     }
-    setTimeout(() => setServerError(""), 5000);
-}
-};
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups`, data, {
+        headers: {
+          'Authorization': `Bearer ${currentToken}`,
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+        }
+      });
+      alert("Succès!");
+      setActiveTab('evente');
+      fetchGroups();
+    } catch (err) {
+      const serverErrors = err.response?.data?.errors;
+      if (serverErrors) {
+          const firstError = Object.values(serverErrors)[0][0];
+          setServerError(firstError);
+      } else {
+          setServerError(err.response?.data?.message || "Erreur de connexion au serveur");
+      }
+      setTimeout(() => setServerError(""), 5000);
+    }
+  };
+
+  // 🛠️ تم إصلاح الرابط والـ Headers هنا لمنع الـ CORS والـ 404
   const joinGroup = async (id) => {
     try {
       const token = sessionStorage.getItem('token'); 
-      const response = await axios.post(`http://localhost:8000/api/groups/${id}/join`, {}, {
-        headers: { Authorization: `Bearer ${token}`, 
-        Accept: "application/json" }
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/${id}/join`, {}, {
+        headers: { 
+          'Authorization': `Bearer ${token}`, 
+          'Accept': "application/json",
+          'Content-Type': 'application/json'
+        }
       });
 
       alert("تم الانضمام!");
@@ -114,88 +115,115 @@ const [pendingRandomGroup, setPendingRandomGroup] = useState(null);
     }
   };
 
-  
-  const [messages,setMessages] = useState([
-    {type:"ai",text:"Ils peuvent vous aider with Suggestion du jou."},
-    {type:"ai",text:"Indiquez-moi simplement l'heure et le lieu."}
+  const [messages, setMessages] = useState([
+    { type: "ai", text: "Ils peuvent vous aider with Suggestion du jou." },
+    { type: "ai", text: "Indiquez-moi simplement l'heure et le lieu." }
   ]);
 
-const [input,setInput] = useState("");
+const [input, setInput] = useState("");
+const [loadingAI, setLoadingAI] = useState(false);
 
-const sendMessage = async () => {
-  if (!input) return;
-  
-  const userMsg = { type: "user", text: input };
-  setMessages(prev => [...prev, userMsg]);
+  const sendMessage = async () => {
+
+  if (!input.trim()) return;
+
+  const userMessage = {
+    type: "user",
+    text: input
+  };
+
+  setMessages(prev => [...prev, userMessage]);
+
+  const currentInput = input;
+
   setInput("");
 
-  // loading state
-  setMessages(prev => [...prev, { type: "ai", text: "..." }]);
+  setLoadingAI(true);
 
   try {
+
     const token = sessionStorage.getItem("token");
-    const res = await axios.post(
-      "http://localhost:8000/api/ai/suggest",
-      { message: input },
-      { headers: { Authorization: `Bearer ${token}` } }
+
+    const response = await axios.post(
+
+      `${import.meta.env.VITE_BACKEND_URL}/api/ai/suggest`,
+
+      {
+        message: currentInput
+      },
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json"
+        }
+      }
     );
 
-    // بدل loading بالجواب الحقيقي
-    setMessages(prev => [
-      ...prev.slice(0, -1),
-      { type: "ai", text: res.data.reply }
-    ]);
-  } catch (err) {
-  console.log("ERROR:", err.response?.data); // ← زيد هادا
-  console.log("STATUS:", err.response?.status);
-  setMessages(prev => [
-    ...prev.slice(0, -1),
-    { type: "ai", text: "Erreur de connexion. Réessayez." }
-  ]);
-}
-};
+    const aiMessage = {
+      type: "ai",
+      text: response.data.reply
+    };
 
+    setMessages(prev => [...prev, aiMessage]);
 
-  // parte Rejoignez un groupe aléatoire
-  const joinRandomGroup = async () => {
-  try {
-    const token = sessionStorage.getItem('token');
-    const response = await axios.post("http://localhost:8000/api/groups/random-join", {}, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    
-    const group = response.data.group;
- setPendingRandomGroup(group);
-
-    // إيلا كمل الجروب (5/5) ديه نيشان للشات
-    if (group.users_count >= 5) {
-      navigate(`/chat/${group.id}`);
-    } else {
-      // إيلا مزال، تقدر تخليه يتسنى أو تطلع ليه ميساج
-      setActiveGroup(group); 
-    }
   } catch (error) {
-    alert(error.response?.data?.message || "Error");
+
+    console.log(error);
+
+    setMessages(prev => [
+      ...prev,
+      {
+        type: "ai",
+        text: "⚠️ AI ma khdamch daba."
+      }
+    ]);
+
+  } finally {
+
+    setLoadingAI(false);
   }
 };
-useEffect(() => {
+
+  // 🛠️ تم إصلاح الرابط هنا أيضاً ليتطابق مع الـ API المحمية
+  const joinRandomGroup = async () => {
+    try {
+      const token = sessionStorage.getItem('token');
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/random-join`, {}, {
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Accept': "application/json",
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const group = response.data.group;
+      setPendingRandomGroup(group);
+
+      if (group.users_count >= 5) {
+        navigate(`/chat/${group.id}`);
+      } else {
+        setActiveGroup(group); 
+      }
+    } catch (error) {
+      alert(error.response?.data?.message || "Error");
+    }
+  };
+
+  useEffect(() => {
     const channel = echo.channel('groups-channel')
         .listen('.group.added', (data) => {
             const updatedGroup = data.group;
 
-            // 1. تحديث قائمة المجموعات (Evente Tab)
             setAvailableGroups((prev) => {
-                // إيلا كان صالون، ما يبانش في القائمة العامة
                 if (updatedGroup.name.startsWith("Salon")) {
                     return prev.filter(g => g.id !== updatedGroup.id);
                 }
 
-                // إيلا كمل 5، نحيدوه من القائمة
                 if (updatedGroup.users_count >= 5) {
                     return prev.filter(g => g.id !== updatedGroup.id);
                 }
 
-                // تحديث المجموعة إيلا كانت ديجا كاين أو زيادتها
                 const index = prev.findIndex(g => g.id === updatedGroup.id);
                 if (index > -1) {
                     const newGroups = [...prev];
@@ -205,55 +233,59 @@ useEffect(() => {
                 return [updatedGroup, ...prev];
             });
 
-            // 2. تحديث الصالون العشوائي (Pending Group)
             setPendingRandomGroup(prev => {
                 if (prev && prev.id === updatedGroup.id) {
-                    // إيلا وصل 5، التوجيه للشات
                     if (updatedGroup.users_count >= 5) {
                         setTimeout(() => navigate(`/chat/${updatedGroup.id}`), 1000);
                     }
-                    return { ...updatedGroup }; // تحديث مع الحفاظ على المرجعية
+                    return { ...updatedGroup };
                 }
                 return prev;
             });
         });
 
     return () => echo.leaveChannel('groups-channel');
-}, [navigate]);
+  }, [navigate]);
 
-const fetchMyCurrentSalon = async () => {
-  try {
-    const token = sessionStorage.getItem('token');
-    // هاد الـ Route خاصك تزيدو في Laravel يجيب آخر صالون دخل ليه اليوزر اليوم ومزال ما كملش
-    const res = await axios.get("http://localhost:8000/api/my-current-salon", {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if (res.data.group) {
-      setPendingRandomGroup(res.data.group);
+  const fetchMyCurrentSalon = async () => {
+    try {
+      const token = sessionStorage.getItem('token');
+      console.log(token);
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/my-current-salon`, {
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Accept': "application/json"
+        }
+        
+      });
+      if (res.data.group) {
+        setPendingRandomGroup(res.data.group);
+      }
+    } catch (err) {
+      console.log("No active salon found");
     }
-  } catch (err) {
-    console.log("No active salon found");
-  }
-};
+  };
 
-useEffect(() => {
-  fetchGroups();
-  fetchMyCurrentSalon(); // عيط ليها هنا
-}, []);
-const MOROCCAN_CITIES = [
-  { name: "Fès", lat: 34.0331, lng: -5.0003 },
-  { name: "Casablanca", lat: 33.5731, lng: -7.5898 },
-  { name: "Rabat", lat: 34.0209, lng: -6.8416 },
-  { name: "Marrakech", lat: 31.6295, lng: -7.9811 },
-  { name: "Tanger", lat: 35.7595, lng: -5.8340 },
-  { name: "Agadir", lat: 30.4278, lng: -9.5981 },
-  { name: "Meknès", lat: 33.8935, lng: -5.5473 },
-  { name: "Oujda", lat: 34.6867, lng: -1.9114 },
-  { name: "Kénitra", lat: 34.2610, lng: -6.5802 },
-  { name: "Tétouan", lat: 35.5785, lng: -5.3684 },
-  { name: "Safi", lat: 32.2994, lng: -9.2372 },
-  { name: "El Jadida", lat: 33.2316, lng: -8.5007 }
-];
+  useEffect(() => {
+    fetchGroups();
+    fetchMyCurrentSalon();
+  }, []);
+
+  const MOROCCAN_CITIES = [
+    { name: "Fès", lat: 34.0331, lng: -5.0003 },
+    { name: "Casablanca", lat: 33.5731, lng: -7.5898 },
+    { name: "Rabat", lat: 34.0209, lng: -6.8416 },
+    { name: "Marrakech", lat: 31.6295, lng: -7.9811 },
+    { name: "Tanger", lat: 35.7595, lng: -5.8340 },
+    { name: "Agadir", lat: 30.4278, lng: -9.5981 },
+    { name: "Meknès", lat: 33.8935, lng: -5.5473 },
+    { name: "Oujda", lat: 34.6867, lng: -1.9114 },
+    { name: "Kénitra", lat: 34.2610, lng: -6.5802 },
+    { name: "Tétouan", lat: 35.5785, lng: -5.3684 },
+    { name: "Safi", lat: 32.2994, lng: -9.2372 },
+    { name: "El Jadida", lat: 33.2316, lng: -8.5007 }
+  ];
+
   return (
     <div className="sketch-app-container_grp">
       <div className="main-content_grp">
@@ -279,46 +311,45 @@ const MOROCCAN_CITIES = [
               </div>
             </div>
 
-           <div className="filter-tags_grp">
-         <span className="tiny-label_grp" style={{ cursor: 'pointer', fontWeight: !filterColor ? 'bold' : 'normal' }} onClick={() => setFilterColor(null)} >All
-          </span>{['red', 'green', 'yellow', 'blue', 'purple'].map(color => ( <button key={color}  className={`color-tag_grp ${color} ${filterColor === color ? 'selected-border_grp' : ''}`} onClick={() => setFilterColor(color)}
-          >
-           {color}
-            </button>
-            ))}
-                  </div>
+            <div className="filter-tags_grp">
+              <span className="tiny-label_grp" style={{ cursor: 'pointer', fontWeight: !filterColor ? 'bold' : 'normal' }} onClick={() => setFilterColor(null)} >All</span>
+              {['red', 'green', 'yellow', 'blue', 'purple'].map(color => ( 
+                <button key={color} className={`color-tag_grp ${color} ${filterColor === color ? 'selected-border_grp' : ''}`} onClick={() => setFilterColor(color)}>
+                  {color}
+                </button>
+              ))}
+            </div>
 
             <div className="evente-grid_grp">
-            <div className="cards-scrollable_grp">
-  {availableGroups
-    .filter(group => !filterColor || group.creator?.color === filterColor)
-    .map(group => (
-      <div className="sketch-card-horizontal_grp" key={group.id}>
-        <div className="card-image-section_grp">
-          <img src={`http://localhost:8000/storage/${group.image_event}`} alt="Group Event" onError={(e) => e.target.src = "https://via.placeholder.com/150"} />
-        </div>
-        <div className="card-info-section_grp">
-          <p className="suggestion-label_grp">Suggestion: {group.suggestion}</p>
-          <h3 className="group-name-title_grp">{group.name}</h3>
-          <div className="meta-data_grp">
-            <p>📅 {group.start_date}</p>
-            <p>⏱ {group.start_time}</p>
-            <p>📍 {group.lieu_event}</p>
-          </div>
-          <div className="meta-action_grp">
-            <span className="count-label_grp">👥 {group.users_count ?? 0}/5</span>
-            <button className="rejoindre-btn-green_grp" onClick={() => joinGroup(group.id)}>Rejoindre</button>
-          </div>
-        </div>
-      </div>
-    ))}
-</div>
-            <div className="map-sidebar_grp">
-   <div className="sketch-map-placeholder_grp" style={{ height: '400px', width: '100%' }}>
-      {/* صيفط الـ groups هنا */}
-      <MapComponent groups={availableGroups} /> 
-   </div>
-</div>
+              <div className="cards-scrollable_grp">
+                {availableGroups
+                  .filter(group => !filterColor || group.creator?.color === filterColor)
+                  .map(group => (
+                    <div className="sketch-card-horizontal_grp" key={group.id}>
+                      <div className="card-image-section_grp">
+                        <img src={`${import.meta.env.VITE_BACKEND_URL}/storage/${group.image_event}`} alt="Group Event" onError={(e) => e.target.src = "https://via.placeholder.com/150"} />
+                      </div>
+                      <div className="card-info-section_grp">
+                        <p className="suggestion-label_grp">Suggestion: {group.suggestion}</p>
+                        <h3 className="group-name-title_grp">{group.name}</h3>
+                        <div className="meta-data_grp">
+                          <p>📅 {group.start_date}</p>
+                          <p>⏱ {group.start_time}</p>
+                          <p>📍 {group.lieu_event}</p>
+                        </div>
+                        <div className="meta-action_grp">
+                          <span className="count-label_grp">👥 {group.users_count ?? 0}/5</span>
+                          <button className="rejoindre-btn-green_grp" onClick={() => joinGroup(group.id)}>Rejoindre</button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+              <div className="map-sidebar_grp">
+                <div className="sketch-map-placeholder_grp" style={{ height: '400px', width: '100%' }}>
+                  <MapComponent groups={availableGroups} /> 
+                </div>
+              </div>
             </div>
           </div>
         ) : (
@@ -334,7 +365,7 @@ const MOROCCAN_CITIES = [
                 <div className="sketch-field_grp">
                   <label>type group:</label>
                   <select name="type_group" onChange={handleChange} className="sketch-input_grp">
-                    <option  value={"Même color"}>Même personnalité</option>
+                    <option value={"Même color"}>Même personnalité</option>
                     <option value={"color different"}>Personnage de Changeur</option>
                   </select>
                   {errors.type_group && <span className="error-text_grp">{errors.type_group[0]}</span>}
@@ -358,57 +389,57 @@ const MOROCCAN_CITIES = [
                     <option value={'different'}>nationalités différentes</option>
                   </select>
                 </div>
-               <div className="sketch-field_grp">
-  <label>Lieu de l'événement (Ville)</label>
-  <select 
-    name="lieu_event" 
-    className="sketch-input_grp"
-    value={form.lieu_event} // باش يبقى الـ select شاد القيمة
-    onChange={(e) => {
-      const selectedCityName = e.target.value;
-      const cityData = MOROCCAN_CITIES.find(c => c.name === selectedCityName);
+                <div className="sketch-field_grp">
+                  <label>Lieu de l'événement (Ville)</label>
+                  <select 
+                    name="lieu_event" 
+                    className="sketch-input_grp"
+                    value={form.lieu_event} 
+                    onChange={(e) => {
+                      const selectedCityName = e.target.value;
+                      const cityData = MOROCCAN_CITIES.find(c => c.name === selectedCityName);
 
-      if (cityData) {
-        setForm(prev => ({
-          ...prev,
-          lieu_event: cityData.name,
-          latitude: cityData.lat,
-          longitude: cityData.lng
-        }));
-      }
-    }}
-  >
-    <option value="">-- Choisir une ville --</option>
-    {MOROCCAN_CITIES.map((city) => (
-      <option key={city.name} value={city.name}>
-        {city.name}
-      </option>
-    ))}
-  </select>
-</div>
-              <div className="sketch-field_grp">
-      <label>Image de l'événement</label>
-  <input 
-    type="file" 
-    id="event-image-upload" 
-    name="image_event" 
-        accept="image/*"
-              onChange={handleChange}
-                 style={{ display: 'none' }} 
-  />
-  <label htmlFor="event-image-upload" className="big-plus-upload_grp">
-    {form.image_event ? (
-      <span className="file-name-ready_grp">✅ {form.image_event.name}</span>
-    ) : (
-      "+"
-    )}
-  </label>
-</div>
-{serverError && (
-    <div className="error-message-banner_grp">
-        ⚠️ {serverError}
-    </div>
-)}
+                      if (cityData) {
+                        setForm(prev => ({
+                          ...prev,
+                          lieu_event: cityData.name,
+                          latitude: cityData.lat,
+                          longitude: cityData.lng
+                        }));
+                      }
+                    }}
+                  >
+                    <option value="">-- Choisir une ville --</option>
+                    {MOROCCAN_CITIES.map((city) => (
+                      <option key={city.name} value={city.name}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="sketch-field_grp">
+                  <label>Image de l'événement</label>
+                  <input 
+                    type="file" 
+                    id="event-image-upload" 
+                    name="image_event" 
+                    accept="image/*"
+                    onChange={handleChange}
+                    style={{ display: 'none' }} 
+                  />
+                  <label htmlFor="event-image-upload" className="big-plus-upload_grp">
+                    {form.image_event ? (
+                      <span className="file-name-ready_grp">✅ {form.image_event.name}</span>
+                    ) : (
+                      "+"
+                    )}
+                  </label>
+                </div>
+                {serverError && (
+                    <div className="error-message-banner_grp">
+                        ⚠️ {serverError}
+                    </div>
+                )}
                 <div className="form-actions-bottom_grp">
                   <button className="btn-annuler-pink_grp" onClick={() => setActiveTab('evente')}>Annuler</button>
                   <button className="btn-cree-green_grp" onClick={createGroup}>crée</button>
@@ -417,46 +448,63 @@ const MOROCCAN_CITIES = [
 
               <div className="ai-column_grp">
                 <div className="ai-box-wrapper_grp">
-                  <h1 className="ai-title_grp">Conseil en IA</h1><div className="ai-suggestion-box-sketch_grp">
-      <div className="ai-chat-simulation_grp">
-                 {messages.map((msg,i)=>(
-               <div key={i} className={msg.type === "ai" ? "ai-msg_grp" : "user-msg_grp"}>
-             {msg.type === "ai" && <div className="ai-avatar_grp">🤖</div>}
-             <div className={msg.type === "ai" ? "bubble-grey_grp" : "bubble-white_grp"}>
-          {msg.text}
+                  <h1 className="ai-title_grp">Conseil en IA</h1>
+                  <div className="ai-suggestion-box-sketch_grp">
+                    <div className="ai-chat-simulation_grp">
+                      {messages.map((msg, i) => (
+                        <div key={i} className={msg.type === "ai" ? "ai-msg_grp" : "user-msg_grp"}>
+                          {msg.type === "ai" && <div className="ai-avatar_grp">🤖</div>}
+                          <div className={msg.type === "ai" ? "bubble-grey_grp" : "bubble-white_grp"}>
+                            {msg.text}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                   <div className="ai-input-bar_grp">
+
+  <input
+    value={input}
+    onChange={(e) => setInput(e.target.value)}
+    placeholder="Ask AI..."
+  />
+
+  <button
+    onClick={sendMessage}
+    disabled={loadingAI}
+  >
+    {loadingAI ? "..." : "➤"}
+  </button>
+
 </div>
-</div>
-))}
-</div>
-                   <div className="ai-input-bar_grp"> <input value={input} onChange={(e)=>setInput(e.target.value)}placeholder="Ask AI..."/><button onClick={sendMessage}>➤</button></div>
                   </div>
                 </div>
                 
-               <h3 className="h3_grp">Rejoignez un groupe aléatoire</h3>
-<div className="random-group-box-sketch_grp">
-  <div className="group-icon_grp">
-    {pendingRandomGroup?.users_count >= 5 ? "🚀" : "🎲"}
-  </div>
-  <p>
-    {pendingRandomGroup 
-      ? `Vous êtes dans le salon "${pendingRandomGroup.name}".`
-      : "Vous pouvez rejoindre un groupe aléatoire de personnes ayant la même personnalité que vous."
-    }
-  </p>
-  
-  <div className="group-users_grp">
-   <span className={pendingRandomGroup?.users_count >= 5 ? "text-success" : ""}>
-        👥 {pendingRandomGroup?.users_count || 0}/5
-    </span>
-  </div>
+                <h3 className="h3_grp">Rejoignez un groupe aléatoire</h3>
+                <div className="random-group-box-sketch_grp">
+                  <div className="group-icon_grp">
+                    {pendingRandomGroup?.users_count >= 5 ? "🚀" : "🎲"}
+                  </div>
+                  <p>
+                    {pendingRandomGroup 
+                      ? `Vous êtes dans le salon "${pendingRandomGroup.name}".`
+                      : "Vous pouvez rejoindre un groupe aléatoire de personnes ayant la même personnalité que vous."
+                    }
+                  </p>
+                  
+                  <div className="group-users_grp">
+                    <span className={pendingRandomGroup?.users_count >= 5 ? "text-success" : ""}>
+                        👥 {pendingRandomGroup?.users_count || 0}/5
+                    </span>
+                  </div>
 
-  <button 
-    className="btn-rejoin-large_grp" 
-    onClick={joinRandomGroup} // 🔥 ربط الدالة بالزر
-disabled={pendingRandomGroup !== null}  >
-    {pendingRandomGroup ? "En attente..." : "🎲 Rejoindre le groupe"}
-  </button>
-</div>
+                  <button 
+                    className="btn-rejoin-large_grp" 
+                    onClick={joinRandomGroup} 
+                    disabled={pendingRandomGroup !== null}  
+                  >
+                    {pendingRandomGroup ? "En attente..." : "🎲 Rejoindre le groupe"}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
