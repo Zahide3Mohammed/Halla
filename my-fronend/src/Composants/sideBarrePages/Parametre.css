@@ -1,9 +1,7 @@
-/* 1. Neutral Dark Palette (Professional & Deep) */
 :root {
-  /* Light Mode (Same as before but cleaner) */
   --bg-page: #f9fafb;
   --bg-card: #ffffff;
-  --text-main: #111827; /* Near black */
+  --text-main: #111827; 
   --text-sub: #6b7280;
   --border-color: #e5e7eb;
   --card-shadow: rgba(0, 0, 0, 0.03);
@@ -12,25 +10,22 @@
 }
 
 [data-theme='dark'] {
-  /* Dark Mode (True Neutral - No Blue Tint) */
-  --bg-page: #0a0a0a;       /* Black Deep (Hal m-t-khach) */
-  --bg-card: #171717;       /* Card k-t-ban ghadi l-gris l-ghameq bzaf */
-  --text-main: #ededed;     /* Off-white (bach may-drch f l-3in) */
-  --text-sub: #a3a3a3;      /* Muted gray */
-  --border-color: #262626;  /* Border r9iqa bzaf */
+  --bg-page: #0a0a0a;      
+  --bg-card: #171717;       
+  --text-main: #ededed;    
+  --text-sub: #a3a3a3;     
+  --border-color: #262626; 
   --card-shadow: rgba(0, 0, 0, 0.5);
-  --input-bg: #262626;      /* Input background */
+  --input-bg: #262626;     
   --tab-border: #262626;
 }
 
-/* 2. Pro Tip: N-bdlo chwiya f l-card shadow f Dark Mode */
 [data-theme='dark'] .profile-header, 
 [data-theme='dark'] .stats-card, 
 [data-theme='dark'] .post-card,
 [data-theme='dark'] .settings-container {
-  box-shadow: 0 0 0 1px var(--border-color); /* Blast shadow, k-ndiro border r9iqa */
+  box-shadow: 0 0 0 1px var(--border-color); 
 }
-/* 1. Global Wrapper & Container */
 .settings-wrapper {
   background-color: var(--bg-page);
   min-height: 100vh;
@@ -40,7 +35,6 @@
   padding: 10px 10px;
   transition: all 0.3s ease;
 }
-
 .settings-container {
   width: 80%;
   background: var(--bg-card);
@@ -49,8 +43,6 @@
   box-shadow: 0 10px 30px var(--card-shadow);
   overflow: hidden;
 }
-
-/* 2. Header */
 .settings-header {
   padding: 30px 40px;
   border-bottom: 1px solid var(--border-color);
