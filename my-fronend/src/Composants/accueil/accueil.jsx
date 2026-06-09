@@ -7,10 +7,7 @@ export default function Accueil() {
   const [recommendation, setRecommendation] = useState(null);
   const { user } = useAuth();
   const primaryColor = user?.color || "#6366f1";
-  
-  // Fix 1: Default value false l-loading
   const [loading, setLoading] = useState(false);
-
   const amenities = [
     "Climatisation", "Chauffage", "Salle de bains", "Toilettes",
     "Douche", "Télévision", "Internet Gratuit", "Terrasse",
@@ -20,18 +17,14 @@ export default function Accueil() {
     "Spa", "Massages", "Sauna", "Petit déjeuner", "Jardin",
     "Vue sur la ville", "Vue sur la piscine",
   ];
-
   const toggleAmenity = (item) => {
     setSelectedAmenities((prev) =>
       prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
     );
   };
-
   const handleSubmit = async (e) => {
     if (e && typeof e.preventDefault === 'function') e.preventDefault();
     setLoading(true);
-
-    // Kanjbdo l-inputs directly mn l-document framework safe
     const cityInput = document.querySelector('input[name="city"]')?.value;
     const budgetInput = document.querySelector('input[name="budget"]')?.value;
     const starsSelect = document.querySelector('select[name="stars"]')?.value;

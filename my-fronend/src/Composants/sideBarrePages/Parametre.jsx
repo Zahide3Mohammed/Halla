@@ -8,24 +8,15 @@ import { useNavigate } from 'react-router';
 const Settings = () => {
   const { user, token, logout ,loginContext } = useAuth();
   const navigate = useNavigate();
-
-  // 1. States dyal l-Infos
   const [isInfosOpen, setIsInfosOpen] = useState(false);
   const [firstName, setFirstName] = useState(user?.prenom || "");
   const [lastName, setLastName] = useState(user?.nom || "");
   const [isSaving, setIsSaving] = useState(false);
-
-  // 2. States dyal l-Image
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
-
-  // 3. States dyal Delete Popup
   const [show, setShow] = useState(false);
   const [password, setPassword] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
-
-  // --- 4. DARK MODE LOGIC (FINAL & FIXED) ---
-  // كنقرأو الحالة من localStorage مباشرة فـ أول rendering
   const [isDark, setIsDark] = useState(() => {
     const savedTheme = localStorage.getItem('theme');
     return savedTheme === 'dark';
@@ -33,13 +24,11 @@ const Settings = () => {
 
   useEffect(() => {
     const theme = isDark ? 'dark' : 'light';
-    // كنطبقو الـ theme على الـ root (html tag)
     document.documentElement.setAttribute('data-theme', theme);
-    // كنسجلو الاختيار باش ميمشيش فـ Refresh
     localStorage.setItem('theme', theme);
   }, [isDark]);
-  // ------------------------------------------
 
+  // ------------------------------------------
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
@@ -62,7 +51,6 @@ const Settings = () => {
       }
     }
   };
-
   const handleUpdateProfile = async () => {
     try {
       setIsSaving(true);
@@ -95,7 +83,6 @@ const Settings = () => {
       setIsDeleting(false);
     }
   };
-
   return (
     <div className="settings-wrapper">
       <div className="settings-container">
@@ -105,7 +92,6 @@ const Settings = () => {
         </header>
 
         <div className="settings-sections">
-          
           {/* 1. Langue */}
           <div className="settings-row">
             <div className="info-side">
