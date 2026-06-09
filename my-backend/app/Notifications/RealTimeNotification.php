@@ -18,13 +18,11 @@ class RealTimeNotification extends Notification
         $this->message = $message;
     }
 
-    // 1. Sifetha f l-Database w f Broadcast (Websocket)
     public function via($notifiable): array
     {
         return ['database', 'broadcast'];
     }
 
-    // 2. Chnu ghat-khzen f Database
     public function toArray($notifiable): array
     {
         return [

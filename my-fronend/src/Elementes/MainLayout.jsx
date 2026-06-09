@@ -25,11 +25,11 @@ const MainLayout = () => {
         const echoInstance = new Echo({
             broadcaster: 'reverb',
             key: 'hallamaghrebkey',
-            wsHost: '127.0.0.1',
+            wsHost: window.location.hostname ,
             wsPort: 8080,
             forceTLS: false,
             enabledTransports: ['ws', 'wss'],
-            authEndpoint: 'http://127.0.0.1:8000/broadcasting/auth',
+            authEndpoint: '/broadcasting/auth',
             auth: {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -38,11 +38,9 @@ const MainLayout = () => {
             },
         });
 
-        // التصنت للـ Event اللي صاوبنا في الباكيند
         echoInstance.private(`App.Models.User.${user.id}`)
             .listen('.NotificationSent', (data) => {
                 console.log('New Friend Request Received!', data);
-                // كنزيدو 1 في الحساب الحقيقي بلا ما نحتاجو نديرو Refresh
                 setUnreadCount(prev => prev + 1);
             });
 
@@ -58,10 +56,9 @@ const MainLayout = () => {
     useEffect(() => {
         const fetchUnreadCount = async () => {
             try {
-                const res = await axios.get('http://localhost:8000/api/notifications', {
+                const res = await axios.get('/api/notifications', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                // كنحسبو شحال من إشعار باقي ما تقراش في الداتاباز
                 const unread = res.data.filter(n => !n.is_read).length;
                 setUnreadCount(unread);
             } catch (err) {
@@ -78,7 +75,7 @@ const MainLayout = () => {
         setUnreadCount(0);
         try {
             // كنعلمو الباكيند بلي كاع الإشعارات تقراو
-            await axios.post('http://localhost:8000/api/notifications/read', {}, {
+            await axios.post('/api/notifications/read', {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
         } catch (err) {

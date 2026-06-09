@@ -18,7 +18,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchMyPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/my-posts", {
+        const response = await axios.get("/api/my-posts", {
           headers: { Authorization: `Bearer ${token}` }
         });
         setMyPosts(response.data);
@@ -44,7 +44,7 @@ export default function Profile() {
     if (!window.confirm(confirmMsg)) return;
 
     try {
-      await axios.delete(`http://localhost:8000/api/posts/${postId}`, {
+      await axios.delete(`/api/posts/${postId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMyPosts(myPosts.filter(p => p.id !== postId));
@@ -110,7 +110,7 @@ export default function Profile() {
                   <img src={
                     !user?.photo 
                       ? "./icons/Nonprofilelight.jpg"
-                      : `http://localhost:8000/storage/${user?.photo}`
+                      : `/storage/${user?.photo}`
                   } alt="" className="profile-img"/>
                   <label htmlFor="photo-upload" className="upload-btn" style={{ backgroundColor: ress.color }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><path d="M12 5v14M5 12h14"/></svg>
@@ -155,7 +155,7 @@ export default function Profile() {
                   
                   {post.media_url && (
                     <div className="post-media-wrapper">
-                      <img src={`http://localhost:8000/storage/${post.media_url}`} alt="Post" />
+                      <img src={`/storage/${post.media_url}`} alt="Post" />
                     </div>
                   )}
                   

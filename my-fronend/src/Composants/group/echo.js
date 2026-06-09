@@ -7,14 +7,13 @@ window.Pusher = Pusher;
 const echo = new Echo({
     broadcaster: 'reverb',
     key: 'hallamaghrebkey', 
-    wsHost: '127.0.0.1',
+    wsHost: window.location.hostname ,
     wsPort: 8080,
     forceTLS: false,
     enabledTransports: ['ws'],
-    authEndpoint: 'http://localhost:8000/api/broadcasting/auth',
+    authEndpoint: '/broadcasting/auth',
     auth: {
         headers: {
-            // استخدام الـ get يضمن جلب التوكن الحقيقي والحديث عند إرسال الطلب
             get Authorization() {
                 return `Bearer ${sessionStorage.getItem('token')}`;
             }

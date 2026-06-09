@@ -25,12 +25,10 @@ export default function UserProfile() {
     const fetchUserData = async () => {
       setLoading(true);
       try {
-        // 1. جلب بيانات المستخدم لآخر
-        const resUser = await axios.get(`http://localhost:8000/api/user-profile/${id}`);
+        const resUser = await axios.get(`/api/user-profile/${id}`);
         setTargetUser(resUser.data);
         
-        // 2. جلب منشورات هاد المستخدم
-        const resPosts = await axios.get(`http://localhost:8000/api/user-posts/${id}`);
+        const resPosts = await axios.get(`/api/user-posts/${id}`);
         setPosts(resPosts.data);
       } catch (error) {
         console.error("Error fetching user profile:", error);
@@ -75,7 +73,7 @@ export default function UserProfile() {
               <img src={targetUser?.color ? ress.image : "/images/purple-back.jpg"} alt="Cover" className="cover-img" />
               <div className={language === "ar" ? "avatar-wrapper-ar" : "avatar-wrapper"}>
                 <div className="avatar-ring" style={{ borderColor: `white` }}>
-                  <img src={!targetUser?.photo ? "/icons/Nonprofilelight.jpg" : `http://localhost:8000/storage/${targetUser?.photo}`} alt="" className="profile-img"/>
+                  <img src={!targetUser?.photo ? "/icons/Nonprofilelight.jpg" : `/storage/${targetUser?.photo}`} alt="" className="profile-img"/>
                 </div>
               </div>
             </div>
@@ -109,7 +107,7 @@ export default function UserProfile() {
                 <article key={post.id} className="profile-post-card">
                   {post.media_url && (
                     <div className="post-media-wrapper">
-                      <img src={`http://localhost:8000/storage/${post.media_url}`} alt="Post" />
+                      <img src={`/storage/${post.media_url}`} alt="Post" />
                     </div>
                   )}
                   <div className="post-body-content">
