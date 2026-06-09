@@ -5,21 +5,22 @@ import { useAuth } from '../../context/AuthContext';
 import ClubSkeleton from './ClubSkeleton';
 import { Link } from 'react-router-dom';
 
-const API_URL = "http://localhost:8000/api";
-const STORAGE_URL = "http://localhost:8000/storage";
+const API_URL = "/api";
+const STORAGE_URL = "/storage";
 
 const Club = () => {
   const Icons = {
     Feed: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
     Explore: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>,
     Clubs: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
-    Settings: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
-    Media: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>,
-    Heart: ({ filled }) => <svg width="20" height="20" viewBox="0 0 24 24" fill={filled ? "#f43f5e" : "none"} stroke={filled ? "#f43f5e" : "currentColor"} strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,
+    Settings: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
+    Media: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>,
+    Heart: ({ filled }) => <svg width="20" height="20" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,
     Comment: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.1a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>,
   };
 
   const [posts, setPosts] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [activeComments, setActiveComments] = useState({});
   const [commentTexts, setCommentTexts] = useState({}); 
   const [loading, setLoading] = useState(true);
@@ -28,7 +29,9 @@ const Club = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const { token, user } = useAuth();
+  const userBrandColor = user?.color || user?.brand_color || "#6366f1";
 
   // --- Fetching Logic ---
   const fetchPosts = async (url = `${API_URL}/posts`) => {
@@ -50,8 +53,20 @@ const Club = () => {
     }
   };
 
+  const fetchGroups = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/groups`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setGroups(response.data.data || response.data);
+    } catch (error) {
+      console.error("Error fetching groups:", error);
+    }
+  };
+
   useEffect(() => {
     fetchPosts();
+    fetchGroups();
   }, []);
 
   // --- Profile Helpers ---
@@ -79,16 +94,37 @@ const Club = () => {
 
   // --- Interaction Logic ---
   const handleLike = async (postId) => {
+    let previousPostState = null;
+
+    setPosts(prevPosts => prevPosts.map(post => {
+      if (post.id === postId) {
+        previousPostState = { ...post }; 
+        const willBeLiked = !post.is_liked;
+        return {
+          ...post,
+          is_liked: willBeLiked,
+          likes_count: willBeLiked ? (post.likes_count || 0) + 1 : Math.max(0, (post.likes_count || 0) - 1)
+        };
+      }
+      return post;
+    }));
+
     try {
-        const response = await axios.post(`${API_URL}/posts/${postId}/toggle-like`, {}, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        setPosts(prevPosts => prevPosts.map(post => 
-            post.id === postId 
-            ? { ...post, is_liked: response.data.liked, likes_count: response.data.count }
-            : post
-        ));
-    } catch (error) { console.error("Error liking post", error); }
+      const response = await axios.post(`${API_URL}/posts/${postId}/toggle-like`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      setPosts(prevPosts => prevPosts.map(post => 
+        post.id === postId 
+          ? { ...post, is_liked: response.data.liked, likes_count: response.data.count }
+          : post
+      ));
+    } catch (error) {
+      console.error("Error liking post", error);
+      if (previousPostState) {
+        setPosts(prevPosts => prevPosts.map(post => post.id === postId ? previousPostState : post));
+      }
+    }
   };
 
   const toggleComments = async (postId) => {
@@ -159,8 +195,16 @@ const Club = () => {
   };
 
   if (loading && posts.length === 0) return <ClubSkeleton />;
+return (
+  <>
+    {/* Dynamic Style Injection - Had l-khra ghadi t-forci l-loun 3la l-page kamla */}
+    <style>{`
+      :root {
+        /* Clamping variables directly over the input brand color */
+        --user-brand-color: ${userBrandColor} !important;
+      }
+    `}</style>
 
-  return (
     <div className="AuthX_ClubApp_Wrapper_55 AuthX_ThemeLight_55">
       <div className="AuthX_MainGrid_Layout_55">
 
@@ -292,23 +336,38 @@ const Club = () => {
         {/* --- Right Sidebar --- */}
         <aside className="AuthX_RightWidgets_Aside_55">
           <div className="AuthX_WidgetCard_Box_55">
-            <h4>Suggested Clubs</h4>
+            <h4>Suggested Groups</h4>
             <div className="AuthX_WidgetList_Stack_55">
-              <div className="AuthX_ClubItem_Row_55">
-                 <div className="AuthX_Avatar_Wrap_55 AuthX_SizeMd_55" style={{background: '#e0e7ff', color: '#6366f1', fontWeight: 'bold'}}>M</div>
-                 <div className="AuthX_ItemInfo_Col_55">
-                    <span className="AuthX_ItemName_Txt_55">Maroc Trip</span>
-                    <span className="AuthX_ItemSub_Txt_55">1.9k members</span>
-                 </div>
-                 <button className="AuthX_JoinInline_Btn_55">Join</button>
-              </div>
+              {groups.length > 0 ? (
+                groups.map((group) => (
+                  <div key={group.id} className="AuthX_ClubItem_Row_55">
+                    <div className="AuthX_Avatar_Wrap_55 AuthX_SizeMd_55" style={{ overflow: 'hidden' }}>
+                      {group.image ? (
+                        <img src={`${STORAGE_URL}/${group.image}`} alt={group.nom} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        <div style={{ background: 'color-mix(in srgb, var(--user-brand-color), transparent 85%)', color: 'var(--user-brand-color)', fontWeight: 'bold', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {group.nom ? group.nom.charAt(0).toUpperCase() : 'G'}
+                        </div>
+                      )}
+                    </div>
+                    <div className="AuthX_ItemInfo_Col_55">
+                      <span className="AuthX_ItemName_Txt_55">{group.nom}</span>
+                      <span className="AuthX_ItemSub_Txt_55">{group.membres_count || group.users_count || 0} members</span>
+                    </div>
+                    <button className="AuthX_JoinInline_Btn_55">Join</button>
+                  </div>
+                ))
+              ) : (
+                <div style={{ padding: '12px 0', fontSize: '0.9rem', color: '#64748b', textAlign: 'center' }}>Aucun groupe suggéré</div>
+              )}
             </div>
           </div>
         </aside>
 
       </div>
     </div>
-  );
+  </>
+);
 };
 
 export default Club;

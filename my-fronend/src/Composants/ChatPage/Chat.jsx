@@ -11,7 +11,6 @@ const IconImage = () => (
         <polyline points="21 15 16 10 5 21" />
     </svg>
 );
-
 const IconSend = () => (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <line x1="22" y1="2" x2="11" y2="13" />
@@ -36,7 +35,7 @@ export default function Chat() {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:8000/api/my-completed-groups", {
+        axios.get("/api/my-completed-groups", {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(res => {
@@ -48,7 +47,7 @@ export default function Chat() {
     }, [token]);
     useEffect(() => {
         if (!selectedGroup || !user) return;
-        axios.get(`http://localhost:8000/api/groups/${selectedGroup.id}/messages`, {
+        axios.get(`/api/groups/${selectedGroup.id}/messages`, {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(res => {
@@ -109,7 +108,7 @@ export default function Chat() {
 
         try {
             const res = await axios.post(
-                `http://localhost:8000/api/groups/${selectedGroup.id}/messages`,
+                `/api/groups/${selectedGroup.id}/messages`,
                 formData,
                 { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } }
             );
@@ -136,7 +135,7 @@ return (
                         .filter(g => activeTab === 'amis' ? g.type === 'private' : g.type !== 'private')
                         .map(group => (
                             <div key={group.id} className={`AuthX_GroupItem_55 ${selectedGroup?.id === group.id ? "AuthX_Active_55" : ""}`} onClick={() => setSelectedGroup(group)}>
-                                <img src={`http://localhost:8000/storage/${group.image_event}`} className="AuthX_AvatarSm_55" alt="avatar"/>
+                                <img src={`/storage/${group.image_event}`} className="AuthX_AvatarSm_55" alt="avatar"/>
                                 <div className="AuthX_GroupInfo_55">
                                     <p className="AuthX_Name_55">{group.prenom || group.nom_event}</p>
                                     <p className="AuthX_Status_55">{activeTab === 'amis' ? 'En ligne' : `${group.users?.length || 0} membres`}</p>
@@ -151,7 +150,7 @@ return (
                 <header className="AuthX_ChatHeader_55">
                     {selectedGroup && (
                         <div className="AuthX_HeaderProfile_55">
-                            <img src={`http://localhost:8000/storage/${selectedGroup.image_event}`} className="AuthX_HeaderAvatar_55" alt="header" />
+                            <img src={`/storage/${selectedGroup.image_event}`} className="AuthX_HeaderAvatar_55" alt="header" />
                             <div>
                                 <h3 className="AuthX_HeaderTitle_55">{selectedGroup.prenom || selectedGroup.nom_event}</h3>
                                 <span className="AuthX_HeaderSubtitle_55">Actif maintenant</span>
@@ -166,12 +165,12 @@ return (
                         return (
                             <div key={m.id} className={`AuthX_MsgRow_55 ${isMe ? "AuthX_Me_55" : "AuthX_NotMe_55"}`}>
                                 {!isMe && (
-                                    <img src={m.user?.photo ? `http://localhost:8000/storage/${m.user.photo}` : "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"} className="AuthX_MsgAvatar_55" alt="user" />
+                                    <img src={m.user?.photo ? `/storage/${m.user.photo}` : "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"} className="AuthX_MsgAvatar_55" alt="user" />
                                 )}
                                 <div className="AuthX_MsgContent_55">
                                     <div className={`AuthX_MsgBubble_55 ${m.isSending ? 'AuthX_Sending_55' : ''}`}>
                                         {m.type === "image" || m.file_path ? (
-                                             <img src={m.isSending ? m.file_path : `http://localhost:8000/storage/${m.file_path}`} className="AuthX_ChatImg_55" alt="media" />
+                                             <img src={m.isSending ? m.file_path : `/storage/${m.file_path}`} className="AuthX_ChatImg_55" alt="media" />
                                         ) : null}
                                         {m.content && <p className="AuthX_MsgText_55">{m.content}</p>}
                                     </div>
@@ -226,7 +225,7 @@ return (
                                 {selectedGroup.users?.map(u => (
                                     <div key={u.id} className="AuthX_MemberItem_55">
                                         <div className="AuthX_AvatarWrapper_55">
-                                            <img src={u.photo ? `http://localhost:8000/storage/${u.photo}` : "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"} className="AuthX_MemberImg_55" alt="member" />
+                                            <img src={u.photo ? `/storage/${u.photo}` : "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"} className="AuthX_MemberImg_55" alt="member" />
                                             <span className="AuthX_OnlineDot_55"></span>
                                         </div>
                                         <span className="AuthX_MemberName_55">{u.prenom} {u.nom}</span>

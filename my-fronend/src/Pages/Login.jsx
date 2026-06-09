@@ -101,7 +101,7 @@ export default function Login() {
     else {
       try {
         setLoading(true);
-        const res = await axios.post("http://localhost:8000/api/check-email", {
+        const res = await axios.post("/api/check-email", {
           email: formData.email
         });
         if (res.data.exists) {
@@ -130,7 +130,7 @@ export default function Login() {
       return;
     }
     try {
-      const res = await axios.post("http://localhost:8000/api/login", credentials);
+      const res = await axios.post("/api/login", credentials);
       loginContext(res.data.user, res.data.token);
       navigate('/HallaClub');
     } catch (err) {
@@ -154,7 +154,7 @@ export default function Login() {
       if (value) data.append(key, value);
     });
     try {
-      const res = await axios.post("http://localhost:8000/api/register", data);
+      const res = await axios.post("/api/register", data);
       if (res.data.token) {
         loginContext(res.data.user, res.data.token);
       }

@@ -45,7 +45,7 @@ function Group() {
 
   const fetchGroups = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/groups`);
+      const res = await axios.get(`/api/groups`);
       const filtered = res.data.filter(g => 
         g.users_count < 5 && 
         !g.name.startsWith("Salon")
@@ -73,7 +73,7 @@ function Group() {
       data.append("image_event", form.image_event);
     }
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups`, data, {
+      const response = await axios.post(`/api/groups`, data, {
         headers: {
           'Authorization': `Bearer ${currentToken}`,
           'Accept': 'application/json',
@@ -98,7 +98,7 @@ function Group() {
   const joinGroup = async (id) => {
     try {
       const token = sessionStorage.getItem('token'); 
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/${id}/join`, {}, {
+      const response = await axios.post(`/api/groups/${id}/join`, {}, {
         headers: { 
           'Authorization': `Bearer ${token}`, 
           'Accept': "application/json",
@@ -139,7 +139,7 @@ function Group() {
     try {
       const token = sessionStorage.getItem("token");
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/ai/suggest`,
+        `/api/ai/suggest`,
         { message: currentInput },
         { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
       );
@@ -160,7 +160,7 @@ function Group() {
   const joinRandomGroup = async () => {
     try {
       const token = sessionStorage.getItem('token');
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/random-join`, {}, {
+      const response = await axios.post(`/api/groups/random-join`, {}, {
         headers: { 
           'Authorization': `Bearer ${token}`,
           'Accept': "application/json",
@@ -221,7 +221,7 @@ function Group() {
   const fetchMyCurrentSalon = async () => {
     try {
       const token = sessionStorage.getItem('token');
-      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/my-current-salon`, {
+      const res = await axios.get(`/api/my-current-salon`, {
         headers: { 
           'Authorization': `Bearer ${token}`,
           'Accept': "application/json"
@@ -300,7 +300,7 @@ function Group() {
                   .map(group => (
                     <div className="sketch-card-horizontal_grp" key={group.id}>
                       <div className="card-image-section_grp">
-                        <img src={`${import.meta.env.VITE_BACKEND_URL}/storage/${group.image_event}`} alt="Group Event" onError={(e) => e.target.src = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=500"} />
+                        <img src={`/storage/${group.image_event}`} alt="Group Event" onError={(e) => e.target.src = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=500"} />
                         <div className="card-badge-badge_grp" style={{ backgroundColor: group.creator?.color || 'var(--user-brand-color)' }}></div>
                       </div>
                       <div className="card-info-section_grp">

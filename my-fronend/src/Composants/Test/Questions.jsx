@@ -81,7 +81,7 @@ const questions = [
     setLoading(true);
     const topColor = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
     try {
-      const res = await axios.post("http://localhost:8000/api/personalitytest", 
+      const res = await axios.post("/api/personalitytest", 
         { color: topColor }, 
         {
           headers: {Authorization: `Bearer ${token}`,

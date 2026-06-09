@@ -16,7 +16,7 @@ const PostDetails = () => {
     const fetchPost = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`http://localhost:8000/api/posts/${id}`, {
+        const res = await axios.get(`/api/posts/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setPost(res.data);
@@ -47,7 +47,7 @@ const PostDetails = () => {
         <div className="post-header">
           {post.user?.photo && (
             <img 
-              src={`http://localhost:8000/storage/${post.user.photo}`} 
+              src={`/storage/${post.user.photo}`} 
               alt="author" 
               className="author-pic" 
             />
@@ -62,7 +62,7 @@ const PostDetails = () => {
           <p>{post.content}</p>
           {post.image && (
             <img 
-              src={`http://localhost:8000/storage/${post.image}`} 
+              src={`/storage/${post.image}`} 
               alt="post" 
               className="post-img" 
             />

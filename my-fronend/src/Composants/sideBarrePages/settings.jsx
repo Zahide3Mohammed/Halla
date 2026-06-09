@@ -14,7 +14,7 @@ export default function Settings2tghf() {
   const confirmDelete = async () => {
     try {
       await axios.post(
-        "http://localhost:8000/api/delete-account",
+        "/api/delete-account",
         { password },
         {
           headers: {
