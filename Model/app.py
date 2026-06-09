@@ -9,10 +9,7 @@ try:
     with open('model.pkl', 'rb') as f:
         model = pickle.load(f)
         print(type(model))
-        print(model[0])
-        print(model[1])
-        print(model[2])
-        print(model[3])
+      
 
         
 except Exception as e:
