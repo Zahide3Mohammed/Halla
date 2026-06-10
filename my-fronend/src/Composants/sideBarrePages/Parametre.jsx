@@ -38,7 +38,7 @@ const Settings = () => {
       formData.append('photo', file);
       try {
         setUploading(true);
-        const res = await axios.post("http://localhost:8000/api/update-photo", formData, {
+        const res = await axios.post("/api/update-photo", formData, {
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
         });
         const updatedUser = { ...user, photo: res.data.path };
@@ -54,7 +54,7 @@ const Settings = () => {
   const handleUpdateProfile = async () => {
     try {
       setIsSaving(true);
-      await axios.post("http://localhost:8000/api/update-profile", 
+      await axios.post("/api/update-profile", 
         { nom: lastName, prenom: firstName },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -70,7 +70,7 @@ const Settings = () => {
     try {
       setIsDeleting(true);
       await axios.post(
-        "http://localhost:8000/api/delete-account",
+        "/api/delete-account",
         { password },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -148,7 +148,7 @@ const Settings = () => {
               <div className={`avatar-preview ${uploading ? 'uploading-pulse' : ''}`}>
                 {(preview || user?.photo) ? (
                   <img 
-                    src={preview || `http://localhost:8000/storage/${user?.photo}`} 
+                    src={preview || `/storage/${user?.photo}`} 
                     alt="Profile" 
                     className='imgdyl'
                   />

@@ -5,20 +5,34 @@
   --ax-text-main-55: #333333;
   --ax-text-meta-55: #6c757d;
   --ax-border-55: #e6e9f0;
-  --ax-primary-55: #7c73e6;
-  --ax-primary-hover-55: #6a61cc;
-  --ax-nav-active-bg-55: #7c73e6;
+  
+  /* 🔥 CLEAN DARABA CONTROL (LIGHT MODE)
+     Kat-khlli loun original howa nit ghir kat-hbet lih chwya l-brightness dyal l-fdiha 
+     b 10% dyal dark slate mix bash y-welli daraja pro w clean.
+  */
+  --raw-brand-color: var(--user-brand-color, #7c73e6);
+  --ax-primary-55: color-mix(in srgb, var(--raw-brand-color) 90%, #1e293b 10%);
+  
+  --ax-primary-hover-55: color-mix(in srgb, var(--ax-primary-55) 85%, #000);
+  --ax-nav-active-bg-55: var(--ax-primary-55);
   --ax-nav-active-text-55: #ffffff;
   --ax-shadow-55: 0 4px 12px rgba(0,0,0,0.05);
 }
+
 .dark, [data-theme='dark'] {
-  --ax-bg-55: #0a0a0a;           /* كحل مطفي - خالص */
-  --ax-card-bg-55: #171717;      /* رمادي غامق جدا للكارطات */
-  --ax-text-main-55: #ededed;    /* أبيض مكسور شوية باش ما يجهرش العين */
-  --ax-text-meta-55: #a3a3a3;    /* رمادي متوسط للوقت والوصف */
-  --ax-border-55: #262626;       /* حدود خفيفة بزاف */
-  --ax-input-bg-55: #0a0a0a;     /* خلفية الـ Inputs */
-  --ax-shadow-55: 0 4px 20px rgba(0, 0, 0, 0.5); /* ضل قوي حيت الخلفية كحلة */
+  --ax-bg-55: #0a0a0a;
+  --ax-card-bg-55: #171717;
+  --ax-text-main-55: #ededed;
+  --ax-text-meta-55: #a3a3a3;
+  --ax-border-55: #262626;
+  --ax-input-bg-55: #0a0a0a;
+  --ax-shadow-55: 0 4px 20px rgba(0, 0, 0, 0.5);
+  
+  /* 🔥 DARK MODE COMPATIBLE DEGREE
+     Hna loun kay-t-mixa m3a chwya d l-pure white (12%) bash y-ndwer f k7olya w ma y-b9ach mdemer.
+  */
+  --ax-primary-55: color-mix(in srgb, var(--raw-brand-color) 88%, #ffffff 12%);
+  --ax-primary-hover-55: color-mix(in srgb, var(--ax-primary-55) 85%, #fff);
 }
 
 /* --- Global Layout --- */
@@ -78,8 +92,15 @@
   border-radius: 12px; cursor: pointer; transition: all 0.2s ease;
   color: var(--ax-text-main-55); font-weight: 500; text-decoration: none;
 }
-.AuthX_NavItem_Link_55:hover { background-color: var(--ax-border-55); }
-.AuthX_NavItem_Link_55.active { background-color: var(--ax-nav-active-bg-55); color: var(--ax-nav-active-text-55); box-shadow: var(--ax-shadow-55); }
+.AuthX_NavItem_Link_55:hover { 
+  background-color: color-mix(in srgb, var(--ax-primary-55) 12%, transparent); 
+  color: var(--ax-primary-55);
+}
+.AuthX_NavItem_Link_55.active { 
+  background-color: var(--ax-nav-active-bg-55); 
+  color: var(--ax-nav-active-text-55); 
+  box-shadow: var(--ax-shadow-55); 
+}
 
 /* --- Create Post Card --- */
 .AuthX_CreatePost_Card_55 {
@@ -95,6 +116,7 @@
 .AuthX_PostInput_Control_55 {
   flex: 1; background-color: var(--ax-bg-55); border: 1px solid var(--ax-border-55);
   color: var(--ax-text-main-55); padding: 12px 20px; border-radius: 25px; font-size: 15px;
+  transition: border-color 0.2s ease;
 }
 .AuthX_PostInput_Control_55:focus { outline: none; border-color: var(--ax-primary-55); }
 
@@ -109,7 +131,8 @@
 }
 
 .AuthX_CreatePost_Footer_55 { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--ax-border-55); padding-top: 15px; }
-.AuthX_Option_Btn_55 { background: none; border: 1px solid var(--ax-border-55); padding: 8px 16px; border-radius: 8px; color: var(--ax-text-meta-55); cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; }
+.AuthX_Option_Btn_55 { background: none; border: 1px solid var(--ax-border-55); padding: 8px 16px; border-radius: 8px; color: var(--ax-text-meta-55); cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; transition: all 0.2s; }
+.AuthX_Option_Btn_55:hover { border-color: var(--ax-primary-55); color: var(--ax-primary-55); }
 .AuthX_PostSubmit_Btn_55 { background-color: var(--ax-primary-55); color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
 .AuthX_PostSubmit_Btn_55:hover { background-color: var(--ax-primary-hover-55); }
 .AuthX_PostSubmit_Btn_55:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -140,7 +163,7 @@
 .AuthX_PostActions_Wrapper_55 { margin-top: 15px; }
 .AuthX_PostActions_Flex_55 { display: flex; gap: 15px; padding-top: 10px; border-top: 1px solid var(--ax-border-55); }
 .AuthX_Action_Btn_55 { background: none; border: none; display: flex; align-items: center; gap: 8px; color: var(--ax-text-meta-55); cursor: pointer; font-size: 14px; padding: 8px 12px; border-radius: 8px; transition: background 0.2s; }
-.AuthX_Action_Btn_55:hover { background: var(--ax-bg-55); }
+.AuthX_Action_Btn_55:hover { background: var(--ax-bg-55); color: var(--ax-primary-55); }
 .AuthX_Action_Btn_55.liked { color: #f43f5e; font-weight: 600; }
 .AuthX_HeartIcon_Wrap_55 svg { transition: transform 0.2s ease; }
 .AuthX_Action_Btn_55.liked .AuthX_HeartIcon_Wrap_55 svg { transform: scale(1.1); }
@@ -148,7 +171,8 @@
 /* --- Comments Section --- */
 .AuthX_CommentsSection_Box_55 { margin-top: 20px; padding: 15px; background: var(--ax-bg-55); border-radius: 12px; }
 .AuthX_CommentInput_Wrap_55 { display: flex; gap: 10px; margin-bottom: 20px; }
-.AuthX_CommentInput_Wrap_55 input { flex: 1; border: 1px solid var(--ax-border-55); border-radius: 20px; padding: 10px 18px; outline: none; font-size: 14px; }
+.AuthX_CommentInput_Wrap_55 input { flex: 1; border: 1px solid var(--ax-border-55); border-radius: 20px; padding: 10px 18px; outline: none; font-size: 14px; transition: border-color 0.2s; }
+.AuthX_CommentInput_Wrap_55 input:focus { border-color: var(--ax-primary-55); }
 .AuthX_CommentItem_Row_55 { display: flex; gap: 12px; margin-bottom: 15px; align-items: flex-start; }
 .AuthX_CommentBubble_Txt_55 { background: var(--ax-card-bg-55); padding: 12px 16px; border-radius: 18px; flex: 1; border: 1px solid var(--ax-border-55); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
 .AuthX_CommentBubble_Txt_55 b { font-size: 13px; display: block; margin-bottom: 4px; color: var(--ax-text-main-55); }
@@ -161,7 +185,8 @@
 .AuthX_ItemInfo_Col_55 { flex: 1; display: flex; flex-direction: column; }
 .AuthX_ItemName_Txt_55 { font-weight: 600; font-size: 14px; color: var(--ax-text-main-55); }
 .AuthX_ItemSub_Txt_55 { font-size: 12px; color: var(--ax-text-meta-55); }
-.AuthX_JoinInline_Btn_55 { background: var(--ax-primary-55); color: #fff; border: none; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.AuthX_JoinInline_Btn_55 { background: var(--ax-primary-55); color: #fff; border: none; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.AuthX_JoinInline_Btn_55:hover { background-color: var(--ax-primary-hover-55); }
 
 /* --- Load More Button --- */
 .AuthX_ShowMore_Btn_55 {
@@ -170,94 +195,32 @@
 }
 .AuthX_ShowMore_Btn_55:hover { background: var(--ax-primary-55); color: white; }
 
-/* --- Responsive --- */
+/* --- Responsive Layouts & Utilities --- */
 @media (max-width: 1100px) {
   .AuthX_MainGrid_Layout_55 { grid-template-columns: 80px 1fr 280px; }
   .AuthX_NavItem_Link_55 span { display: none; }
 }
-
 @media (max-width: 900px) {
   .AuthX_MainGrid_Layout_55 { grid-template-columns: 1fr; }
   .AuthX_LeftNav_Aside_55, .AuthX_RightWidgets_Aside_55 { display: none; }
 }
-.user-avatar-link {
-    display: inline-block;
-    transition: transform 0.2s ease;
-}
+.user-avatar-link { display: inline-block; transition: transform 0.2s ease; }
+.user-avatar-link:hover { transform: scale(1.1); cursor: pointer; }
 
-.user-avatar-link:hover {
-    transform: scale(1.1); 
-    cursor: pointer;
-}
-/*-------------------------------- Mobile Responsive (Phones) ---------------------------------------------- */
 @media (max-width: 600px) {
-  .AuthX_ClubApp_Wrapper_55 {
-    padding: 5px 0;
-  }
-  .AuthX_MainGrid_Layout_55 {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding: 0 8px;
-  }
-  .AuthX_LeftNav_Aside_55, 
-  .AuthX_RightWidgets_Aside_55 {
-    display: none;
-  }
-  .AuthX_CreatePost_Card_55 {
-    padding: 15px;
-    border-radius: 12px;
-    margin-bottom: 8px;
-  }
-
-  .AuthX_PostInput_Control_55 {
-    padding: 10px 15px;
-    font-size: 14px;
-  }
-
-  .AuthX_Option_Btn_55 {
-    padding: 6px 12px;
-    font-size: 13px;
-  }
-
-  .AuthX_PostItem_Card_55 {
-    padding: 12px;
-    border-radius: 12px;
-    margin-bottom: 8px;
-  }
-
-  .AuthX_AuthorName_Txt_55 {
-    font-size: 15px;
-  }
-
-  .AuthX_PostItem_Content_55 p {
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
-
-  .AuthX_PostItem_Media_55 img {
-    max-height: 400px;
-  }
-  .AuthX_PostActions_Flex_55 {
-    justify-content: space-between;
-    gap: 5px;
-  }
-
-  .AuthX_Action_Btn_55 {
-    padding: 8px 5px;
-    font-size: 13px;
-    flex: 1;
-    justify-content: center;
-  }
-  .AuthX_CommentsSection_Box_55 {
-    padding: 10px;
-    margin-top: 15px;
-  }
-
-  .AuthX_CommentBubble_Txt_55 {
-    padding: 10px;
-  }
-  .AuthX_Avatar_Wrap_55.AuthX_SizeMd_55 { 
-    width: 36px; 
-    height: 36px; 
-  }
+  .AuthX_ClubApp_Wrapper_55 { padding: 5px 0; }
+  .AuthX_MainGrid_Layout_55 { grid-template-columns: 1fr; gap: 8px; padding: 0 8px; }
+  .AuthX_LeftNav_Aside_55, .AuthX_RightWidgets_Aside_55 { display: none; }
+  .AuthX_CreatePost_Card_55 { padding: 15px; border-radius: 12px; margin-bottom: 8px; }
+  .AuthX_PostInput_Control_55 { padding: 10px 15px; font-size: 14px; }
+  .AuthX_Option_Btn_55 { padding: 6px 12px; font-size: 13px; }
+  .AuthX_PostItem_Card_55 { padding: 12px; border-radius: 12px; margin-bottom: 8px; }
+  .AuthX_AuthorName_Txt_55 { font-size: 15px; }
+  .AuthX_PostItem_Content_55 p { font-size: 14px; margin-bottom: 10px; }
+  .AuthX_PostItem_Media_55 img { max-height: 400px; }
+  .AuthX_PostActions_Flex_55 { justify-content: space-between; gap: 5px; }
+  .AuthX_Action_Btn_55 { padding: 8px 5px; font-size: 13px; flex: 1; justify-content: center; }
+  .AuthX_CommentsSection_Box_55 { padding: 10px; margin-top: 15px; }
+  .AuthX_CommentBubble_Txt_55 { padding: 10px; }
+  .AuthX_Avatar_Wrap_55.AuthX_SizeMd_55 { width: 36px; height: 36px; }
 }

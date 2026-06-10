@@ -10,12 +10,12 @@ function Group() {
 
  const [form, setForm] = useState({
   name: "",
-  type_group: "Même color", // قيمة افتراضية
+  type_group: "Même color", 
   start_date: "",
   start_time: "",
   end_time: "",
   suggestion: "",
-  nationality_type: "same"// اجعلها 'same' كقيمة افتراضية بدلاً من نص فارغ
+  nationality_type: "same"
   
 });
 
@@ -28,12 +28,12 @@ function Group() {
 
 const createGroup = async () => {
   const currentToken = sessionStorage.getItem("token");
-  console.log("Token used for request:", currentToken); // سطر للتأكد في Console
+  console.log("Token used for request:", currentToken); 
 
   try {
-    const response = await axios.post("http://localhost:8000/api/groups", form, {
+    const response = await axios.post("/api/groups", form, {
       headers: {
-        'Authorization': `Bearer ${currentToken}`, // تأكد من وجود المسافة بعد Bearer
+        'Authorization': `Bearer ${currentToken}`, 
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       }
@@ -48,8 +48,7 @@ const createGroup = async () => {
 };
 const fetchGroups = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/groups");
-      // التعديل هنا: عرض المجموعات التي لم تكتمل فقط (أقل من 5)
+      const res = await axios.get("/api/groups");
       const availableGroups = res.data.filter(g => g.users_count < 5);
       setGroups(availableGroups);
     } catch (err) {
@@ -61,7 +60,7 @@ const joinGroup = async (id) => {
     try {
       const token = sessionStorage.getItem('token'); 
 
-      const response = await axios.post(`http://localhost:8000/api/groups/${id}/join`, {}, {
+      const response = await axios.post(`/api/groups/${id}/join`, {}, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json"
@@ -69,38 +68,26 @@ const joinGroup = async (id) => {
       });
 
       alert("تم الانضمام بنجاح!");
-
-      // 2. التحقق من عدد الأعضاء بعد الانضمام
-      // نفترض أن API يرجع بيانات المجموعة المحدثة أو نقوم بفحص الحالة محلياً
-      const updatedGroup = response.data.group; // حسب ما يرجعه الـ Backend لديك
-
-      // إذا اكتمل العدد (5/5) ننتقل للدردشة
+      const updatedGroup = response.data.group; 
       if (updatedGroup && updatedGroup.users_count >= 5) {
-        navigate(`/Chat/${id}`); // التوجه لغرفة الدردشة الخاصة بالمجموعة
+        navigate(`/Chat/${id}`); 
       } else {
-        fetchGroups(); // تحديث القائمة إذا لم يكتمل العدد بعد
+        fetchGroups(); 
       }
-
     } catch (error) {
       console.error(error.response?.data);
       alert(error.response?.data?.message || "فشل الانضمام");
     }
   };
-
-  // 3. إضافة وظيفة الدخول المباشر للمجموعات المكتملة أصلاً
   const goToChat = (id) => {
     navigate(`/chat/${id}`);
   };
-
   useEffect(()=>{
-
     fetchGroups();
-
   },[]);
 
   return (
     <div className="container">
-
       {/* LEFT */}
       <div className="form-section">
 

@@ -8,13 +8,11 @@ const Notifications = () => {
   const [notifsList, setNotifsList] = useState([]);
   const navigate = useNavigate();
   const [isPageLoading, setIsPageLoading] = useState(true);
-  const { user, token } = useAuth(); // Khdmina b token dyal l-context mchark m3a l-app kamla
-
-  // 1. Fetching Notifications
+  const { user, token } = useAuth();
   useEffect(() => {
     const getMyNotifs = async () => {
       try {
-        const res = await axios.get('http://localhost:8000/api/notifications', {
+        const res = await axios.get('/api/notifications', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setNotifsList(res.data);
@@ -33,23 +31,19 @@ const Notifications = () => {
   // 2. Mark ALL as Read
   const markAllNotificationsRead = async () => {
     try {
-      await axios.post('http://localhost:8000/api/notifications/read', {}, {
+      await axios.post('/api/notifications/read', {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      // Update local state bach t-tfa dik l-point l-7mer fihom kmlin
       setNotifsList(notifsList.map(item => ({ ...item, is_read: 1 })));
     } catch (err) {
       console.error("Error marking all as read:", err);
     }
   };
-
-  // 3. Mark SINGLE as Read (clique 3la whda)
   
-
 const handleSingleRead = async (item) => {
   if (!item.is_read) {
     try {
-      await axios.post(`http://localhost:8000/api/notifications/${item.id}/read`, {}, {
+      await axios.post(`/api/notifications/${item.id}/read`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setNotifsList(prev => 
@@ -93,7 +87,7 @@ const handleSingleRead = async (item) => {
                 onClick={() => handleSingleRead(item)}>
                 <div className="ntf-avatar-box">
                     {item.sender?.photo ? (
-                        <img src={`http://localhost:8000/storage/${item.sender.photo}`} className="ntf-user-pic" alt="user" />
+                        <img src={`/storage/${item.sender.photo}`} className="ntf-user-pic" alt="user" />
                         ) : (
                         <div className="ntf-user-pic">
                             {item.sender?.nom?.charAt(0).toUpperCase()}
