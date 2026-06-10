@@ -13,9 +13,7 @@ class Update_Profile extends Controller
         $request->validate([
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // max 2MB
         ]);
-
         $user = Auth::user();
-
         if ($user->photo) {
             Storage::disk('public')->delete($user->photo);
         }
@@ -26,11 +24,9 @@ class Update_Profile extends Controller
             ]);
             return response()->json([
                 'message' => 'Photo mise à jour avec succès',
-                'path' => $path // هادي غترجع دابا "photos/image.jpg"
+                'path' => $path 
             ], 200);
         }
-
-
         return response()->json(['message' => 'Erreur lors de l\'upload'], 400);
     }
 }

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -73,122 +74,117 @@ class AuthController extends Controller
             'token' => $token
         ]);
     }
-// controler de checkEmail
+//================================================================
     public function checkEmail(Request $request)
     {
-        // 1. Dir validation 3la l-format dyal l-email
         $request->validate([
             'email' => 'required|email',
         ]);
-        // 2. Check wach l-email exists f la base de données
         $exists = User::where('email', $request->email)->exists();
-
-        // 3. Reje3 l-jawab l-React (JSON)
         return response()->json([
             'exists' => $exists,
             'message' => $exists ? 'Email déjà utilisé' : 'Email disponible'
         ]);
     }
-   //  
+//===========================================================
     public function personalitytest(Request $request)
-{
-    // 1. جيب المستخدم اللي صيفط الطوكن
-    $user = $request->user();
-
-    // 2. تأكد واش كاين (Safety check)
-    if (!$user) {
-        return response()->json(['message' => 'User not found'], 401);
+    {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 401);
+        }
+        $user->color = $request->color;
+        if ($user->save()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'تم حفظ النتيجة بنجاح',
+                'user' => $user,
+                'token' => $request->bearerToken() 
+            ], 200);
+        }
+        return response()->json(['message' => 'Error saving data'], 500);
     }
-
-    // 3. تحديث اللون
-    $user->color = $request->color;
-    
-    // 4. حفظ التغييرات
-    if ($user->save()) {
-        return response()->json([
-            'status' => 'success',
-            'message' => 'تم حفظ النتيجة بنجاح',
-            'user' => $user,
-            // صيفط الطوكن القديم باش React ما يوقعش ليه Logout
-            'token' => $request->bearerToken() 
-        ], 200);
-    }
-
-    return response()->json(['message' => 'Error saving data'], 500);
-}
-
 // controller changePassword
  public function changePassword(Request $request)
     {
         try {
-            // الـ Validation بطريقة كتمنع الـ Redirect الـتلقائي
             $validator = Validator::make($request->all(), [
                 'current_password' => 'required',
                 'new_password' => ['required', 'min:8', 'regex:/[A-Z]/', 'regex:/[0-9]/', 'confirmed']
             ]);
-
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
-
             $user = $request->user();
-
             if (!Hash::check($request->current_password, $user->password)) {
                 return response()->json(['message' => 'Le mot de passe actuel est incorrect'], 422);
             }
-
             $user->password = Hash::make($request->new_password);
             $user->save();
-
             return response()->json(['message' => 'Password changé avec succès']);
-
         } catch (\Exception $e) {
-            // هادي غتوري ليك الـ Error الحقيقي فـ React يلا وقع مشكل فالسيرفر
             return response()->json(['message' => 'Server Error: ' . $e->getMessage()], 500);
         }
     }
-   
-        // controller  de suppremer compter 
-        public function deleteAccount(Request $request)
-        {
-            $request->validate([
-                'password' => 'required'
-            ]);
-
-            $user = $request->user();
-
-            if (!Hash::check($request->password, $user->password)) {
-                return response()->json([
-                    'message' => 'Password incorrect'
-                ], 401);
-            }
-
-            if ($user->photo) {
-                Storage::disk('public')->delete($user->photo);
-            }
-
-            $user->delete();
-
+//===================================================
+    public function deleteAccount(Request $request)
+    {
+        $request->validate([
+            'password' => 'required'
+        ]);
+        $user = $request->user();
+        if (!Hash::check($request->password, $user->password)) {
             return response()->json([
-                'message' => 'Account deleted successfully'
-            ]);
+                'message' => 'Password incorrect'
+            ], 401);
         }
-        public function getProfile($id)
-        {
-            $user = User::find($id);
-
-            if (!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
-            return response()->json([
-                'id' => $user->id,
-                'nom' => $user->nom,
-                'prenom' => $user->prenom,
-                'photo' => $user->photo,
-                'color' => $user->color,
-                'role' => $user->role,
-                'paye' => $user->paye,
-                'age' => $user->age,   
-            ]);
+        if ($user->photo) {
+            Storage::disk('public')->delete($user->photo);
         }
+        $user->delete();
+        return response()->json([
+            'message' => 'Account deleted successfully'
+        ]);
     }
+//=============================================
+    public function getProfile($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+        return response()->json([
+            'id' => $user->id,
+            'nom' => $user->nom,
+            'prenom' => $user->prenom,
+            'photo' => $user->photo,
+            'color' => $user->color,
+            'role' => $user->role,
+            'paye' => $user->paye,
+            'age' => $user->age,   
+        ]);
+    }
+//=====================================================================
+    public function showProfile($id)
+    {
+        $currentUserId = auth('sanctum')->id() ?? auth()->id(); 
+        $user = User::findOrFail($id);
+        $isFriend = false;
+        if ($currentUserId) {
+            $isFriend = DB::table('friends')
+                ->where(function($q) use ($currentUserId, $id) {
+                    $q->where('user_id', $currentUserId)->where('friend_id', $id);
+                })
+                ->orWhere(function($q) use ($currentUserId, $id) {
+                    $q->where('user_id', $id)->where('friend_id', $currentUserId);
+                })
+                ->exists();
+        }
+
+        if (empty($user->color) || $user->color === "No Color") {
+            $user->color = 'purple';
+        }
+        $user->is_friend = $isFriend ? true : false;
+        return response()->json($user);
+    }
+}

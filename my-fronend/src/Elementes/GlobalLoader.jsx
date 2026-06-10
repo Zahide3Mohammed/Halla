@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Bach njibou lon l-user
+import { useAuth } from '../context/AuthContext';
 import './GlobalLoader.css';
 
 const GlobalLoader = () => {
@@ -9,7 +9,6 @@ const GlobalLoader = () => {
   const location = useLocation();
   const { user } = useAuth();
 
-  // Déterminer le couleur (Profile color vs Global color)
   const activeColor = user?.color;
 
   useEffect(() => {
