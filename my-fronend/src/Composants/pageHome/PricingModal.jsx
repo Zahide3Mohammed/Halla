@@ -8,13 +8,13 @@ export default function PricingModal({ isOpen, onClose }) {
   const plans = [
     {
       name: "Free",
-      price: "0€",
+      price: "0$",
       features: ["Basic features", "Community support", "Limited analytics"],
       popular: false,
     },
     {
       name: "Pro",
-      price: "5€",
+      price: "10$",
       features: [
         "All Free features",
         "Advanced analytics",
@@ -25,7 +25,7 @@ export default function PricingModal({ isOpen, onClose }) {
     },
     {
       name: "Enterprise",
-      price: "20€",
+      price: "50$",
       features: [
         "All Pro features",
         "Dedicated support",

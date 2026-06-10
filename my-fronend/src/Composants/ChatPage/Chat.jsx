@@ -4,7 +4,6 @@ import "./Chat.css";
 import echo from "../group/echo";
 import { useAuth } from "../../context/AuthContext";
 
-// --- Professional SVG Icons (Stroke 1.5 for Clean Look) ---
 const IconImage = () => (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
@@ -28,17 +27,14 @@ export default function Chat() {
     const [input, setInput] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
-    const [activeTab, setActiveTab] = useState("amis");
-
+    const [activeTab, setActiveTab] = useState("groups");
     const fileInputRef = useRef(null);
     const messagesEndRef = useRef(null);
 
-    // --- Fast Scroll Function ---
     const scrollToBottom = (behavior = "smooth") => {
         messagesEndRef.current?.scrollIntoView({ behavior });
     };
 
-    // 1. Initial Load of Groups
     useEffect(() => {
         axios.get("http://localhost:8000/api/my-completed-groups", {
             headers: { Authorization: `Bearer ${token}` }
@@ -50,12 +46,8 @@ export default function Chat() {
             }
         });
     }, [token]);
-
-    // 2. Real-time Message Engine (Crucial for Speed)
     useEffect(() => {
         if (!selectedGroup || !user) return;
-
-        // Fetch History
         axios.get(`http://localhost:8000/api/groups/${selectedGroup.id}/messages`, {
             headers: { Authorization: `Bearer ${token}` }
         })
@@ -63,24 +55,18 @@ export default function Chat() {
             setMessages(res.data);
             setTimeout(() => scrollToBottom("auto"), 50);
         });
-
-        // Setup WebSocket Channel
         const channelName = `chat.${selectedGroup.id}`;
         const channel = echo.private(channelName);
 
         channel.listen(".message.sent", (e) => {
             setMessages((prev) => {
-                // Prevent duplicates (already sent by me)
                 const exists = prev.some((msg) => msg.id === e.message.id);
                 if (exists) return prev;
-
-                // If message from someone else, add it immediately
                 if (String(e.message.user_id) !== String(user.id)) {
                     return [...prev, e.message];
                 }
                 return prev;
             });
-            // Instant scroll for incoming message
             setTimeout(() => scrollToBottom("smooth"), 10);
         });
 
@@ -89,7 +75,6 @@ export default function Chat() {
         };
     }, [selectedGroup?.id, user?.id, token]);
 
-    // --- Handle File Upload ---
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -97,12 +82,8 @@ export default function Chat() {
             setPreviewUrl(URL.createObjectURL(file));
         }
     };
-
-    // --- Send Message Logic (Optimistic UI) ---
     const handleSend = async () => {
         if (!selectedGroup || (!input.trim() && !selectedFile)) return;
-
-        // Create temporary message for instant display
         const optimisticId = Date.now();
         const optimisticMessage = {
             id: optimisticId,
@@ -114,12 +95,9 @@ export default function Chat() {
             created_at: new Date().toISOString(),
             isSending: true,
         };
-
         setMessages(prev => [...prev, optimisticMessage]);
         const savedInput = input;
         const savedFile = selectedFile;
-
-        // Reset inputs immediately
         setInput("");
         setSelectedFile(null);
         setPreviewUrl(null);
@@ -135,13 +113,11 @@ export default function Chat() {
                 formData,
                 { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } }
             );
-            
-            // Swap temp message with real DB record
             setMessages(prev => prev.map(msg => msg.id === optimisticId ? res.data : msg));
         } catch (err) {
             console.error("Failed to send:", err);
             setMessages(prev => prev.filter(msg => msg.id !== optimisticId));
-            setInput(savedInput); // Give text back to user if fail
+            setInput(savedInput); 
         }
     };
 

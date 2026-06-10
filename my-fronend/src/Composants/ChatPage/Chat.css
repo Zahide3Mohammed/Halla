@@ -49,14 +49,13 @@
   object-fit: cover;
 }
 
-/* --- باقي الستايل ديالك بدون تغيير --- */
 .AuthX_SidebarLeft_55 {
   width: 280px;
   background: #ffffff;
   border-right: 1px solid #e2e8f0;
   display: flex; flex-direction: column;
   padding: 20px 0;
- }
+}
 .AuthX_SidebarTitle_55 { 
   padding: 0 20px 20px; font-size: 1.25rem; font-weight: 700; color: #1e293b; 
 }
@@ -166,87 +165,52 @@
 .AuthX_AvatarWrapper_55 { position: relative; }
 .AuthX_PreviewImg_55 { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; }
 .AuthX_ClosePreview_55 { position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; }
-/* ============================================================
-   --- FINAL MOBILE RESPONSIVE (AuthX App) ---
-   ============================================================ */
 
-
-
-/* تعديلات للأجهزة الصغيرة بزاف */
+/* Media queries dialk exact block */
 @media (max-width: 400px) {
-  .AuthX_MsgBubble_55 {
-    max-width: 92%;
-  }
-  
-  .AuthX_Option_Btn_55 {
-    padding: 6px 8px;
-    font-size: 12px;
-  }
+  .AuthX_MsgBubble_55 { max-width: 92%; }
+  .AuthX_Option_Btn_55 { padding: 6px 8px; font-size: 12px; }
 }
-/* --- Mobile Responsive Fix (بلا ما نبدل ليك الستايل ديالك) --- */
 @media (max-width: 850px) {
-  
-  /* 1. السايدبار اللي فيه لستة ديال المجموعات */
-  .AuthX_SidebarLeft_55 {
-    position: fixed;
-    left: -280px; /* كيبقى مخبي في الجنب */
-    top: 0;
-    bottom: 0;
-    z-index: 1000;
-    transition: left 0.3s ease-in-out;
-    box-shadow: 5px 0 15px rgba(0,0,0,0.1);
-  }
-
-  /* هاد الكلاص غاتزيدو للسايدبار بالـ JS باش يتحل */
-  .AuthX_SidebarLeft_55.active_mobile {
-    left: 0;
-  }
-
-  /* 2. السايدبار ديال اليمن (Members/Goals) غانخبوه باش نربحو الاتساع */
-  .AuthX_SidebarRight_55 {
-    display: none;
-  }
-
-  /* 3. منطقة الشات تاخد العرض كامل */
-  .AuthX_ChatWindow_55 {
-    width: 100%;
-    flex: none;
-  }
-
-  /* 4. تصحيح مشكل الـ 10% اللي كان عندك في الـ Row */
-  .AuthX_MsgRow_55 {
-    width: 100% !important; /* باش الرسالة تقدر تمشي لليمن ولا ليسر */
-  }
-
-  /* 5. فقاعة الرسالة (Bubble) */
-  .AuthX_MsgBubble_55 {
-    max-width: 85%; /* باش تجي باينة مزيان في التلفون */
-  }
-
-  /* 6. الـ Overlay (الخلفية اللي كتغطي الشات ملي كيتحل المنيو) */
-  .AuthX_MobileOverlay_55 {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 999;
-    display: none;
-  }
-
-  .AuthX_MobileOverlay_55.show {
-    display: block;
-  }
-
-  /* زر المنيو (Hamburger) خاصك تزيدو في الهيدر ودير ليه هاد الستايل */
-  .AuthX_MobileToggle_Btn {
-    display: block !important;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0 10px;
-  }
+  .AuthX_SidebarLeft_55 { position: fixed; left: -280px; top: 0; bottom: 0; z-index: 1000; transition: left 0.3s ease-in-out; box-shadow: 5px 0 15px rgba(0,0,0,0.1); }
+  .AuthX_SidebarLeft_55.active_mobile { left: 0; }
+  .AuthX_SidebarRight_55 { display: none; }
+  .AuthX_ChatWindow_55 { width: 100%; flex: none; }
+  .AuthX_MsgRow_55 { width: 100% !important; }
+  .AuthX_MsgBubble_55 { max-width: 85%; }
+  .AuthX_MobileOverlay_55 { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 999; display: none; }
+  .AuthX_MobileOverlay_55.show { display: block; }
+  .AuthX_MobileToggle_Btn { display: block !important; background: none; border: none; cursor: pointer; padding: 0 10px; }
 }
+.AuthX_MobileToggle_Btn { display: none; }
 
-/* هاد الزر خبوه في الـ Desktop */
-.AuthX_MobileToggle_Btn {
-  display: none;
+
+/* ==========================================================================
+   --- ADDED DARK MODE OVERRIDES ONLY (No structural changes above) ---
+   ========================================================================== */
+[data-theme="dark"] {
+  --user-main-hover: color-mix(in srgb, var(--user-main-color), rgb(0, 0, 0) 20%);
+  --user-light-bg: color-mix(in srgb, var(--user-main-color), transparent 85%);
+  --user-border-alpha: color-mix(in srgb, var(--user-main-color), transparent 60%);
 }
+[data-theme="dark"] .AuthX_AppContainer_55 { background-color: #090d16; }
+[data-theme="dark"] .AuthX_TabButtons_55 { border-bottom-color: #171717; }
+[data-theme="dark"] .AuthX_TabBtn_55 { background: #171717; color: #94a3b8; }
+[data-theme="dark"] .AuthX_SidebarLeft_55 { background: #0a0a0a; border-right-color: #262626; }
+[data-theme="dark"] .AuthX_SidebarTitle_55 { color: #f8fafc; }
+[data-theme="dark"] .AuthX_GroupItem_55 { color: #f8fafc; }
+[data-theme="dark"] .AuthX_GroupItem_55:hover { background-color: #171717; }
+[data-theme="dark"] .AuthX_ChatWindow_55 { background: #0a0a0a; }
+[data-theme="dark"] .AuthX_ChatHeader_55 { border-bottom-color: #262626; background: #0a0a0a; color: #f8fafc; }
+[data-theme="dark"] .AuthX_MessagesArea_55 { background-image: radial-gradient(#262626 1px, transparent 1px); }
+[data-theme="dark"] .AuthX_NotMe_55 .AuthX_MsgBubble_55 { background: #171717; color: #f8fafc; }
+[data-theme="dark"] .AuthX_MsgTime_55 { color: #94a3b8; }
+[data-theme="dark"] .AuthX_InputContainer_55 { background: #171717; border-top-color: #262626; }
+[data-theme="dark"] .AuthX_MsgText_55 { color: #f8fafc; }
+[data-theme="dark"] .AuthX_InputPill_55 { background: #0a0a0a; }
+[data-theme="dark"] .AuthX_InputPill_55:focus-within { background: #0a0a0a; }
+[data-theme="dark"] .AuthX_MainInput_55 { color: #f8fafc; }
+[data-theme="dark"] .AuthX_IconBtn_55 { color: #94a3b8; }
+[data-theme="dark"] .AuthX_SidebarRight_55 { background: #0a0a0a; border-left-color: #262626; color: #f8fafc; }
+[data-theme="dark"] .AuthX_GoalLabel_55 { color: #94a3b8; }
+[data-theme="dark"] .AuthX_OnlineDot_55 { border-color: #262626; }

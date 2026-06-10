@@ -1,90 +1,57 @@
-from flask import Flask, request, jsonify
-import pickle
 import pandas as pd
-import traceback
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import joblib
+import unicodedata
 
 app = Flask(__name__)
+CORS(app)
 
-try:
-    with open('model.pkl', 'rb') as f:
-        model = pickle.load(f)
-        print(type(model))
-      
+# تحميل البيانات والموديل
+model = joblib.load('model.pkl', mmap_mode='r')
+le = joblib.load('hotel_label_encoder.pkl')
+df = pd.read_excel('dataset.xlsx')
 
-        
-except Exception as e:
-    print(f"CRITICAL ERROR LOADING MODEL: {str(e)}")
+# وظيفة لإزالة الـ Accents (مثلاً تحويل 'fès' إلى 'fes')
+def remove_accents(input_str):
+    if not isinstance(input_str, str): return str(input_str)
+    nfkd_form = unicodedata.normalize('NFKD', input_str)
+    return "".join([c for c in nfkd_form if not unicodedata.combining(c)]).lower().strip()
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    try:
-        data = request.get_json()
-        print("\n=== DATA RECEIVED FROM LARAVEL ===")
-        print(data)
-      
-        
-        city = data.get('city', 'Marrakech')
-        
-        try:
-            budget = float(data.get('budget', 0))
-        except Exception:
-            budget = 1000.0
+    data = request.get_json()
+    target_city = remove_accents(data.get('city', ''))
+    budget = float(data.get('budget', 0))
+    
+    # تحضير عمود للمقارنة بدون Accents
+    df['City_Clean'] = df['City'].apply(remove_accents)
+    
+    # 1. فلتر المدينة
+    city_df = df[df['City_Clean'] == target_city].copy()
+    
+    if city_df.empty:
+        return jsonify({'success': False, 'message': 'لا توجد أوتيلات في هذه المدينة.'})
 
-        stars_raw = data.get('stars', '3')
-        try:
-            if isinstance(stars_raw, str) and ' ' in stars_raw:
-                stars = int(stars_raw.split()[0])
-            else:
-                stars = int(stars_raw)
-        except Exception:
-            stars = 3
+    # 2. ترتيب النتائج حسب الميزانية (أقرب أوتيل للميزانية)
+    city_df['diff'] = (city_df['Prix_Num'] - budget).abs()
+    best_hotel = city_df.sort_values(by='diff').iloc[0]
+    
+    # 3. إرجاع النتيجة
+    hotel_result = {
+        "nom": str(best_hotel['Nom']),
+        "city": str(best_hotel['City']),
+        "prix_num": float(best_hotel['Prix_Num']),
+        "devise": str(best_hotel['Devise']),
+        "etoiles": str(best_hotel['Etoiles']),
+        "address": str(best_hotel['Address']),
+        "quartier": str(best_hotel['Quartier']),
+        "lat": str(best_hotel['Lat']),
+        "long": str(best_hotel['Long']),
+        "image_url": "https://images.unsplash.com/photo-1566073771259-6a8506099945"
+    }
 
-        input_data = pd.DataFrame([{
-            'city': city,
-            'budget': budget,
-            'stars': stars
-        }])
-
-        # Execution secure dial prediction attribute
-        if hasattr(model, 'predict'):
-            prediction = model.predict(input_data)
-            predicted_hotel_name = str(prediction[0])
-        else:
-            if hasattr(model, '__getitem__') and len(model) > 0:
-                predicted_hotel_name = str(model[0])
-            else:
-                predicted_hotel_name = "Hôtel Atlas Luxury"
-        
-        print(f"PREDICTION RESULT: {predicted_hotel_name}")
-        
-        hotel_output = {
-            "nom": predicted_hotel_name,
-            "city": city,
-            "pagename": "hotel-details-page",
-            "city_extract": city,
-            "type": "Luxury Hotel",
-            "prix_num": budget,
-            "devise": "DH",
-            "etoiles": f"{stars} Stars",
-            "address": "Boulevard Mohamed V, N° 45",
-            "quartier": "Centre Ville",
-            "lat": "31.6295",
-            "long": "-7.9811",
-            "image_url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80"
-        }
-
-        return jsonify({
-            'status': 'success',
-            'hotel': hotel_output
-        })
-        
-    except Exception as e:
-        print("\n!!! EXCEPTION INNER FLASK APP !!!")
-        traceback.print_exc()
-        return jsonify({
-            'status': 'error', 
-            'message': str(e)
-        }), 500
+    return jsonify({'success': True, 'hotel': hotel_result})
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

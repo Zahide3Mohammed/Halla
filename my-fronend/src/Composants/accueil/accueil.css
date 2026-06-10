@@ -1,33 +1,70 @@
+/* --- Light Mode (Default Variables) --- */
 :root {
-  --bg-page: #f8fafc;
-  --bg-card: #ffffff;
+  --bg-page2: #f8fafc;
+  --bg-card2: #ffffff;
   --text-main: #0f172a;
   --text-muted: #475569;
-  --border-color: #e2e8f0;
+  --border-color2: #e2e8f0;
+  --bg-input: #f8fafc;
+  --bg-input-focus: #ffffff;
+  --placeholder-color: #94a3b8;
+  --bg-amenity: #f1f5f9;
+  --bg-amenity-hover: #e2e8f0;
+  --bg-badge-mini: rgba(15, 23, 42, 0.05);
+  --bg-feature-card: rgba(255, 255, 255, 0.7);
+  --bg-geo: #f8fafc;
+    --bg-stars: #fef08a;
+  --text-stars: #a16207;
   --radius-lg: 16px;
   --radius-md: 12px;
   --radius-sm: 8px;
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
+[data-theme="dark"] {
+  --bg-page2: #0a0a0a;        
+  --bg-card2: #171717;         
+  --text-main: #f8fafc;       
+  --text-muted: #94a3b8;       
+  --border-color2: #222f47;     
+  --bg-input: #0f172a;
+  --bg-input-focus: #131b2e;
+  --placeholder-color: #475569;
+  --bg-amenity: #1e293b;
+  --bg-amenity-hover: #2d3748;
+  --bg-badge-mini: rgba(248, 254, 252, 0.1);
+  --bg-feature-card: rgba(19, 27, 46, 0.6);
+  --bg-geo: #0f172a;
+  --bg-stars: rgba(254, 240, 138, 0.15);
+  --text-stars: #fef08a;
+}
 
 .page {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: var(--bg-page);
+  background-color: var(--bg-page2);
   color: var(--text-main);
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden;width: 100%;
+  overflow: hidden;
+  width: 100%;
   box-sizing: border-box;
+  transition: background-color var(--transition), color var(--transition);
 }
+
+/* Deep blur opacity fixed for dark mode to stay elegant */
 .bg-circle {
   position: absolute;
   border-radius: 50%;
   filter: blur(120px);
   z-index: 1;
-  opacity: 0.4;
+  opacity: 0.35;
+  transition: var(--transition);
+}
+
+[data-theme="dark"] .bg-circle {
+  opacity: 0.18; /* Lower opacity in dark mode to prevent washing out the blacks */
 }
 
 .bg-circle.one {
@@ -50,30 +87,36 @@
 .container {
   position: relative;
   z-index: 2;
-  width: 100%;padding: 10px 40px;
+  width: 100%;
+  padding: 10px 40px;
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   gap: 60px;
   align-items: center;
 }
-
+.hotel-img{
+    width: 100%;
+     height: max-content;
+}
 /* --- Left Section (Hero) --- */
 .left {
   display: flex;
-  flex-direction: column;height: max-content;
+  flex-direction: column;
+  height: max-content;
   gap: 25px;
 }
 
 .mini-badge {
   align-self: flex-start;
-  background-color: rgba(15, 23, 42, 0.05);
+  background-color: var(--bg-badge-mini);
   color: var(--text-main);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.5px;
-  padding: 0px 14px;
+  padding: 4px 14px; /* Added minor top-bottom padding for visual perfection */
   border-radius: 30px;
   text-transform: uppercase;
+  transition: var(--transition);
 }
 
 .left h1 {
@@ -82,6 +125,7 @@
   line-height: 1.15;
   letter-spacing: -1px;
   margin: 0;
+  transition: color var(--transition);
 }
 
 .left h1 span {
@@ -94,6 +138,7 @@
   line-height: 1.6;
   margin: 0;
   max-width: 480px;
+  transition: color var(--transition);
 }
 
 /* Features grid inside Hero */
@@ -105,12 +150,13 @@
 }
 
 .feature-card {
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid var(--border-color);
+  background: var(--bg-feature-card);
+  border: 1px solid var(--border-color2);
   backdrop-filter: blur(10px);
   padding: 20px 16px;
   border-radius: var(--radius-md);
   text-align: left;
+  transition: var(--transition);
 }
 
 .feature-card h2 {
@@ -118,29 +164,37 @@
   font-weight: 700;
   color: var(--text-main);
   margin: 0 0 4px 0;
+  transition: color var(--transition);
 }
 
 .feature-card span {
   font-size: 13px;
   color: var(--text-muted);
   font-weight: 500;
+  transition: color var(--transition);
 }
 
 /* --- Right Section (Form Card) --- */
 .right {
-  width: 100%;padding-top: 20px;
+  width: 100%;
+  padding-top: 20px;
 }
 
 .form {
-  background: var(--bg-card);
+  background: var(--bg-card2);
   padding: 40px;
   border-radius: var(--radius-lg);
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04), 
               0 1px 3px rgba(0, 0, 0, 0.02);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-color2);
   display: flex;
   flex-direction: column;
   gap: 28px;
+  transition: var(--transition);
+}
+
+[data-theme="dark"] .form {
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.45); /* Rich depth for dark mode layout */
 }
 
 .form .top h2 {
@@ -148,12 +202,14 @@
   font-weight: 700;
   margin: 0 0 6px 0;
   letter-spacing: -0.3px;
+  transition: color var(--transition);
 }
 
 .form .top p {
   font-size: 14px;
   color: var(--text-muted);
   margin: 0;
+  transition: color var(--transition);
 }
 
 /* Form Inputs Layout */
@@ -173,6 +229,7 @@
   font-size: 13px;
   font-weight: 600;
   color: var(--text-main);
+  transition: color var(--transition);
 }
 
 .input-group input,
@@ -181,8 +238,8 @@
   padding: 12px 16px;
   font-size: 14px;
   color: var(--text-main);
-  background-color: #f8fafc;
-  border: 1px solid var(--border-color);
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color2);
   border-radius: var(--radius-sm);
   outline: none;
   transition: var(--transition);
@@ -190,24 +247,15 @@
 }
 
 .input-group input::placeholder {
-  color: #94a3b8;
+  color: var(--placeholder-color);
 }
 
 .input-group input:focus,
 .input-group select:focus {
-  background-color: #ffffff;
+  background-color: var(--bg-input-focus);
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 4px rgba(var(--primary-color), 0.1);
-  /* Khdma dynamic s3iba f hex hex box-shadow, radi nkhliwha clean border solid inline */
 }
 
-.input-group input:focus,
-.input-group select:focus {
-  border-color: var(--primary-color);
-  background-color: #fff;
-}
-
-/* Section Amenities Title */
 .section-title h3 {
   font-size: 15px;
   font-weight: 700;
@@ -215,6 +263,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--text-muted);
+  transition: color var(--transition);
 }
 
 /* Amenities Tags Grid */
@@ -235,12 +284,12 @@
   background: transparent;
 }
 .amenities-grid::-webkit-scrollbar-thumb {
-  background: var(--border-color);
+  background: var(--border-color2);
   border-radius: 10px;
 }
 
 .amenity {
-  background-color: #f1f5f9;
+  background-color: var(--bg-amenity);
   color: var(--text-muted);
   padding: 8px 14px;
   font-size: 13px;
@@ -253,7 +302,7 @@
 }
 
 .amenity:hover {
-  background-color: #e2e8f0;
+  background-color: var(--bg-amenity-hover);
   color: var(--text-main);
 }
 
@@ -288,6 +337,80 @@
   transform: scale(0.98);
 }
 
+/* --- Hotel Card Details Meta --- */
+.card-top-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hotel-stars-badge {
+  background: var(--bg-stars);
+  color: var(--text-stars);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: var(--transition);
+}
+
+.hotel-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.hotel-price {
+  text-align: right;
+}
+
+.price-num {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primary-color);
+}
+
+.price-devise {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color var(--transition);
+}
+
+.hotel-type-tag {
+  display: inline-block;
+  background: var(--bg-amenity);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  transition: var(--transition);
+}
+
+.hotel-location-info {
+  font-size: 13px !important;
+  color: var(--text-muted);
+  line-height: 1.6 !important;
+  margin: 0 0 14px 0 !important;
+  transition: color var(--transition);
+}
+
+.geo-coordinates {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: monospace;
+  background: var(--bg-geo);
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px dashed var(--border-color2);
+  margin-bottom: 20px;
+  transition: var(--transition);
+}
+
 /* --- Responsive Media Queries --- */
 @media (max-width: 968px) {
   .container {
@@ -316,71 +439,4 @@
   .left h1 {
     font-size: 36px;
   }
-}
-.card-top-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.hotel-stars-badge {
-  background: #fef08a;
-  color: #a16207;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 6px;
-}
-
-.hotel-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-
-.hotel-price {
-  text-align: right;
-}
-
-.price-num {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--primary-color);
-}
-
-.price-devise {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.hotel-type-tag {
-  display: inline-block;
-  background: #f1f5f9;
-  color: var(--text-muted);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 4px;
-  margin-bottom: 12px;
-}
-
-.hotel-location-info {
-  font-size: 13px !important;
-  color: var(--text-muted);
-  line-height: 1.6 !important;
-  margin: 0 0 14px 0 !important;
-}
-
-.geo-coordinates {
-  font-size: 11px;
-  color: #94a3b8;
-  font-family: monospace;
-  background: #f8fafc;
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: 1px dashed var(--border-color);
-  margin-bottom: 20px;
 }

@@ -4,8 +4,13 @@ import "./Group.css";
 import { useNavigate } from 'react-router-dom';
 import echo from './echo';
 import MapComponent from './MapComponent';
+import { useAuth } from "../../context/AuthContext";
+
 
 function Group() {
+  const { user } = useAuth();
+  const brandColor = user?.color || "#3b82f6"; 
+
   const [availableGroups, setAvailableGroups] = useState([]); 
   const [activeTab, setActiveTab] = useState('evente'); 
   const navigate = useNavigate();
@@ -90,7 +95,6 @@ function Group() {
     }
   };
 
-  // 🛠️ تم إصلاح الرابط والـ Headers هنا لمنع الـ CORS والـ 404
   const joinGroup = async (id) => {
     try {
       const token = sessionStorage.getItem('token'); 
@@ -116,76 +120,43 @@ function Group() {
   };
 
   const [messages, setMessages] = useState([
-    { type: "ai", text: "Ils peuvent vous aider with Suggestion du jou." },
+    { type: "ai", text: "Ils peuvent vous aider with Suggestion du jour." },
     { type: "ai", text: "Indiquez-moi simplement l'heure et le lieu." }
   ]);
 
-const [input, setInput] = useState("");
-const [loadingAI, setLoadingAI] = useState(false);
+  const [input, setInput] = useState("");
+  const [loadingAI, setLoadingAI] = useState(false);
 
   const sendMessage = async () => {
+    if (!input.trim()) return;
 
-  if (!input.trim()) return;
+    const userMessage = { type: "user", text: input };
+    setMessages(prev => [...prev, userMessage]);
+    const currentInput = input;
+    setInput("");
+    setLoadingAI(true);
 
-  const userMessage = {
-    type: "user",
-    text: input
+    try {
+      const token = sessionStorage.getItem("token");
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/ai/suggest`,
+        { message: currentInput },
+        { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
+      );
+
+      const aiMessage = { type: "ai", text: response.data.reply };
+      setMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      console.log(error);
+      setMessages(prev => [
+        ...prev,
+        { type: "ai", text: "⚠️ AI ma khdamch daba." }
+      ]);
+    } finally {
+      setLoadingAI(false);
+    }
   };
 
-  setMessages(prev => [...prev, userMessage]);
-
-  const currentInput = input;
-
-  setInput("");
-
-  setLoadingAI(true);
-
-  try {
-
-    const token = sessionStorage.getItem("token");
-
-    const response = await axios.post(
-
-      `${import.meta.env.VITE_BACKEND_URL}/api/ai/suggest`,
-
-      {
-        message: currentInput
-      },
-
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json"
-        }
-      }
-    );
-
-    const aiMessage = {
-      type: "ai",
-      text: response.data.reply
-    };
-
-    setMessages(prev => [...prev, aiMessage]);
-
-  } catch (error) {
-
-    console.log(error);
-
-    setMessages(prev => [
-      ...prev,
-      {
-        type: "ai",
-        text: "⚠️ AI ma khdamch daba."
-      }
-    ]);
-
-  } finally {
-
-    setLoadingAI(false);
-  }
-};
-
-  // 🛠️ تم إصلاح الرابط هنا أيضاً ليتطابق مع الـ API المحمية
   const joinRandomGroup = async () => {
     try {
       const token = sessionStorage.getItem('token');
@@ -250,13 +221,11 @@ const [loadingAI, setLoadingAI] = useState(false);
   const fetchMyCurrentSalon = async () => {
     try {
       const token = sessionStorage.getItem('token');
-      console.log(token);
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/my-current-salon`, {
         headers: { 
           'Authorization': `Bearer ${token}`,
           'Accept': "application/json"
         }
-        
       });
       if (res.data.group) {
         setPendingRandomGroup(res.data.group);
@@ -287,37 +256,41 @@ const [loadingAI, setLoadingAI] = useState(false);
   ];
 
   return (
-    <div className="sketch-app-container_grp">
+    <div className="sketch-app-container_grp" style={{ '--user-brand-color': brandColor }}>
       <div className="main-content_grp">
         {activeTab === 'evente' ? (
           <div className="evente_grp">
             <div className="sketch-header_grp">
               <div className="search-wrapper_grp">
-                <input type="text" placeholder="Recherche par lieu" className="sketch-search-input_grp" />
+                <svg className="search-icon_grp" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" placeholder="Recherche par lieu..." className="sketch-search-input_grp" />
               </div>
               <div className="tab-buttons_grp">
                 <button 
-                  className={`tab-btn_grp ${activeTab === 'evente' ? 'active-green_grp' : ''}`}
+                  className={`tab-btn_grp ${activeTab === 'evente' ? 'active_grp' : ''}`}
                   onClick={() => setActiveTab('evente')}
                 >
-                  Evente
+                  Découvrir
                 </button>
                 <button 
-                  className={`tab-btn_grp ${activeTab === 'create' ? 'active-pink_grp' : ''}`}
+                  className={`tab-btn_grp ${activeTab === 'create' ? 'active_grp' : ''}`}
                   onClick={() => setActiveTab('create')}
                 >
-                  creer Group
+                  Créer un Groupe
                 </button>
               </div>
             </div>
 
             <div className="filter-tags_grp">
-              <span className="tiny-label_grp" style={{ cursor: 'pointer', fontWeight: !filterColor ? 'bold' : 'normal' }} onClick={() => setFilterColor(null)} >All</span>
-              {['red', 'green', 'yellow', 'blue', 'purple'].map(color => ( 
-                <button key={color} className={`color-tag_grp ${color} ${filterColor === color ? 'selected-border_grp' : ''}`} onClick={() => setFilterColor(color)}>
-                  {color}
-                </button>
-              ))}
+              <span className={`tiny-label_grp ${!filterColor ? 'active-filter' : ''}`} onClick={() => setFilterColor(null)} >Tous les Groupes</span>
+              <div className="tags-flex_grp">
+                {['red', 'green', 'yellow', 'blue', 'purple'].map(color => ( 
+                  <button key={color} className={`color-tag_grp ${color} ${filterColor === color ? 'selected-border_grp' : ''}`} onClick={() => setFilterColor(color)}>
+                    <span className="color-dot_grp" style={{ backgroundColor: color }}></span>
+                    {color}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="evente-grid_grp">
@@ -327,18 +300,19 @@ const [loadingAI, setLoadingAI] = useState(false);
                   .map(group => (
                     <div className="sketch-card-horizontal_grp" key={group.id}>
                       <div className="card-image-section_grp">
-                        <img src={`${import.meta.env.VITE_BACKEND_URL}/storage/${group.image_event}`} alt="Group Event" onError={(e) => e.target.src = "https://via.placeholder.com/150"} />
+                        <img src={`${import.meta.env.VITE_BACKEND_URL}/storage/${group.image_event}`} alt="Group Event" onError={(e) => e.target.src = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=500"} />
+                        <div className="card-badge-badge_grp" style={{ backgroundColor: group.creator?.color || 'var(--user-brand-color)' }}></div>
                       </div>
                       <div className="card-info-section_grp">
-                        <p className="suggestion-label_grp">Suggestion: {group.suggestion}</p>
+                        <span className="suggestion-label_grp">✨ {group.suggestion || "No custom setup"}</span>
                         <h3 className="group-name-title_grp">{group.name}</h3>
                         <div className="meta-data_grp">
-                          <p>📅 {group.start_date}</p>
-                          <p>⏱ {group.start_time}</p>
-                          <p>📍 {group.lieu_event}</p>
+                          <p><span>📅</span> {group.start_date}</p>
+                          <p><span>⏱</span> {group.start_time}</p>
+                          <p><span>📍</span> {group.lieu_event}</p>
                         </div>
                         <div className="meta-action_grp">
-                          <span className="count-label_grp">👥 {group.users_count ?? 0}/5</span>
+                          <span className="count-label_grp">👥 <b>{group.users_count ?? 0}</b> / 5 voyageur</span>
                           <button className="rejoindre-btn-green_grp" onClick={() => joinGroup(group.id)}>Rejoindre</button>
                         </div>
                       </div>
@@ -346,79 +320,94 @@ const [loadingAI, setLoadingAI] = useState(false);
                   ))}
               </div>
               <div className="map-sidebar_grp">
-                <div className="sketch-map-placeholder_grp" style={{ height: '400px', width: '100%' }}>
+                <div className="sketch-map-placeholder_grp">
                   <MapComponent groups={availableGroups} /> 
                 </div>
               </div>
             </div>
           </div>
         ) : (
-          <div className="create-view_grp animate-fade_grp">
-            <h1 className="create-title-pink_grp">Créer un groupe</h1>
+          <div className="create-view_grp">
+            <div className="create-header-wrapper_grp">
+               <h1 className="create-title-pink_grp" >Lancer une nouvelle aventure</h1>
+               <p className="create-sub-grp">Remplissez les détails pour rassembler des touristes partageant les mêmes passions.</p>
+            </div>
+            
             <div className="create-layout-split_grp">
               <div className="form-column_grp">
                 <div className="sketch-field_grp">
                   <label>Nom du groupe</label>
-                  <input name="name" onChange={handleChange} className="sketch-input_grp" />
+                  <input name="name" placeholder="Ex: Découverte de la Médina..." onChange={handleChange} className="sketch-input_grp" />
                   {errors.name && <span className="error-text_grp">{errors.name[0]}</span>}
                 </div>
+                
                 <div className="sketch-field_grp">
-                  <label>type group:</label>
+                  <label>Compatibilité</label>
                   <select name="type_group" onChange={handleChange} className="sketch-input_grp">
-                    <option value={"Même color"}>Même personnalité</option>
-                    <option value={"color different"}>Personnage de Changeur</option>
+                    <option value={"Même color"}>Même personnalité (Même Couleur)</option>
+                    <option value={"color different"}>Mixte (Toutes Personnalités)</option>
                   </select>
                   {errors.type_group && <span className="error-text_grp">{errors.type_group[0]}</span>}
                 </div>
-                <div className="sketch-field_grp">
-                  <label>Date de début</label>
-                  <input type="date" name="start_date" onChange={handleChange} className="sketch-input_grp" />
-                </div>
-                <div className="field-row-time_grp">
-                  <label>Heure de début</label> <input type="time" name="start_time" onChange={handleChange} className="small-input_grp" />
-                  <label>heure de fin</label> <input type="time" name="end_time" onChange={handleChange} className="small-input_grp" />
-                </div>
-                <div className="sketch-field_grp">
-                  <label>Suggestion du jour:</label>
-                  <textarea name="suggestion" onChange={handleChange} className="sketch-textarea_grp"></textarea>
-                </div>
-                <div className="sketch-field_grp">
-                  <label>Type de nationalité</label>
-                  <select name="nationality_type" onChange={handleChange} className="sketch-input_grp">
-                    <option value={'same'}>Même nationalité</option>
-                    <option value={'different'}>nationalités différentes</option>
-                  </select>
-                </div>
-                <div className="sketch-field_grp">
-                  <label>Lieu de l'événement (Ville)</label>
-                  <select 
-                    name="lieu_event" 
-                    className="sketch-input_grp"
-                    value={form.lieu_event} 
-                    onChange={(e) => {
-                      const selectedCityName = e.target.value;
-                      const cityData = MOROCCAN_CITIES.find(c => c.name === selectedCityName);
 
-                      if (cityData) {
-                        setForm(prev => ({
-                          ...prev,
-                          lieu_event: cityData.name,
-                          latitude: cityData.lat,
-                          longitude: cityData.lng
-                        }));
-                      }
-                    }}
-                  >
-                    <option value="">-- Choisir une ville --</option>
-                    {MOROCCAN_CITIES.map((city) => (
-                      <option key={city.name} value={city.name}>
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
+                <div className="grid-form-row_grp">
+                  <div className="sketch-field_grp">
+                    <label>Date de début</label>
+                    <input type="date" name="start_date" onChange={handleChange} className="sketch-input_grp" />
+                  </div>
+                  <div className="sketch-field_grp">
+                    <label>Heure de début</label> 
+                    <input type="time" name="start_time" onChange={handleChange} className="sketch-input_grp" />
+                  </div>
+                  <div className="sketch-field_grp">
+                    <label>Heure de fin</label> 
+                    <input type="time" name="end_time" onChange={handleChange} className="sketch-input_grp" />
+                  </div>
                 </div>
+
                 <div className="sketch-field_grp">
-                  <label>Image de l'événement</label>
+                  <label>Suggestion d'itinéraire:</label>
+                  <textarea name="suggestion" placeholder="Que voulez-vous visiter ensemble ?" onChange={handleChange} className="sketch-textarea_grp"></textarea>
+                </div>
+
+                <div className="grid-form-row_grp stacked_fields">
+                  <div className="sketch-field_grp">
+                    <label>Type de nationalité</label>
+                    <select name="nationality_type" onChange={handleChange} className="sketch-input_grp">
+                      <option value={'same'}>Même nationalité</option>
+                      <option value={'different'}>Mondes et nationalités différentes</option>
+                    </select>
+                  </div>
+                  
+                  <div className="sketch-field_grp">
+                    <label>Lieu de l'événement (Ville)</label>
+                    <select 
+                      name="lieu_event" 
+                      className="sketch-input_grp"
+                      value={form.lieu_event} 
+                      onChange={(e) => {
+                        const selectedCityName = e.target.value;
+                        const cityData = MOROCCAN_CITIES.find(c => c.name === selectedCityName);
+                        if (cityData) {
+                          setForm(prev => ({
+                            ...prev,
+                            lieu_event: cityData.name,
+                            latitude: cityData.lat,
+                            longitude: cityData.lng
+                          }));
+                        }
+                      }}
+                    >
+                      <option value="">-- Choisir une ville marocaine --</option>
+                      {MOROCCAN_CITIES.map((city) => (
+                        <option key={city.name} value={city.name}>{city.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="sketch-field_grp">
+                  <label>Image représentative du groupe</label>
                   <input 
                     type="file" 
                     id="event-image-upload" 
@@ -431,69 +420,62 @@ const [loadingAI, setLoadingAI] = useState(false);
                     {form.image_event ? (
                       <span className="file-name-ready_grp">✅ {form.image_event.name}</span>
                     ) : (
-                      "+"
+                      <div className="uploader-flex">
+                        <span>📸 Click to upload image</span>
+                      </div>
                     )}
                   </label>
                 </div>
-                {serverError && (
-                    <div className="error-message-banner_grp">
-                        ⚠️ {serverError}
-                    </div>
-                )}
+
+                {serverError && <div className="error-message-banner_grp">⚠️ {serverError}</div>}
+
                 <div className="form-actions-bottom_grp">
                   <button className="btn-annuler-pink_grp" onClick={() => setActiveTab('evente')}>Annuler</button>
-                  <button className="btn-cree-green_grp" onClick={createGroup}>crée</button>
+                  <button className="btn-cree-green_grp" onClick={createGroup}>Créer l'Aventure</button>
                 </div>
               </div>
 
               <div className="ai-column_grp">
                 <div className="ai-box-wrapper_grp">
-                  <h1 className="ai-title_grp">Conseil en IA</h1>
+                  <h3 className="ai-title_grp">💡 Compagnon de voyage IA</h3>
                   <div className="ai-suggestion-box-sketch_grp">
                     <div className="ai-chat-simulation_grp">
                       {messages.map((msg, i) => (
                         <div key={i} className={msg.type === "ai" ? "ai-msg_grp" : "user-msg_grp"}>
-                          {msg.type === "ai" && <div className="ai-avatar_grp">🤖</div>}
                           <div className={msg.type === "ai" ? "bubble-grey_grp" : "bubble-white_grp"}>
                             {msg.text}
                           </div>
                         </div>
                       ))}
                     </div>
-                   <div className="ai-input-bar_grp">
-
-  <input
-    value={input}
-    onChange={(e) => setInput(e.target.value)}
-    placeholder="Ask AI..."
-  />
-
-  <button
-    onClick={sendMessage}
-    disabled={loadingAI}
-  >
-    {loadingAI ? "..." : "➤"}
-  </button>
-
-</div>
+                    <div className="ai-input-bar_grp">
+                      <input
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Demander un itinéraire à l'IA..."
+                      />
+                      <button onClick={sendMessage} disabled={loadingAI}>
+                        {loadingAI ? "..." : "➤"}
+                      </button>
+                    </div>
                   </div>
                 </div>
                 
-                <h3 className="h3_grp">Rejoignez un groupe aléatoire</h3>
                 <div className="random-group-box-sketch_grp">
                   <div className="group-icon_grp">
-                    {pendingRandomGroup?.users_count >= 5 ? "🚀" : "🎲"}
+                    {pendingRandomGroup?.users_count >= 5 ? "🚀" : "✨"}
                   </div>
+                  <h4>Match Instantané</h4>
                   <p>
                     {pendingRandomGroup 
                       ? `Vous êtes dans le salon "${pendingRandomGroup.name}".`
-                      : "Vous pouvez rejoindre un groupe aléatoire de personnes ayant la même personnalité que vous."
+                      : "Rejoignez un groupe aléatoire de voyageurs qui partagent exactement votre profil de personnalité."
                     }
                   </p>
                   
                   <div className="group-users_grp">
-                    <span className={pendingRandomGroup?.users_count >= 5 ? "text-success" : ""}>
-                        👥 {pendingRandomGroup?.users_count || 0}/5
+                    <span className="badge-pill_users">
+                        👥 {pendingRandomGroup?.users_count || 0} / 5 Membres
                     </span>
                   </div>
 
@@ -502,7 +484,7 @@ const [loadingAI, setLoadingAI] = useState(false);
                     onClick={joinRandomGroup} 
                     disabled={pendingRandomGroup !== null}  
                   >
-                    {pendingRandomGroup ? "En attente..." : "🎲 Rejoindre le groupe"}
+                    {pendingRandomGroup ? "Match en cours..." : "Rejoindre un Salon Auto"}
                   </button>
                 </div>
               </div>
