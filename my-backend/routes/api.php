@@ -9,6 +9,7 @@ use App\Http\Controllers\Update_Profile;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\AiController;
+use App\Http\Controllers\DirectMessageController;
 use App\Http\Controllers\HotelController;
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -62,3 +63,13 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
  Route::post('/ai/suggest', [AiController::class, 'suggest']);
+
+ Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/friends', [DirectMessageController::class, 'getFriends']);
+    Route::delete('/friends/{id}', [DirectMessageController::class, 'removeFriend']);
+    Route::post('/friends', [DirectMessageController::class, 'addFriend']);
+    Route::get('/direct-messages/{friendId}', [DirectMessageController::class, 'getHistory']);
+    Route::post('/direct-messages', [DirectMessageController::class, 'send']);
+    Route::get('/user-profile/{id}', [AuthController::class, 'showProfile']);
+    Route::delete('/direct-messages/{friendId}', [DirectMessageController::class, 'deleteDiscussion']);
+});

@@ -214,3 +214,173 @@
 [data-theme="dark"] .AuthX_SidebarRight_55 { background: #0a0a0a; border-left-color: #262626; color: #f8fafc; }
 [data-theme="dark"] .AuthX_GoalLabel_55 { color: #94a3b8; }
 [data-theme="dark"] .AuthX_OnlineDot_55 { border-color: #262626; }
+
+.AuthX_UnreadBadge_55 {
+    background-color: #ef4444;
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 9999px;
+    margin-left: auto;
+    min-width: 18px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+    animation: popIn 0.2s ease-out;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+}
+.AuthX_SkeletonWrapper_55 {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+    width: 100%;
+}
+.AuthX_SkeletonRow_55 {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    width: 100%;
+}
+.AuthX_SkeletonMe_55 {
+    flex-direction: row-reverse;
+}
+.AuthX_SkeletonAvatar_55 {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+}
+.AuthX_SkeletonContent_55 {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 65%;
+}
+.AuthX_SkeletonMe_55 .AuthX_SkeletonContent_55 {
+    align-items: flex-end;
+}
+.AuthX_SkeletonBubble_55 {
+    width: 180px;
+    height: 40px;
+    border-radius: 16px;
+    background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+}
+.AuthX_SkeletonMe_55 .AuthX_SkeletonBubble_55 {
+    width: 140px;
+    border-radius: 16px 16px 0 16px;
+}
+.AuthX_SkeletonTime_55 {
+    width: 40px;
+    height: 10px;
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+.AuthX_FriendSidebarWrapper_55 {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 24px 16px;
+    box-sizing: border-box;
+}
+.AuthX_FriendInfoSection_55 {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.AuthX_BigAvatarWrapper_55 {
+    position: relative;
+    margin-bottom: 16px;
+}
+.AuthX_BigFriendAvatar_55 {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--user-main-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.AuthX_OnlineStatusBadge_55 {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 14px;
+    height: 14px;
+    background-color: #22c55e;
+    border: 2px solid #fff;
+    border-radius: 50%;
+}
+.AuthX_FriendNameTitle_55 {
+    margin: 8px 0 4px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+}
+.AuthX_FriendRoleSubtitle_55 {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0 0 12px 0;
+}
+.AuthX_GenderTag_55 {
+    font-size: 11px;
+    background-color: #f1f5f9;
+    color: #475569;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    text-transform: capitalize;
+    font-weight: 500;
+}
+.AuthX_SidebarActions_55 {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: auto; 
+}
+.AuthX_ActionBtnProfile_55, 
+.AuthX_ActionBtnDeleteChat_55 {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    border: none;
+}
+.AuthX_ActionBtnProfile_55 {
+    background-color: #f8fafc;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+}
+.AuthX_ActionBtnProfile_55:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+.AuthX_ActionBtnDeleteChat_55 {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fee2e2;
+}
+.AuthX_ActionBtnDeleteChat_55:hover {
+    background-color: #fee2e2;
+    border-color: #fca5a5;
+}

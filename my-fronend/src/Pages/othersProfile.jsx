@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useLanguage } from "../Elementes/LanguageContext";
 import { translationsLayout } from "../Elementes/translations/translationsLayout";
 import axios from "axios";
 import "./Profile.Module.css";
+import { useAuth } from "../context/AuthContext";
 
 export default function UserProfile() {
   const { id } = useParams(); 
   const { language } = useLanguage();
+  const navigate = useNavigate();
+  const { token } = useAuth();
+  
   const [targetUser, setTargetUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+  const [isFriend, setIsFriend] = useState(false); 
+
   const t = translationsLayout[language];
 
   const sidebarLinks = [
@@ -23,24 +29,70 @@ export default function UserProfile() {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!token) return;
       setLoading(true);
       try {
-        const resUser = await axios.get(`/api/user-profile/${id}`);
+        const headers = { Authorization: `Bearer ${token}` };
+        
+        // Jib user payload objects direct
+        const resUser = await axios.get(`/api/user-profile/${id}`, { headers });
+        
+        // 🔍 Debugging log lines inside console
+        console.log("--- DEBUG REALTIME SYNC ---");
+        console.log("Data loaded from API backend:", resUser.data);
+        console.log("Relationship state is_friend:", resUser.data.is_friend);
+
         setTargetUser(resUser.data);
         
-        const resPosts = await axios.get(`/api/user-posts/${id}`);
+        // Force conversion mapping checks to ensure reliable rendering layout
+        if (resUser.data && resUser.data.is_friend !== undefined) {
+            setIsFriend(Boolean(resUser.data.is_friend));
+        }
+        
+        const resPosts = await axios.get(`/api/user-posts/${id}`, { headers });
         setPosts(resPosts.data);
       } catch (error) {
-        console.error("Error fetching user profile:", error);
+        console.error("Error fetching user profile data streams:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    if (id) fetchUserData();
-  }, [id]);
+    fetchUserData();
+  }, [id, token]); 
 
-  const ress = sidebarLinks.find((e) => e.color === targetUser?.color) || sidebarLinks[0];
+  const handleAddFriend = async () => {
+     try {
+        const headers = { Authorization: `Bearer ${token}` };
+        await axios.post(`/api/friends`, { friend_id: id }, { headers });
+        setIsFriend(true);
+     } catch (err) {
+        console.error("Error adding friend connection entries:", err);
+     }
+  };
+
+  const handleRemoveFriend = async () => {
+    const confirmMsg = language === "ar" ? "هل تريد إزالة هذا الصديق؟" : "Voulez-vous vraiment retirer cet ami ?";
+    if (confirm(confirmMsg)) {
+      try {
+        const headers = { Authorization: `Bearer ${token}` };
+        await axios.delete(`/api/friends/${id}`, { headers });
+        setIsFriend(false);
+      } catch (err) {
+        console.error("Error removing friend loop matches:", err);
+      }
+    }
+  };
+
+  const handleRedirectToChat = () => {
+    navigate("/chat", { state: { openFriendId: id } });
+  };
+
+  // Modern clean dynamic fallback setup tracking backend values
+  const userColor = targetUser?.color && targetUser.color !== "No Color" ? targetUser.color : "purple";
+  const ress = sidebarLinks.find(
+    (e) => e.color.toLowerCase() === userColor.toLowerCase()
+  ) || sidebarLinks[0];
 
   if (loading) {
     return (
@@ -70,7 +122,7 @@ export default function UserProfile() {
         <div className="profile-main">
           <header className="profile-header">
             <div className="cover-wrapper">
-              <img src={targetUser?.color ? ress.image : "/images/purple-back.jpg"} alt="Cover" className="cover-img" />
+              <img src={ress.image} alt="Cover" className="cover-img" />
               <div className={language === "ar" ? "avatar-wrapper-ar" : "avatar-wrapper"}>
                 <div className="avatar-ring" style={{ borderColor: `white` }}>
                   <img src={!targetUser?.photo ? "/icons/Nonprofilelight.jpg" : `/storage/${targetUser?.photo}`} alt="" className="profile-img"/>
@@ -80,17 +132,43 @@ export default function UserProfile() {
 
             <div className={language === "ar" ? "profile-intro text-right" : "profile-intro text-left"}>
               <h1 className="user-name">{targetUser?.nom} {targetUser?.prenom}</h1>
+              
               <div className="badge-wrapper">
                 <span className="label-text">{t.present} :</span>
-                <span className="personality-badge" style={{ backgroundColor: ress.color, color: "white" }}>
-                  {targetUser?.color || "No Color"}
+                <span className="personality-badge" style={{ backgroundColor: ress.color, color: "white", textTransform: 'capitalize' }}>
+                  {userColor}
                 </span>
               </div>
+              
               <p className="personality-desc">{ress.text}</p>
               
-              <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-                 <button className="btn primary1" style={{ backgroundColor: ress.color, width: '160px' }}>Message</button>
-                 <button className="btn secondary" style={{ width: '160px', marginTop: 0 }}>Follow</button>
+              {/* ⚡ Pixel-Perfect Responsive Action Buttons Controls Layout */}
+              <div style={{ display: 'flex', gap: '10px', marginTop: '20px', alignItems: 'center' }}>
+                 <button 
+                     className="btn primary1" 
+                     style={{ backgroundColor: ress.color, width: '160px', marginTop: 0 }}
+                     onClick={handleRedirectToChat}
+                 >
+                     💬 Message
+                 </button>
+
+                 {isFriend ? (
+                    <button 
+                        className="AuthX_BtnAlreadyFriend_55" 
+                        style={{ width: '160px' }}
+                        onClick={handleRemoveFriend}
+                    >
+                        Already Friend ✓
+                    </button>
+                 ) : (
+                    <button 
+                        className="btn secondary" 
+                        style={{ width: '160px', marginTop: 0 }}
+                        onClick={handleAddFriend}
+                    >
+                        ➕ Add Friend
+                    </button>
+                 )}
               </div>
             </div>
 

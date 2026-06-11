@@ -430,3 +430,27 @@
 }
 
 .del-btn:hover { opacity: 1; color: red; }
+
+.AuthX_BtnAlreadyFriend_55 {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.AuthX_BtnAlreadyFriend_55:hover {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border-color: #fca5a5;
+    /* Soft animation message swapping to delete warning look on hover */
+    content: "Unfriend ✕";
+}
