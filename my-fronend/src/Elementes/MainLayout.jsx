@@ -14,8 +14,10 @@ const MainLayout = () => {
     const { language } = useLanguage();
     const { user, logout, token } = useAuth();
     const [unreadCount, setUnreadCount] = useState(0); 
+    const [liveToast, setLiveToast] = useState(null); // ✨ State jdid dial Pop-up live notification
     const t = translationsLayout[language];
     const navigate = useNavigate();
+    const API_URL = "/api";
 
     // ------------------------------------- LOGIC WEBSOCKET (REAL-TIME) -----------------------------------
     useEffect(() => {
@@ -42,6 +44,17 @@ const MainLayout = () => {
             .listen('.NotificationSent', (data) => {
                 console.log('New Friend Request Received!', data);
                 setUnreadCount(prev => prev + 1);
+
+                // ✨ Ila jatt demande d follow, n-affichiw Toast real-time dynamic f l-blasa
+                const notifPayload = data.notification;
+                if (notifPayload.type === 'friend_request') {
+                    setLiveToast(notifPayload);
+                    
+                    // Auto-hide pop-up après 8 seconds la ma-clikach
+                    setTimeout(() => {
+                        setLiveToast(null);
+                    }, 8000);
+                }
             });
 
         return () => {
@@ -69,12 +82,35 @@ const MainLayout = () => {
         if (user && token) fetchUnreadCount();
     }, [user, token]);
 
-    // ---------------------------------- HANDLERS -----------------------------
+    // ---------------------------------- ACTIONS LIVE BUTTONS -----------------------------
+    const handleAcceptLive = async (senderId) => {
+        try {
+            await axios.post(`${API_URL}/friend-accept`, { sender_id: senderId }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setLiveToast(null);
+            alert("Demande acceptée !");
+        } catch (err) {
+            console.error("Error accepting request:", err);
+        }
+    };
+
+    const handleRefuseLive = async (notifId) => {
+        try {
+            // Sifet call l backend bach n-supprimiwn notification oula n-bdelo status
+            await axios.delete(`${API_URL}/notifications/${notifId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setLiveToast(null);
+        } catch (err) {
+            console.error("Error refusing request:", err);
+            setLiveToast(null); // hide anyway for UI smooth flow
+        }
+    };
+
     const handleNotificationClick = async () => {
-        // بمجرد ما يكليكي، كنردو الـ counter لـ 0 في الـ UI
         setUnreadCount(0);
         try {
-            // كنعلمو الباكيند بلي كاع الإشعارات تقراو
             await axios.post('/api/notifications/read', {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -103,6 +139,46 @@ const MainLayout = () => {
 
     return (
         <div className="AuthX_DashboardContainer_55" style={{"--accent-blue": user?.color }}>
+            
+            {/* ✨ DYNAMIC LIVE TOAST WINDOW (APPLE/STRIPE STYLE) */}
+            {liveToast && (
+                <div className="live-toast-premium">
+                    <div className="live-toast-content">
+                        <div className="live-toast-avatar">
+                            {liveToast.sender?.photo ? (
+                                <img src={`http://localhost:8000/storage/${liveToast.sender.photo}`} alt="user" />
+                            ) : (
+                                <div className="live-avatar-fallback">{liveToast.sender?.nom?.charAt(0)}</div>
+                            )}
+                        </div>
+                        <div className="live-toast-body">
+                            <strong>{liveToast.sender?.prenom} {liveToast.sender?.nom}</strong>
+                            <p>vous a envoyé une demande de suivi</p>
+                        </div>
+                    </div>
+                    <div className="live-toast-actions">
+                        <button className="live-btn-accept" onClick={() => handleAcceptLive(liveToast.sender_id)}>Accepter</button>
+                        <button className="live-btn-refuse" onClick={() => handleRefuseLive(liveToast.id)}>Refuser</button>
+                    </div>
+                </div>
+            )}
+
+            {/* Custom inject for live toast positioning without touching global CSS */}
+            <style>{`
+                .live-toast-premium { position: fixed; top: 24px; right: 24px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.03); z-index: 99999; display: flex; flex-direction: column; gap: 12px; min-width: 320px; animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); font-family: system-ui, sans-serif; }
+                @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+                .live-toast-content { display: flex; align-items: center; gap: 12px; }
+                .live-toast-avatar img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+                .live-avatar-fallback { width: 42px; height: 42px; border-radius: 50%; background: #e2e8f0; text-align: center; line-height: 42px; font-weight: bold; color: #475569; }
+                .live-toast-body strong { font-size: 14px; color: #0f172a; display: block; }
+                .live-toast-body p { font-size: 13px; color: #64748b; margin: 2px 0 0 0; }
+                .live-toast-actions { display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid #f1f5f9; padding-top: 10px; }
+                .live-btn-accept { background: ${user?.color || '#6366f1'}; color: white; border: none; padding: 6px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+                .live-btn-refuse { background: #f1f5f9; color: #475569; border: none; padding: 6px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+                .live-btn-accept:hover { filter: brightness(1.05); }
+                .live-btn-refuse:hover { background: #e2e8f0; }
+            `}</style>
+
             <header className="AuthX_TopNavbar_55">
                 <div className="AuthX_UserProfileMini_55">
                     <div className="AuthX_AvatarPlaceholder_55">
@@ -125,7 +201,6 @@ const MainLayout = () => {
                                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                                 <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                             </svg>
-                            {/* البادج كيبان غير يلا كان الحساب كبر من 0 */}
                             {unreadCount > 0 && <span className="AuthX_NotifBadge_55">{unreadCount}</span>}
                         </span>
                         <span className="AuthX_Label_55">Notification</span>

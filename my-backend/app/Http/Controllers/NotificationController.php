@@ -4,39 +4,56 @@ namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
-    // 1. Jib notifications
     public function index(Request $request)
     {
-        $notifications = Notification::with('sender:id,nom,prenom,photo') // Jib m3ahom chkoun sifethom
+        $notifications = Notification::with('sender:id,nom,prenom,photo') 
             ->where('receiver_id', $request->user()->id)
             ->orderBy('created_at', 'desc')
             ->get();
 
         return response()->json($notifications);
     }
-
-    // 2. Mark as read
     public function markAsRead(Request $request)
     {
         Notification::where('receiver_id', $request->user()->id)
-            ->where('is_read', false)
-            ->update(['is_read' => true]);
+            ->where('is_read', 0) 
+            ->update(['is_read' => 1]); 
 
         return response()->json(['message' => 'All marked as read']);
     }
+
     public function markAsReadone($id)
     {
-        // Kanchoufo l-notification li 3ndha dak l-id W khassa b had l-user nite
-        $notification = auth()->user()->notifications()->where('id', $id)->first();
+        $currentUserId = Auth::id();
+        $notification = Notification::where('id', $id)
+            ->where('receiver_id', $currentUserId)
+            ->first();
 
         if ($notification) {
-            $notification->markAsRead(); // Hadi kat-setty 'read_at' l-wa9t dyal daba
+            $notification->update(['is_read' => 1]);
+            
             return response()->json(['message' => 'Notification marked as read']);
         }
 
         return response()->json(['message' => 'Notification not found'], 404);
     }
+//============================================================================
+    public function destroy($id)
+{
+    $notification = Notification::where('id', $id)
+        ->where('receiver_id', auth()->id())
+        ->first();
+
+    if ($notification) {
+        $notification->delete(); 
+        
+        return response()->json(['message' => 'Notification supprimée.']);
+    }
+
+    return response()->json(['message' => 'Non trouvé.'], 404);
+}
 }

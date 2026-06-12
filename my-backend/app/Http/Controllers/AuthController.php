@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
-
-
 class AuthController extends Controller
 {
     public function register(Request $request)
@@ -21,7 +19,7 @@ class AuthController extends Controller
             'age' => 'required|date',
             'paye' => 'required|string|max:255',
             'sexe' => 'required|string|max:10',
-            'role' => 'required|string|in:user,guide,cooperative', // زدنا الـ validation ديال الـ role
+            'role' => 'required|string|in:user,guide,cooperative', 
             'email' => 'required|email|unique:users,email',
             'tel' => 'required|string|max:20',
             'password' => 'required|string|min:6',
@@ -34,7 +32,7 @@ class AuthController extends Controller
         $user->age = $request->age;
         $user->paye = $request->paye;
         $user->sexe = $request->sexe;
-        $user->role = $request->role; // حفظ الـ role الجديد
+        $user->role = $request->role; 
         $user->email = $request->email;
         $user->tel = $request->tel;
         $user->password = Hash::make($request->password);
@@ -45,7 +43,6 @@ class AuthController extends Controller
             $file->storeAs('photos', $filename, 'public');
             $user->photo = 'photos/'.$filename;
         }
-
         $user->save();
         $token = $user->createToken('auth_token')->plainTextToken;
 

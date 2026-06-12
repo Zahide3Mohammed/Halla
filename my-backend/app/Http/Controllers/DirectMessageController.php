@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\DirectMessage;
 use App\Events\PrivateMessageSent;
 use Illuminate\Http\Request;
+use App\Models\FriendRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DirectMessageController extends Controller
@@ -41,17 +44,20 @@ class DirectMessageController extends Controller
 
         return response()->json($msg);
     }
-//==================================================================================
+
+    // ==================================================================================
     public function getFriends() {
         $userId = auth()->id();
+        
         $friendIds = DB::table('friends')
-            ->where('user_id', $userId)
-            ->pluck('friend_id')
-            ->merge(
-                DB::table('friends')
-                    ->where('friend_id', $userId)
-                    ->pluck('user_id')
-            )
+            ->where(function($q) use ($userId) {
+                $q->where('user_id', $userId)->orWhere('friend_id', $userId);
+            })
+            ->where('status', 'accepted') // ⚡ Khass status ykon accepted bach i-bano f chat list
+            ->get()
+            ->map(function($row) use ($userId) {
+                return $row->user_id == $userId ? $row->friend_id : $row->user_id;
+            })
             ->unique()
             ->toArray();
 
@@ -74,42 +80,24 @@ class DirectMessageController extends Controller
         $sortedFriends = $friends->sortByDesc(function ($friend) use ($latestMessages) {
             return $latestMessages[$friend->id] ?? '0000-00-00 00:00:00';
         })->values(); 
+
         return response()->json($sortedFriends);
     }
-//==========================================================================
+
+    // ==========================================================================
     public function deleteDiscussion($friendId) {
-    $userId = auth()->id();
-    DB::table('direct_messages') 
-        ->where(function($q) use ($userId, $friendId) {
-            $q->where('sender_id', $userId)->where('receiver_id', $friendId);
-        })
-        ->orWhere(function($q) use ($userId, $friendId) {
-            $q->where('sender_id', $friendId)->where('receiver_id', $userId);
-        })
-        ->delete();
-    return response()->json(['message' => 'Discussion supprimée avec succès']);
-}
-//==================================================================
-    public function addFriend(Request $request) {
-        $currentUserId = auth()->id();
-        $friendId = $request->input('friend_id');
-        $exists = DB::table('friends')
-            ->where('user_id', $currentUserId)
-            ->where('friend_id', $friendId)
-            ->exists();
-
-        if (!$exists) {
-            DB::table('friends')->insert([
-                'user_id' => $currentUserId,
-                'friend_id' => $friendId,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
-        }
-
-        return response()->json(['message' => 'Ami ajouté avec succès']);
+        $userId = auth()->id();
+        DB::table('direct_messages') 
+            ->where(function($q) use ($userId, $friendId) {
+                $q->where('sender_id', $userId)->where('receiver_id', $friendId);
+            })
+            ->orWhere(function($q) use ($userId, $friendId) {
+                $q->where('sender_id', $friendId)->where('receiver_id', $userId);
+            })
+            ->delete();
+        return response()->json(['message' => 'Discussion supprimée avec succès']);
     }
-//=========================================================
+// ==================================================================
     public function removeFriend($id) {
         $currentUserId = auth()->id();
         DB::table('friends')
@@ -122,5 +110,50 @@ class DirectMessageController extends Controller
             ->delete();
 
         return response()->json(['message' => 'Ami retiré avec succès']);
+    }
+// ==================================================================
+    public function getSuggestions() {
+        $userId = auth()->id();
+        $connectedUserIds = DB::table('friends')
+            ->where('user_id', $userId)
+            ->pluck('friend_id')
+            ->merge(
+                DB::table('friends')->where('friend_id', $userId)->pluck('user_id')
+            )
+            ->unique()
+            ->toArray();
+        $suggestions = User::where('id', '!=', $userId)
+            ->whereNotIn('id', $connectedUserIds)
+            ->select('id', 'nom', 'prenom', 'photo', 'sexe')
+            ->limit(10)
+            ->get();
+        return response()->json($suggestions);
+    }
+//================================================================================
+    public function acceptFriendRequest(Request $request)
+    {
+        $currentUserId = Auth::id();
+        $senderId = $request->input('sender_id'); // ID dyal l-user li sift d-demande f l-bdaya
+
+        // N-9lbo 3la d-demande f DB
+        $friendRequest = FriendRequest::where('sender_id', $senderId)
+                                    ->where('receiver_id', $currentUserId)
+                                    ->where('status', 'pending')
+                                    ->first();
+
+        if (!$friendRequest) {
+            return response()->json(['message' => 'Demande introuvable ou déjà traitée.'], 444);
+        }
+
+        // ✨ Update l-status flawlessly l 'accepted'
+        $friendRequest->update([
+            'status' => 'accepted'
+        ]);
+
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Demande acceptée avec succès. Vous êtes maintenant amis!'
+        ], 200);
     }
 }

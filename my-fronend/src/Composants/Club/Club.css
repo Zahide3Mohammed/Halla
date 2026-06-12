@@ -5,11 +5,7 @@
   --ax-text-main-55: #333333;
   --ax-text-meta-55: #6c757d;
   --ax-border-55: #e6e9f0;
-  
-  /* 🔥 CLEAN DARABA CONTROL (LIGHT MODE)
-     Kat-khlli loun original howa nit ghir kat-hbet lih chwya l-brightness dyal l-fdiha 
-     b 10% dyal dark slate mix bash y-welli daraja pro w clean.
-  */
+
   --raw-brand-color: var(--user-brand-color, #7c73e6);
   --ax-primary-55: color-mix(in srgb, var(--raw-brand-color) 90%, #1e293b 10%);
   
@@ -27,10 +23,6 @@
   --ax-border-55: #262626;
   --ax-input-bg-55: #0a0a0a;
   --ax-shadow-55: 0 4px 20px rgba(0, 0, 0, 0.5);
-  
-  /* 🔥 DARK MODE COMPATIBLE DEGREE
-     Hna loun kay-t-mixa m3a chwya d l-pure white (12%) bash y-ndwer f k7olya w ma y-b9ach mdemer.
-  */
   --ax-primary-55: color-mix(in srgb, var(--raw-brand-color) 88%, #ffffff 12%);
   --ax-primary-hover-55: color-mix(in srgb, var(--ax-primary-55) 85%, #fff);
 }
@@ -86,10 +78,10 @@
 }
 
 /* --- Sidebar Navigation --- */
-.AuthX_SideNav_Menu_55 { display: flex; flex-direction: column; gap: 8px; position: sticky; top: 20px; }
+.AuthX_SideNav_Menu_55 { display: flex; flex-direction: column; gap: 15px; position: fixed; top: 80px; }
 .AuthX_NavItem_Link_55 {
-  display: flex; align-items: center; gap: 12px; padding: 12px 18px;
-  border-radius: 12px; cursor: pointer; transition: all 0.2s ease;
+  display: flex; align-items: center; gap: 12px; padding: 15px 45px;
+  border-radius: 12px; cursor: pointer; transition: all 0.2s ease;background-color: #f3f2f2;
   color: var(--ax-text-main-55); font-weight: 500; text-decoration: none;
 }
 .AuthX_NavItem_Link_55:hover { 
