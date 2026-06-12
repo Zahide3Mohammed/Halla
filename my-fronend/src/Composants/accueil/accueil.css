@@ -105,6 +105,17 @@
   height: max-content;
   gap: 25px;
 }
+.maps-btn{
+  display:block;
+  margin-top:10px;
+  text-align:center;
+  padding:10px;
+  background:#2563eb;
+  color:white;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:600;
+}
 
 .mini-badge {
   align-self: flex-start;

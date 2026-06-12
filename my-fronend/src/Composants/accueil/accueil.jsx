@@ -1,49 +1,51 @@
 import React, { useState } from "react";
 import "./accueil.css";
 import { useAuth } from "../../context/AuthContext";
+import HotelMap from "./HotelMap";
 
 export default function Accueil() {
-  // 1. استخدام state لكل input لتفادي querySelector ومشاكل الـ DOM
+    // Form state
   const [city, setCity] = useState("Fes");
   const [budget, setBudget] = useState(500);
   const [stars, setStars] = useState("4 Stars");
-  const [hotelType, setHotelType] = useState("Riad"); // الديفولت لي كاين فالفلاكس
-  
+  const [hotelType, setHotelType] = useState("Riad"); 
+    // Recommendation data
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [recommendation, setRecommendation] = useState(null);
   const { user } = useAuth();
   const primaryColor = user?.color || "#6366f1";
+    // Loading state
   const [loading, setLoading] = useState(false);
-
-  const amenities = [
-    "Climatisation", "Chauffage", "Salle de bains", "Toilettes",
-    "Douche", "Télévision", "Internet Gratuit", "Terrasse",
-    "Service de navette", "Ascenseur", "Chambres familiales",
-    "Navette aéroport", "Restaurant", "Balcon", "Parking",
-    "Piscine extérieure", "Piscine intérieure", "Fitness",
-    "Spa", "Massages", "Sauna", "Petit déjeuner", "Jardin",
-    "Vue sur la ville", "Vue sur la piscine",
-  ];
-
+  // Available amenities
+ const amenities = [
+    "climatisation", "chauffage", "salle_de_bains", "toilettes", "douche", 
+    "television", "internet_gratuit", "terrasse", "service_de_navette", "ascenseur", 
+    "chambres_familiales", "navette_aeroport", "restaurant", "balcon", "cheminee", 
+    "parking", "piscine_exterieure", "piscine_interieure", "fitness", "spa", 
+    "coiffure", "massages", "sauna", "bagagerie", "petit_dejeuner_en_chambre", 
+    "jardin", "vue_sur_la_ville", "vue_sur_la_piscine", "vue_sur_le_jardin"
+];
+  // Add or remove an amenity
   const toggleAmenity = (item) => {
     setSelectedAmenities((prev) =>
       prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
     );
   };
+  // Send user preferences to the API
 
   const handleSubmit = async (e) => {
     if (e && typeof e.preventDefault === 'function') e.preventDefault();
     setLoading(true);
 
-    // 2. تحويل الـ amenities لـ Lowercase باش تطابق مع الـ Python والـ Dataset
+  
     
 const amenitiesToPython = selectedAmenities.map(a => a.toLowerCase().replace(/ /g, '_'));
-    // بناء الـ Payload الحقيقي والمطابق للـ Controller د لارافيل
+      // Request payload
     const payload = {
       city: city,
       budget: parseFloat(budget),
       stars: stars,
-      type: hotelType, // صيفطنا الـ type دابا
+      type: hotelType, // Selected hotel category
       amenities: amenitiesToPython,
     };
 
@@ -77,7 +79,7 @@ const amenitiesToPython = selectedAmenities.map(a => a.toLowerCase().replace(/ /
       <div className="bg-circle two"></div>
 
       <div className="container">
-        {/* LEFT SIDE */}
+     {/* Recommendation panel */}
         <div className="left">
           <div className="mini-badge">AI Powered Hotel Recommendation</div>
 
@@ -120,9 +122,14 @@ const amenitiesToPython = selectedAmenities.map(a => a.toLowerCase().replace(/ /
                   <strong>Address:</strong> {recommendation.address}
                 </p>
 
-                <div className="geo-coordinates">
-                  Lat: {recommendation.lat} | Long: {recommendation.long}
-                </div>
+  <a
+  href={`https://www.google.com/maps/search/?api=1&query=${recommendation.lat},${recommendation.long}`}
+  target="_blank"
+  rel="noreferrer"
+  className="maps-btn"
+>
+  Open in Google Maps
+</a>
 
                 <button className="reset-btn" onClick={() => setRecommendation(null)}>
                   ← Search Another Hotel
@@ -132,7 +139,7 @@ const amenitiesToPython = selectedAmenities.map(a => a.toLowerCase().replace(/ /
           )}
         </div>
 
-        {/* RIGHT SIDE */}
+       {/* Search form */}
         <div className="right">
           <div className="form">
             <div className="top">
