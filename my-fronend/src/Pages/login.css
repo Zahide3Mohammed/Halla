@@ -16,7 +16,7 @@
 /* --- Left Side: Slider --- */
 .AuthX_SliderWrapper_12 {
     flex: 1;
-    position: relative;min-height: 100dvh;
+    position: relative;max-height: 100dvh;min-height: 100dvh;
     clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
     background: #05071a;
     display: flex;
@@ -102,7 +102,6 @@
     color: #333;
 }
 
-/* ستايل خاص بالـ select باش نحيدو الشكل القديم */
 .AuthX_FormSide_54 select {
     cursor: pointer;
     appearance: none;
@@ -255,7 +254,6 @@
         display: block;
     }
 }
-
 .AuthX_FormSide_54 {
     flex: 1;
     display: flex;
@@ -273,7 +271,6 @@
     cursor: pointer;
     font-size: 16px;
 }
-/* Layout adjustments for Sign In */
 .AuthX_SignIn_Theme_02,.AuthX_Variant_Compact {
     max-width: 500px;box-sizing: border-box;justify-content: center;align-items: center;height: max-content;
     margin: auto;
