@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import "./PricingModal.css";
 import { Link } from "react-router";
 
@@ -36,41 +37,35 @@ export default function PricingModal({ isOpen, onClose }) {
     },
   ];
 
+  // هادي هي الخدمة اللي كتصيفط الـ User لـ Stripe
+  const handlePayment = async (planName) => {
+    try {
+      const { data } = await axios.post("/api/create-checkout-session", {
+        plan: planName,
+      });
+      window.location.href = data.url; 
+    } catch (error) {
+      console.error("Payment failed", error);
+      alert("حدث خطأ في عملية الدفع");
+    }
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div
-        className="pricing-modal"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="pricing-modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <div>
             <h2>Choose your plan</h2>
             <p>Simple, transparent pricing</p>
           </div>
-
-          <button className="close-btn" onClick={onClose}>
-            ✕
-          </button>
+          <button className="close-btn" onClick={onClose}>✕</button>
         </div>
-
         <div className="pricing-grid">
           {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`pricing-card ${
-                plan.popular ? "popular" : ""
-              }`}
-            >
-              {plan.popular && (
-                <div className="badge55">Most Popular</div>
-              )}
-
+            <div key={plan.name} className={`pricing-card ${plan.popular ? "popular" : ""}`}>
+              {plan.popular && <div className="badge55">Most Popular</div>}
               <h3>{plan.name}</h3>
-
-              <div className="price">
-                {plan.price}
-                <span>/month</span>
-              </div>
+              <div className="price">{plan.price}<span>/month</span></div>
 
               <ul>
                 {plan.features.map((f, i) => (
@@ -78,11 +73,17 @@ export default function PricingModal({ isOpen, onClose }) {
                 ))}
               </ul>
 
-              <Link to='/login' >
-                <button className="cta-btn22">
-                    Get Started
+              {plan.name === "Free" ? (
+                <Link to="/login">
+                  <button className="cta-btn22">Get Started</button>
+                </Link>
+              ) : (
+                <button 
+                  className="cta-btn22" 
+                  onClick={() => handlePayment(plan.name)}>
+                  Pay {plan.price}
                 </button>
-              </Link>
+              )}
             </div>
           ))}
         </div>

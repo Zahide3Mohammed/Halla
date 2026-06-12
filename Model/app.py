@@ -1,115 +1,166 @@
-from flask import Flask, request, jsonify
-import pickle
 import pandas as pd
-import traceback
+import unicodedata
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
-try:
-    with open('model.pkl', 'rb') as f:
-        model = pickle.load(f)
-except Exception as e:
-    print(f"CRITICAL ERROR LOADING MODEL: {str(e)}")
+df = pd.read_excel("dataset.xlsx")
 
-# L-list dial ga3 les amenities kifma mktobin exact f l-CSV dyalkom
-csv_amenities = [
-    "climatisation", "chauffage", "salle_de_bai", "toilettes", "douche", 
-    "television", "internet_grat", "terrasse", "service_de_nav", "ascenseur", 
-    "chambres_fami", "navette_aero", "telephone", "restaurant", "balcon", 
-    "cheminee", "parking", "piscine_exteri", "piscine_interi", "fitness", 
-    "spa", "coiffure", "massages", "sauna", "bagagerie", "petit_dejeuner_en", 
-    "jardin", "vue_sur_la_v", "vue_sur_la_pis", "vue_sur_le_ja"
+
+def remove_accents(text):
+    if not isinstance(text, str):
+        return ""
+
+    nfkd = unicodedata.normalize('NFKD', text)
+    return ''.join(
+        c for c in nfkd
+        if not unicodedata.combining(c)
+    ).lower().strip()
+
+
+amenities_columns = [
+    "climatisation",
+    "chauffage",
+    "salle_de_bains",
+    "toilettes",
+    "douche",
+    "television",
+    "internet_gratuit",
+    "terrasse",
+    "service_de_navette",
+    "ascenseur",
+    "chambres_familiales",
+    "navette_aeroport",
+    "telephone",
+    "restaurant",
+    "balcon",
+    "cheminee",
+    "parking",
+    "piscine_exterieure",
+    "piscine_interieure",
+    "fitness",
+    "spa",
+    "coiffure",
+    "massages",
+    "sauna",
+    "bagagerie",
+    "petit_dejeuner_en_chambre",
+    "jardin",
+    "vue_sur_la_ville",
+    "vue_sur_la_piscine",
+    "vue_sur_le_jardin"
 ]
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    try:
-        data = request.get_json()
-        print("\n=== DATA RECEIVED FROM LARAVEL ===")
-        print(data)
-        
-        # 1. Extraction standard dial inputs
-        react_city = data.get('city', 'Marrakech')
-        react_budget = data.get('budget', 1000)
-        react_stars_raw = data.get('stars', '3')
-        react_amenities = data.get('amenities', [])
-        
-        # T-9ad l-format dial stars (rj3ha ghir r9m)
-        try:
-            if isinstance(react_stars_raw, str) and ' ' in react_stars_raw:
-                react_stars = int(react_stars_raw.split()[0])
-            else:
-                react_stars = int(react_stars_raw)
-        except:
-            react_stars = 3
 
-        # 2. Bni l-Row structure matching dynamic CSV Columns 100%
-        row_data = {}
-        
-        # Mapping dial l-amenities (1 ila dynamic select f React, 0 ila la)
-        # N-7wlo kolchi l-lowercase bsh n-tfadow moshkil dial data entry mismatch
-        react_amenities_lower = [a.lower() for a in react_amenities]
-        
-        for am in csv_amenities:
-            # Check ila t-smiya dial csv dynamic m9arba m3a chno dkhli f React
-            is_active = any(am[:5] in ra for ra in react_amenities_lower)
-            row_data[am] = 1 if is_active else 0
-            
-        # Zid les champs s7a7 dynamic matchy m3a dynamic CSV structure
-        row_data['City'] = react_city
-        row_data['Prix_Num'] = float(react_budget)
-        row_data['Etoiles'] = react_stars
+    data = request.get_json()
 
-        # Create DataFrame matching exactly sa7bek model inputs
-        input_data = pd.DataFrame([row_data])
-        
-        print("\n=== DATAFRAME MATCHING CSV FOR MODEL ===")
-        print(input_data)
+    city = data.get("city", "")
+    budget = float(data.get("budget", 0))
+    stars = data.get("stars", "")
+    hotel_type = data.get("type", "")
+    amenities = data.get("amenities", [])
 
-        # 3. Prediction execution attribute secure check
-        if hasattr(model, 'predict') and not str(type(model)).endswith("ndarray'"):
-            try:
-                prediction = model.predict(input_data)
-                predicted_hotel_name = str(prediction[0])
-            except Exception as e_pred:
-                print(f"Prediction logic error: {str(e_pred)}")
-                predicted_hotel_name = "Error mapping model prediction"
-        else:
-            # Safe Fallback code direct men database/array dynamic match
-            print("⚠️ Notice: 'model.pkl' behaves as static array fallback.")
-            if hasattr(model, '__getitem__') and len(model) > 0:
-                predicted_hotel_name = str(model[0])
-            else:
-                predicted_hotel_name = "Hôtel Atlas Luxury"
-        
-        print(f"FINAL PREDICTION RESULT: {predicted_hotel_name}")
-        
-        # 4. Return json back object
-        hotel_output = {
-            "nom": predicted_hotel_name,
-            "city": react_city,
-            "pagename": "hotel-details-page",
-            "city_extract": react_city,
-            "type": "Luxury Hotel",
-            "prix_num": react_budget,
-            "devise": "DH",
-            "etoiles": f"{react_stars} Stars",
-            "address": "Boulevard Mohamed V, N° 45",
-            "quartier": "Centre Ville",
-            "lat": "31.6295",
-            "long": "-7.9811",
-            "image_url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80"
-        }
+    city_clean = remove_accents(city)
 
+    df["City_Clean"] = df["City"].apply(remove_accents)
+
+    # ==========================
+    # FILTRE CITY
+    # ==========================
+
+    hotels = df[df["City_Clean"] == city_clean].copy()
+
+    if hotels.empty:
         return jsonify({
-            'status': 'success',
-            'hotel': hotel_output
+            "success": False,
+            "message": "Aucun hôtel trouvé dans cette ville"
         })
-        
-    except Exception as e:
-        print("\n!!! EXCEPTION INNER FLASK APP !!!")
-        traceback.print_exc()
-        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+    scores = []
+
+    for _, hotel in hotels.iterrows():
+
+        score = 0
+
+      
+        # STARS SCORE
+       
+
+        if str(hotel["Etoiles"]).strip() == str(stars).strip():
+            score += 15
+
+     
+        # TYPE SCORE
+      
+
+        if remove_accents(str(hotel["Type"])) == remove_accents(str(hotel_type)):
+            score += 15
+
+       
+        # BUDGET SCORE
+      
+
+        hotel_price = float(hotel["Prix_Num"])
+
+        diff = abs(hotel_price - budget)
+
+        if diff <= 200:
+            score += 30
+        elif diff <= 500:
+            score += 20
+        elif diff <= 1000:
+            score += 10
+
+   
+        # AMENITIES SCORE
+      
+
+        amenities_score = 0
+
+        for amenity in amenities:
+
+            if amenity in amenities_columns:
+
+                if int(hotel[amenity]) == 1:
+                    amenities_score += 2
+
+        score += amenities_score
+
+        scores.append(score)
+
+    hotels["score"] = scores
+
+    best_hotel = hotels.sort_values(
+        by="score",
+        ascending=False
+    ).iloc[0]
+
+    hotel_result = {
+
+        "nom": str(best_hotel["Nom"]),
+        "city": str(best_hotel["City"]),
+        "prix_num": float(best_hotel["Prix_Num"]),
+        "devise": str(best_hotel["Devise"]),
+        "etoiles": str(best_hotel["Etoiles"]),
+        "type": str(best_hotel["Type"]),
+        "address": str(best_hotel["Address"]),
+        "quartier": str(best_hotel["Quartier"]),
+        "lat": str(best_hotel["Lat"]),
+        "long": str(best_hotel["Long"]),
+        "score": float(best_hotel["score"]),
+        "image_url": "https://images.unsplash.com/photo-1566073771259-6a8506099945"
+    }
+
+    return jsonify({
+        "success": True,
+        "hotel": hotel_result
+    })
+
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(debug=True, port=5000)

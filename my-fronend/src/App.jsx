@@ -22,6 +22,8 @@ import HotelAIFinder from "./Composants/accueil/accueil";
 import Group from "./Composants/group/Group";
 import UserProfile from "./Pages/othersProfile";
 import { Analytics } from "@vercel/analytics/react"
+import SuccessPage from "./Composants/Stripe/SuccessPage";
+import CancelPage from "./Composants/Stripe/CancelPage";
 
 
 
@@ -37,13 +39,14 @@ export default function App() {
   <GlobalLoader /> 
    <Analytics />
              
-
   <Routes>
       <Route path="/" element={<Home /> } />
       <Route path="/Login" element={<Login />} />
       <Route path="/Terms" element={<TermsJourney />} />
       <Route path="/intro-test" element={<ProtectedRoute ><AskTest /></ProtectedRoute>} />
       <Route path="/Questions" element={<ProtectedRoute ><Questions /></ProtectedRoute>} />
+      <Route path="/success" element={<SuccessPage />} />
+      <Route path="/cancel" element={<CancelPage />} />      
             <Route element={<MainLayout />}>
               <Route path="/Profile" element={<ProtectedRoute ><Profile /></ProtectedRoute>} />
               <Route path="/Settings" element={<ProtectedRoute ><Settings /></ProtectedRoute>} />
