@@ -104,8 +104,8 @@ const questions = [
         <div className="modern-header-container">
           <div className="welcome-section">
             <div className="icon-wrapper"><IconUser /></div>
-            <h1>أهلاً، <span className="user-name">{user?.nom || 'المستخدم'}</span></h1>
-            <p>ابدأ رحلة اكتشاف شخصيتك وتطوير ذاتك</p>
+            <h1>أهلاً، <span className="user-name">{user?.nom } {user?.prenom}</span></h1>
+            <p>{t.mo1}</p>
         </div>
           <div className="steps-cards-grid">
               <div className="card active">

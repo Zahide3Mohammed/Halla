@@ -25,6 +25,7 @@ export const translationsQuestions ={
         startbtn:"Start Test Now",btn2:"Maybe Later",
         personalgro:"Personal Growth",join:"Join +2,000 others this week",
         timetest:"Test Takes only 5 minutes to complete",
+        mo1:'Begin your journey of discovering your personality and developing yourself',
     },
     fr:{
         Q1:"Préféreriez-vous être le leader d'un groupe plutôt que d'être dirigé ?",
@@ -52,6 +53,7 @@ export const translationsQuestions ={
         startbtn:"Commencez le test maintenant",btn2:"Peut-être plus tard",
         personalgro:"Développement personnel",join:"Rejoignez +2 000 autres personnes cette semaine",
         timetest:"Le test ne prend que 5 minutes à compléter.",
+        mo1:'Commencez votre voyage à la découverte de votre personnalité et à votre développement personnel.',
 
     },
     ar:{
@@ -80,6 +82,7 @@ export const translationsQuestions ={
         startbtn:"ابدأ الاختبار الآن",btn2:"ربما لاحقاً",
         personalgro:"التنمية الذاتية",join:"انضم إلى 2000+ شخص آخر هذا الأسبوع",
         timetest:"لا يستغرق الاختبار سوى 5 دقائق لإكماله",
+        mo1:'ابدأ رحلة اكتشاف شخصيتك وتطوير ذاتك',
 
     }
 }
