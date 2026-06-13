@@ -53,7 +53,7 @@ class DirectMessageController extends Controller
             ->where(function($q) use ($userId) {
                 $q->where('user_id', $userId)->orWhere('friend_id', $userId);
             })
-            ->where('status', 'accepted') // ⚡ Khass status ykon accepted bach i-bano f chat list
+            ->where('status', 'accepted')
             ->get()
             ->map(function($row) use ($userId) {
                 return $row->user_id == $userId ? $row->friend_id : $row->user_id;
@@ -133,9 +133,7 @@ class DirectMessageController extends Controller
     public function acceptFriendRequest(Request $request)
     {
         $currentUserId = Auth::id();
-        $senderId = $request->input('sender_id'); // ID dyal l-user li sift d-demande f l-bdaya
-
-        // N-9lbo 3la d-demande f DB
+        $senderId = $request->input('sender_id'); 
         $friendRequest = FriendRequest::where('sender_id', $senderId)
                                     ->where('receiver_id', $currentUserId)
                                     ->where('status', 'pending')
@@ -144,13 +142,9 @@ class DirectMessageController extends Controller
         if (!$friendRequest) {
             return response()->json(['message' => 'Demande introuvable ou déjà traitée.'], 444);
         }
-
-        // ✨ Update l-status flawlessly l 'accepted'
         $friendRequest->update([
             'status' => 'accepted'
         ]);
-
-        
         return response()->json([
             'status' => 'success',
             'message' => 'Demande acceptée avec succès. Vous êtes maintenant amis!'

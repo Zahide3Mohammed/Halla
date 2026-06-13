@@ -9,7 +9,7 @@ class MessageController extends Controller
 {
     public function fetchMessages($groupId) {
         return Message::where('group_id', $groupId)
-                      ->with('user:id,prenom,photo')
+                      ->with('user:id,prenom,nom,photo')
                       ->oldest()
                       ->get();
     }

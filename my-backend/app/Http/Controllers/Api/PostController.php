@@ -67,24 +67,21 @@ class PostController extends Controller
 
         return response()->json($post, 201);
     }
-
+//=============================================================
     public function updateProfilePicture(Request $request)
     {
         $request->validate([
             'photo' => 'required|image|max:2048'
         ]);
-
         $user = auth()->user();
         if ($request->hasFile('photo')) {
             if ($user->photo) {
                 Storage::disk('public')->delete(str_replace('storage/', '', $user->photo));
             }
-
             $path = $request->file('photo')->store('profiles', 'public');
             $user->photo = $path; 
             $user->save();
         }
-
         return response()->json([
             'message' => 'Profile updated!',
             'photo' => $user->photo, 
@@ -189,9 +186,12 @@ class PostController extends Controller
         $user->friends()->syncWithoutDetaching([$friend_id => ['status' => 'pending']]);
         return response()->json(['message' => 'Request sent successfully!']);
     }
-
-    public function getUserPosts($id) 
+//===================================================================
+    public function getUserPosts($id)
     {
-        return Post::where('user_id', $id)->orderBy('created_at', 'desc')->get();
+        $posts = Post::where('user_id', $id)->get();
+        return response()->json($posts);
     }
+//===================================================================
+
 }

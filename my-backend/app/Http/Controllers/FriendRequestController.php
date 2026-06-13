@@ -117,23 +117,19 @@ public function accept($senderId)
     if (!$request) {
         return response()->json(['error' => 'Demande non trouvée.'], 404);
     }
-
-    // 2. 🚀 INSERTION F TABLE FRIENDS (Matching l-columns li 3ndek: user_id, friend_id)
     DB::table('friends')->insert([
-        'user_id'    => $senderId,   // L-user li ssifet l-demande
-        'friend_id'  => $receiverId, // Nta (l-user li accepta)
-        'status'     => 'active',    // bghiti t-zidi status active (optional)
+        'user_id'    => $senderId,   
+        'friend_id'  => $receiverId, 
+        'status'     => 'accepted',   
         'created_at' => now(),
         'updated_at' => now()
     ]);
 
-    // 3. Update status d-demande l 'accepted'
     DB::table('friend_requests')
         ->where('sender_id', $senderId)
         ->where('receiver_id', $receiverId)
         ->update(['status' => 'accepted']);
 
-    // 4. Update notification (Rjje3ha is_read = 1)
     DB::table('notifications')
         ->where('sender_id', $senderId)
         ->where('receiver_id', $receiverId)
@@ -143,11 +139,18 @@ public function accept($senderId)
     return response()->json(['status' => 'success', 'message' => 'Demande acceptée avec succès.']);
 }
 //============================
-// Zid hada f FriendRequestController.php
-public function acceptFriendRequest(Request $request)
-{
-    // l-input li kaysifet l-front-end huwa sender_id
-    $senderId = $request->input('sender_id');
-    return $this->accept($senderId); // 3yyti l-fonction accept() li swebna 9bel
-}
+public function acceptRequest(Request $request, $friendId)
+    {
+        $friendship = Friend::where('user_id', $friendId)
+                            ->where('friend_id', auth()->id())
+                            ->where('status', 'pending')
+                            ->first();
+
+        if ($friendship) {
+            $friendship->status = 'accepted';
+            $friendship->save();
+            return response()->json(['message' => 'تم قبول الصداقة']);
+        }
+        return response()->json(['message' => 'الطلب غير موجود'], 404);
+    }
 }

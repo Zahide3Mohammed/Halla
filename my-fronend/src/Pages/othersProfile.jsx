@@ -11,7 +11,8 @@ export default function UserProfile() {
   const { language } = useLanguage();
   const navigate = useNavigate();
   const { token } = useAuth();
-  
+  const [requestSent, setRequestSent] = useState(false);
+  const [requestReceived, setRequestReceived] = useState(false);
   const [targetUser, setTargetUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
@@ -33,18 +34,17 @@ export default function UserProfile() {
       setLoading(true);
       try {
         const headers = { Authorization: `Bearer ${token}` };
-        
-        // Jib user payload objects direct
         const resUser = await axios.get(`/api/user-profile/${id}`, { headers });
         
-        // 🔍 Debugging log lines inside console
         console.log("--- DEBUG REALTIME SYNC ---");
         console.log("Data loaded from API backend:", resUser.data);
         console.log("Relationship state is_friend:", resUser.data.is_friend);
 
         setTargetUser(resUser.data);
+        setIsFriend(Boolean(resUser.data.is_friend));
+        setRequestSent(Boolean(resUser.data.request_sent));
+        setRequestReceived(Boolean(resUser.data.request_received));
         
-        // Force conversion mapping checks to ensure reliable rendering layout
         if (resUser.data && resUser.data.is_friend !== undefined) {
             setIsFriend(Boolean(resUser.data.is_friend));
         }
@@ -60,16 +60,40 @@ export default function UserProfile() {
 
     fetchUserData();
   }, [id, token]); 
-
+//==============================================
   const handleAddFriend = async () => {
-     try {
-        const headers = { Authorization: `Bearer ${token}` };
-        await axios.post(`/api/friends`, { friend_id: id }, { headers });
-        setIsFriend(true);
-     } catch (err) {
-        console.error("Error adding friend connection entries:", err);
-     }
-  };
+  try {
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+    await axios.post(
+      `/api/users/${id}/follow`,
+      {},
+      { headers }
+    );
+    setRequestSent(true);
+
+  } catch (err) {
+    console.error(err);
+  }
+};
+//=================================================
+const handleAcceptFriend = async () => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+    await axios.post(
+      `/api/friend-accept/${id}`,
+      {},
+      { headers }
+    );
+    setIsFriend(true);
+    setRequestReceived(false);
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   const handleRemoveFriend = async () => {
     const confirmMsg = language === "ar" ? "هل تريد إزالة هذا الصديق؟" : "Voulez-vous vraiment retirer cet ami ?";
@@ -153,22 +177,47 @@ export default function UserProfile() {
                  </button>
 
                  {isFriend ? (
-                    <button 
-                        className="AuthX_BtnAlreadyFriend_55" 
-                        style={{ width: '160px' }}
-                        onClick={handleRemoveFriend}
-                    >
-                        Already Friend ✓
-                    </button>
-                 ) : (
-                    <button 
-                        className="btn secondary" 
-                        style={{ width: '160px', marginTop: 0 }}
-                        onClick={handleAddFriend}
-                    >
-                        ➕ Add Friend
-                    </button>
-                 )}
+                  <button
+                    className="AuthX_BtnAlreadyFriend_55"
+                    style={{ width: '160px' }}
+                    onClick={handleRemoveFriend}>👥 Friend</button>
+                ) : requestReceived ? (
+                  <button
+                    className="btn primary1"
+                    style={{
+                      width: '160px',
+                      marginTop: 0,
+                      backgroundColor: '#22c55e'
+                    }}
+                    onClick={handleAcceptFriend}>
+                    ✅ Accept
+                  </button>
+                ) : requestSent ? (
+                  <button
+                    className="btn secondary"
+                    style={{
+                      width: '160px',
+                      marginTop: 0
+                    }}
+                    disabled
+                  >
+                    ⏳ Request Sent
+                  </button>
+
+                ) : (
+
+                  <button
+                    className="btn secondary"
+                    style={{
+                      width: '160px',
+                      marginTop: 0
+                    }}
+                    onClick={handleAddFriend}
+                  >
+                    ➕ Add Friend
+                  </button>
+
+                )}
               </div>
             </div>
 

@@ -2,7 +2,6 @@ import React from "react";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 
 export default function HotelMap({ lat, lng }) {
-
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY
   });
@@ -13,7 +12,6 @@ export default function HotelMap({ lat, lng }) {
     lat: parseFloat(lat),
     lng: parseFloat(lng)
   };
-
   return (
     <GoogleMap
       mapContainerStyle={{

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import echo from './echo';
 import MapComponent from './MapComponent';
 import { useAuth } from "../../context/AuthContext";
+import { IconCalendar, IconCamera, IconClock, IconLightbulb, IconMapPin, IconRocket, IconSparkles, IconUser } from "../../Elementes/Icons";
 
 
 function Group() {
@@ -304,15 +305,15 @@ function Group() {
                         <div className="card-badge-badge_grp" style={{ backgroundColor: group.creator?.color || 'var(--user-brand-color)' }}></div>
                       </div>
                       <div className="card-info-section_grp">
-                        <span className="suggestion-label_grp">✨ {group.suggestion || "No custom setup"}</span>
+                        <span className="suggestion-label_grp"><IconSparkles /> {group.suggestion || "No custom setup"}</span>
                         <h3 className="group-name-title_grp">{group.name}</h3>
                         <div className="meta-data_grp">
-                          <p><span>📅</span> {group.start_date}</p>
-                          <p><span>⏱</span> {group.start_time}</p>
-                          <p><span>📍</span> {group.lieu_event}</p>
+                          <p><span><IconCalendar /></span> {group.start_date}</p>
+                          <p><span><IconClock /></span> {group.start_time}</p>
+                          <p><span><IconMapPin /></span> {group.lieu_event}</p>
                         </div>
                         <div className="meta-action_grp">
-                          <span className="count-label_grp">👥 <b>{group.users_count ?? 0}</b> / 5 voyageur</span>
+                          <span className="count-label_grp"><IconUser /> <b>{group.users_count ?? 0}</b> / 5 voyageur</span>
                           <button className="rejoindre-btn-green_grp" onClick={() => joinGroup(group.id)}>Rejoindre</button>
                         </div>
                       </div>
@@ -421,7 +422,7 @@ function Group() {
                       <span className="file-name-ready_grp">✅ {form.image_event.name}</span>
                     ) : (
                       <div className="uploader-flex">
-                        <span>📸 Click to upload image</span>
+                        <span><IconCamera /> Click to upload image</span>
                       </div>
                     )}
                   </label>
@@ -437,7 +438,7 @@ function Group() {
 
               <div className="ai-column_grp">
                 <div className="ai-box-wrapper_grp">
-                  <h3 className="ai-title_grp">💡 Compagnon de voyage IA</h3>
+                  <h3 className="ai-title_grp"><IconLightbulb />Compagnon de voyage IA</h3>
                   <div className="ai-suggestion-box-sketch_grp">
                     <div className="ai-chat-simulation_grp">
                       {messages.map((msg, i) => (
@@ -463,7 +464,7 @@ function Group() {
                 
                 <div className="random-group-box-sketch_grp">
                   <div className="group-icon_grp">
-                    {pendingRandomGroup?.users_count >= 5 ? "🚀" : "✨"}
+                    {pendingRandomGroup?.users_count >= 5 ? <IconRocket /> : <IconSparkles />}
                   </div>
                   <h4>Match Instantané</h4>
                   <p>

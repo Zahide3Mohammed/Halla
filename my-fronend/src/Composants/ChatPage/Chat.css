@@ -38,19 +38,20 @@
 /* --- HEADER PROFILE --- */
 .AuthX_HeaderProfile_55 {
   display: flex;
-  align-items: center;
   gap: 12px;
 }
-
+.AuthX_HeaderTitle_55{
+  position: absolute;left: 100px;top:20px;
+}
 .AuthX_HeaderAvatar_55 {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
   object-fit: cover;
 }
 
 .AuthX_SidebarLeft_55 {
-  width: 280px;
+  width: 290px;
   background: #ffffff;
   border-right: 1px solid #e2e8f0;
   display: flex; flex-direction: column;
@@ -144,14 +145,14 @@
 .AuthX_BtnSend_55 { 
   background: var(--user-main-color) !important; 
   border: none; 
-  width: 40px !important;  
+  width: 40px !important; color: white; 
   height: 40px !important;
   border-radius: 50%; display: flex; 
   align-items: center; 
   justify-content: center; cursor: pointer;
 }
 .AuthX_BtnSend_55:hover { background: #64748b !important; }
-.AuthX_SidebarRight_55 { width: 280px; background: #fff; border-left: 1px solid #e2e8f0; padding: 20px; display: flex; flex-direction: column; gap: 25px; }
+.AuthX_SidebarRight_55 { width: 260px; background: #fff; border-left: 1px solid #e2e8f0; padding: 20px; display: flex; flex-direction: column; gap: 25px; }
 .AuthX_GoalCard_55 { background: var(--user-light-bg) !important; padding: 15px; border-radius: 16px; border: 1px solid var(--user-border-alpha); }
 .AuthX_GoalLabel_55 { font-size: 0.7rem; font-weight: 800; color: rgb(97, 97, 97); }
 .AuthX_MemberItem_55 { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
@@ -383,4 +384,21 @@
 .AuthX_ActionBtnDeleteChat_55:hover {
     background-color: #fee2e2;
     border-color: #fca5a5;
+}
+.AuthX_MsgSenderName_55 {
+    font-weight: 600;
+    margin-left: 5px;
+}
+.AuthX_GroupInfo_55 {
+    padding: 0px;
+    overflow: hidden;
+}
+
+.AuthX_Status_55 {
+    font-size: 11px;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
 }

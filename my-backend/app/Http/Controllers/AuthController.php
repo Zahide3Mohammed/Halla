@@ -163,25 +163,49 @@ class AuthController extends Controller
     }
 //=====================================================================
     public function showProfile($id)
-    {
-        $currentUserId = auth('sanctum')->id() ?? auth()->id(); 
-        $user = User::findOrFail($id);
-        $isFriend = false;
-        if ($currentUserId) {
-            $isFriend = DB::table('friends')
-                ->where(function($q) use ($currentUserId, $id) {
-                    $q->where('user_id', $currentUserId)->where('friend_id', $id);
-                })
-                ->orWhere(function($q) use ($currentUserId, $id) {
-                    $q->where('user_id', $id)->where('friend_id', $currentUserId);
-                })
-                ->exists();
-        }
+{
+    $currentUserId = auth('sanctum')->id() ?? auth()->id();
 
-        if (empty($user->color) || $user->color === "No Color") {
-            $user->color = 'purple';
-        }
-        $user->is_friend = $isFriend ? true : false;
-        return response()->json($user);
+    $user = User::findOrFail($id);
+
+    $isFriend = false;
+    $requestSent = false;
+    $requestReceived = false;
+
+    if ($currentUserId) {
+
+        $isFriend = DB::table('friends')
+            ->where(function ($q) use ($currentUserId, $id) {
+                $q->where('user_id', $currentUserId)
+                  ->where('friend_id', $id);
+            })
+            ->orWhere(function ($q) use ($currentUserId, $id) {
+                $q->where('user_id', $id)
+                  ->where('friend_id', $currentUserId);
+            })
+            ->exists();
+
+        $requestSent = DB::table('friend_requests')
+            ->where('sender_id', $currentUserId)
+            ->where('receiver_id', $id)
+            ->where('status', 'pending')
+            ->exists();
+
+        $requestReceived = DB::table('friend_requests')
+            ->where('sender_id', $id)
+            ->where('receiver_id', $currentUserId)
+            ->where('status', 'pending')
+            ->exists();
     }
+
+    if (empty($user->color) || $user->color === "No Color") {
+        $user->color = 'purple';
+    }
+
+    $user->is_friend = $isFriend;
+    $user->request_sent = $requestSent;
+    $user->request_received = $requestReceived;
+
+    return response()->json($user);
+}
 }

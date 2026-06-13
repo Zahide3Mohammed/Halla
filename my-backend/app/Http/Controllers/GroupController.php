@@ -26,7 +26,7 @@ class GroupController extends Controller
         'end_time' => 'required',
         'nationality_type' => 'required|in:same,different',
         'suggestion' => 'nullable|string',
-        'image_event' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'image_event' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10048',
     ]);
 
     $today = now()->toDateString();
@@ -52,6 +52,7 @@ class GroupController extends Controller
         "group" => $group
     ], 201);
 }
+//==============================================================================
     public function join($id)
     {
         $group = Group::with('creator')->findOrFail($id);
@@ -72,30 +73,27 @@ class GroupController extends Controller
                 ], 403);
             }
         } elseif ($group->type_group === 'color different') {
-            // شرط: يجب أن يكون اللون مختلفاً عن لون المنشئ
             if ($userColor === $creatorColor) {
                 return response()->json([
                     "message" => "عذراً، هذه المجموعة مخصصة لأشخاص بألوان مختلفة عن لونك"
                 ], 403);
             }
         }
-
-        // 4. إتمام عملية الانضمام بنجاح
         $group->users()->attach($user->id);
+        $group->loadCount('users');
+            $group->load('creator'); 
+        broadcast(new \App\Events\GroupCreated($group));
 
-$group->loadCount('users');
-    $group->load('creator'); 
-   broadcast(new \App\Events\GroupCreated($group));
-
-    return response()->json([
-        "message" => "تم الانضمام بنجاح",
-        "group" => $group // صيفط الجروب باش الـ React يقدّر يخدم بيه
-    ]);    }
+            return response()->json([
+                "message" => "تم الانضمام بنجاح",
+                "group" => $group 
+            ]);    
+    }
    public function getMyGroups() {
     $user = auth()->user();
         $groups = $user->groups()
                    ->withCount('users')
-                   ->with('users:id,nom,prenom,photo') // 🔥 هادي ضرورية باش يبانو الأعضاء في React
+                   ->with('users:id,nom,prenom,photo') 
                    ->get()
                    ->filter(function($group) {
                        return $group->users_count == 5;

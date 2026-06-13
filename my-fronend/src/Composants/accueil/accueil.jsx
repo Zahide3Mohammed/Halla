@@ -4,20 +4,16 @@ import { useAuth } from "../../context/AuthContext";
 import HotelMap from "./HotelMap";
 
 export default function Accueil() {
-    // Form state
   const [city, setCity] = useState("Fes");
   const [budget, setBudget] = useState(500);
   const [stars, setStars] = useState("4 Stars");
   const [hotelType, setHotelType] = useState("Riad"); 
-    // Recommendation data
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [recommendation, setRecommendation] = useState(null);
   const { user } = useAuth();
   const primaryColor = user?.color || "#6366f1";
-    // Loading state
   const [loading, setLoading] = useState(false);
-  // Available amenities
- const amenities = [
+  const amenities = [
     "climatisation", "chauffage", "salle_de_bains", "toilettes", "douche", 
     "television", "internet_gratuit", "terrasse", "service_de_navette", "ascenseur", 
     "chambres_familiales", "navette_aeroport", "restaurant", "balcon", "cheminee", 
@@ -63,17 +59,13 @@ export default function Accueil() {
         setLoading(false);
     }
 };
-
   return (
     <div className="page" style={{ "--primary-color": primaryColor }}>
       <div className="bg-circle one"></div>
       <div className="bg-circle two"></div>
-
       <div className="container">
-     {/* Recommendation panel */}
         <div className="left">
           <div className="mini-badge">AI Powered Hotel Recommendation</div>
-
           {!recommendation ? (
             <>
               <h1>Find Your <span>Dream Hotel</span></h1>
@@ -87,16 +79,13 @@ export default function Accueil() {
                 <div className="feature-card"><h2>AI</h2><span>Smart Match</span></div>
                 <div className="feature-card"><h2>24/7</h2><span>Instant Results</span></div>
               </div>
-            </>
-          ) : (
+            </>) : (
             <div className="hotel-result-card">
               <div className="card-top-info">
                 <span className="result-badge">AI MATCH FOUND</span>
                 <span className="hotel-stars-badge">{recommendation.etoiles}</span>
               </div>
-              
               <img src={recommendation.image_url} alt={recommendation.nom} className="hotel-img" />
-              
               <div className="hotel-details-content">
                 <div className="hotel-header-row">
                   <h2>{recommendation.nom}</h2>
@@ -105,23 +94,16 @@ export default function Accueil() {
                     <span className="price-devise"> {recommendation.devise}</span>
                   </div>
                 </div>
-
                 <span className="hotel-type-tag">{recommendation.type}</span>
-                
                 <p className="hotel-location-info">
                   <strong>Quartier:</strong> {recommendation.quartier}, {recommendation.city} <br />
                   <strong>Address:</strong> {recommendation.address}
                 </p>
-
-  <a
-  href={`https://www.google.com/maps/search/?api=1&query=${recommendation.lat},${recommendation.long}`}
-  target="_blank"
-  rel="noreferrer"
-  className="maps-btn"
->
-  Open in Google Maps
-</a>
-
+                <a
+                href={`https://www.google.com/maps/search/?api=1&query=${recommendation.lat},${recommendation.long}`}
+                target="_blank" rel="noreferrer" className="maps-btn">
+                Open in Google Maps
+                </a>
                 <button className="reset-btn" onClick={() => setRecommendation(null)}>
                   ← Search Another Hotel
                 </button>
@@ -129,15 +111,12 @@ export default function Accueil() {
             </div>
           )}
         </div>
-
-       {/* Search form */}
         <div className="right">
           <div className="form">
             <div className="top">
               <h2>Customize Your Experience</h2>
               <p>Select your travel preferences</p>
             </div>
-
             <div className="inputs-grid">
               <div className="input-group">
                 <label>Destination City</label>
@@ -149,18 +128,12 @@ export default function Accueil() {
                   required 
                 />
               </div>
-
               <div className="input-group">
                 <label>Budget (DH)</label>
                 <input 
-                  type="number" 
-                  value={budget} 
-                  onChange={(e) => setBudget(e.target.value)} 
-                  placeholder="Ex: 1200" 
-                  required 
-                />
+                  type="number" value={budget} 
+                  onChange={(e) => setBudget(e.target.value)} placeholder="Ex: 1200" required />
               </div>
-
               <div className="input-group">
                 <label>Hotel Stars</label>
                 <select value={stars} onChange={(e) => setStars(e.target.value)}>
@@ -169,7 +142,6 @@ export default function Accueil() {
                   <option value="5 Stars">5 Stars</option>
                 </select>
               </div>
-
               <div className="input-group">
                 <label>Hotel Type</label>
                 <select value={hotelType} onChange={(e) => setHotelType(e.target.value)}>
@@ -179,23 +151,19 @@ export default function Accueil() {
                 </select>
               </div>
             </div>
-
             <div className="section-title">
               <h3>Select Amenities</h3>
             </div>
-
             <div className="amenities-grid">
               {amenities.map((item, index) => (
                 <div
                   key={index}
                   className={`amenity ${selectedAmenities.includes(item) ? "active" : ""}`}
-                  onClick={() => toggleAmenity(item)}
-                >
+                  onClick={() => toggleAmenity(item)}>
                   {item}
                 </div>
               ))}
             </div>
-
             <button type="button" className="submit-btn" disabled={loading} onClick={handleSubmit}>
               {loading ? "AI Processing..." : "Find Best Hotels"}
             </button>
