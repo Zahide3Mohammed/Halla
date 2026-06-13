@@ -5,6 +5,7 @@ import { translationsLayout } from "../Elementes/translations/translationsLayout
 import axios from "axios";
 import "./Profile.Module.css";
 import { useAuth } from "../context/AuthContext";
+import { IconMessage, IconUser } from "../Elementes/Icons";
 
 export default function UserProfile() {
   const { id } = useParams(); 
@@ -171,16 +172,13 @@ const handleAcceptFriend = async () => {
                  <button 
                      className="btn primary1" 
                      style={{ backgroundColor: ress.color, width: '160px', marginTop: 0 }}
-                     onClick={handleRedirectToChat}
-                 >
-                     💬 Message
-                 </button>
+                     onClick={handleRedirectToChat}><IconMessage /> Message</button>
 
                  {isFriend ? (
                   <button
                     className="AuthX_BtnAlreadyFriend_55"
                     style={{ width: '160px' }}
-                    onClick={handleRemoveFriend}>👥 Friend</button>
+                    onClick={handleRemoveFriend}><IconUser /> Friend</button>
                 ) : requestReceived ? (
                   <button
                     className="btn primary1"

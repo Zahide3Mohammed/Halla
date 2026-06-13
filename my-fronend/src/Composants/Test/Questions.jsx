@@ -7,16 +7,14 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router';
 import { useLanguage } from '../../Elementes/LanguageContext';
 import { translationsQuestions } from '../../Elementes/translations/translationsQuestions';
+import { IconUser, IconTarget, IconMessage }  from '../../Elementes/Icons';
 
 export default function Questions() {
   const [currentPage, setCurrentPage] = useState(0); 
   const questionsPerPage = 5;
   const { language } = useLanguage();
   const t = translationsQuestions[language];
-  
-  // 1. Kan-jibu l-user w l-function li kat-update l-context
   const { user, loginContext ,token} = useAuth(); 
-
   const [scores, setScores] = useState({ red: 0, green: 0, yellow: 0, blue: 0, purple: 0 });
   const [answers, setAnswers] = useState({});
   const navigate = useNavigate();
@@ -33,16 +31,14 @@ const questions = [
     { id: 8, text:`${t.Q8}`, color: "yellow", reselta: [-3, -2, -1, 0, 1, 2, 3] },
     { id: 9, text: `${t.Q9}`, color: "blue", reselta: [-3, -2, -1, 0, 1, 2, 3] },
     { id: 10, text: `${t.Q10}`, color: "purple", reselta: [-3, -2, -1, 0, 1, 2, 3] },
-     { id: 11, text: `${t.Q11}`, color: "blue", reselta: [-3, -2, -1, 0, 1, 2, 3] },
+    { id: 11, text: `${t.Q11}`, color: "blue", reselta: [-3, -2, -1, 0, 1, 2, 3] },
     { id: 12, text:`${t.Q12}`, color: "red", reselta: [-3, -2, -1, 0, 1, 2, 3] },
     { id: 13, text: `${t.Q13}`, color: "yellow", reselta: [-3, -2, -1, 0, 1, 2, 3] },
     { id: 14, text: `${t.Q14}`, color: "green", reselta: [-3, -2, -1, 0, 1, 2, 3] },
     { id: 15, text: `${t.Q15}`, color: "purple", reselta: [-3, -2, -1, 0, 1, 2, 3] }
   ];
-
   const startIndex = currentPage * questionsPerPage;
   const currentQuestions = questions.slice(startIndex, startIndex + questionsPerPage);
-
   const handleSelect = (questionId, color, value) => {
     const oldValue = answers[questionId] || 0;
     setScores(prev => ({
@@ -105,12 +101,30 @@ const questions = [
       <Header />
       <div className="max-w-4xl mx-auto p-8 bg-white ">
         
-        <article className="steps"> 
-          <h1 style={{ flexShrink:"0 " }}>أهلاً {user?.nom || 'المستخدم'}</h1>
-          <div className="card"><h1>الخطوة 1</h1><h3>أكمل الاختبار</h3></div> 
-          <div className="card"><h1>الخطوة 2</h1><h3>النتائج</h3></div>
-          <div className="card"><h1>الخطوة 3</h1><h3>تطوير الذات</h3></div> 
-        </article>
+        <div className="modern-header-container">
+          <div className="welcome-section">
+            <div className="icon-wrapper"><IconUser /></div>
+            <h1>أهلاً، <span className="user-name">{user?.nom || 'المستخدم'}</span></h1>
+            <p>ابدأ رحلة اكتشاف شخصيتك وتطوير ذاتك</p>
+        </div>
+          <div className="steps-cards-grid">
+              <div className="card active">
+                  <IconTarget />
+                  <h4>الخطوة 1</h4>
+                  <p>أكمل الاختبار</p>
+              </div>
+              <div className="card">
+                  <IconMessage />
+                  <h4>الخطوة 2</h4>
+                  <p>النتائج</p>
+              </div>
+              <div className="card">
+                  <IconUser />
+                  <h4>الخطوة 3</h4>
+                  <p>تطوير الذات</p>
+              </div>
+          </div>
+      </div>
 
         <div className="progress-bar-container">
           <div className="progress-bar" style={{ width: `${((startIndex + currentQuestions.length) / questions.length) * 100}%` }}></div>
