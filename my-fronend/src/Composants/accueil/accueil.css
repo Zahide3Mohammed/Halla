@@ -53,7 +53,6 @@
   transition: background-color var(--transition), color var(--transition);
 }
 
-/* Deep blur opacity fixed for dark mode to stay elegant */
 .bg-circle {
   position: absolute;
   border-radius: 50%;
@@ -64,7 +63,7 @@
 }
 
 [data-theme="dark"] .bg-circle {
-  opacity: 0.18; /* Lower opacity in dark mode to prevent washing out the blacks */
+  opacity: 0.18; 
 }
 
 .bg-circle.one {
@@ -98,9 +97,8 @@
     width: 100%;
      height: max-content;
 }
-/* --- Left Section (Hero) --- */
 .left {
-  display: flex;
+  display: flex;position: relative;top: -100px;
   flex-direction: column;
   height: max-content;
   gap: 25px;

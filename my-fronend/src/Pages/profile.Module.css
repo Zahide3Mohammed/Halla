@@ -1,9 +1,6 @@
-/* --- Logic dyal l-alwan (Dark Mode) --- */
-
 [data-theme='dark'] .profile-page-wrapper {
     background-color: #0a0a0a !important;
 }
-
 [data-theme='dark'] .profile-header,
 [data-theme='dark'] .stats-card,
 [data-theme='dark'] .fb-post-card {
@@ -11,7 +8,6 @@
     border: 1px solid #262626 !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
 }
-
 [data-theme='dark'] .user-name,
 [data-theme='dark'] .stats-title,
 [data-theme='dark'] .fb-post-author-name,
@@ -21,7 +17,6 @@
 [data-theme='dark'] .metric-item-counter span {
     color: #ededed !important;
 }
-
 [data-theme='dark'] .personality-desc,
 [data-theme='dark'] .metric-info,
 [data-theme='dark'] .fb-post-text,
@@ -33,7 +28,6 @@
 [data-theme='dark'] .profile-tabs {
     border-top: 1px solid #262626 !important;
 }
-
 [data-theme='dark'] .avatar-ring {
     border-color: #171717 !important;
     background: var(--active-color) !important;
@@ -492,3 +486,64 @@
   .fb-post-media-container { margin: 4px -16px 12px -16px; }
   .fb-del-btn { opacity: 1; } /* Always viewable on mobile view */
 }
+.posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 100%; 
+    margin: 0 auto;
+}
+
+.fb-post-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    padding: 0 15px 10px 15px;
+}
+
+.post-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.user-info h4 { margin: 0; font-size: 15px; }
+.post-time { font-size: 12px; color: #65676b; }
+
+.post-content { padding: 0 15px 10px 15px; font-size: 15px; }
+
+.post-image img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.post-actions {
+    border-top: 1px solid #eee;
+    margin: 10px 15px 0 15px;
+    padding-top: 10px;
+    display: flex;
+    gap: 20px;
+}
+
+.post-actions button {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #65676b;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.post-actions button:hover { background: #f0f2f5; }

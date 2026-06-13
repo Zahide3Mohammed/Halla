@@ -104,24 +104,24 @@ const questions = [
         <div className="modern-header-container">
           <div className="welcome-section">
             <div className="icon-wrapper"><IconUser /></div>
-            <h1>أهلاً، <span className="user-name">{user?.nom } {user?.prenom}</span></h1>
+            <h1><span className="user-name">{user?.nom } {user?.prenom}</span></h1>
             <p>{t.mo1}</p>
         </div>
           <div className="steps-cards-grid">
               <div className="card active">
                   <IconTarget />
-                  <h4>الخطوة 1</h4>
-                  <p>أكمل الاختبار</p>
+                  <h4>{t.mokh1}</h4>
+                  <p>{t.mokh11}</p>
               </div>
               <div className="card">
                   <IconMessage />
-                  <h4>الخطوة 2</h4>
-                  <p>النتائج</p>
+                  <h4>{t.mokh2}</h4>
+                  <p>{t.mokh22}</p>
               </div>
               <div className="card">
                   <IconUser />
-                  <h4>الخطوة 3</h4>
-                  <p>تطوير الذات</p>
+                  <h4>{t.mokh3}</h4>
+                  <p>{t.mokh33}</p>
               </div>
           </div>
       </div>

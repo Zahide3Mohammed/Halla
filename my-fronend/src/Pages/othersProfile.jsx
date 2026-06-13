@@ -5,7 +5,7 @@ import { translationsLayout } from "../Elementes/translations/translationsLayout
 import axios from "axios";
 import "./Profile.Module.css";
 import { useAuth } from "../context/AuthContext";
-import { IconMessage, IconUser } from "../Elementes/Icons";
+import { IconClock, IconLightbulb, IconMessage, IconSearch, IconUser } from "../Elementes/Icons";
 
 export default function UserProfile() {
   const { id } = useParams(); 
@@ -188,7 +188,7 @@ const handleAcceptFriend = async () => {
                       backgroundColor: '#22c55e'
                     }}
                     onClick={handleAcceptFriend}>
-                    ✅ Accept
+                    <IconLightbulb /> Accept
                   </button>
                 ) : requestSent ? (
                   <button
@@ -199,7 +199,7 @@ const handleAcceptFriend = async () => {
                     }}
                     disabled
                   >
-                    ⏳ Request Sent
+                    <IconClock /> Request Sent
                   </button>
 
                 ) : (
@@ -212,7 +212,7 @@ const handleAcceptFriend = async () => {
                     }}
                     onClick={handleAddFriend}
                   >
-                    ➕ Add Friend
+                    <IconSearch /> Add Friend
                   </button>
 
                 )}
@@ -226,27 +226,40 @@ const handleAcceptFriend = async () => {
             </nav>
           </header>
 
-          <section className="posts-grid">
+          <section className="posts-list">
             {posts.length > 0 ? (
               posts.map((post) => (
-                <article key={post.id} className="profile-post-card">
+                <article key={post.id} className="fb-post-card">
+                  {/* Header: User Info */}
+                  <div className="post-header">
+                    <img src={!targetUser?.photo ? "/icons/Nonprofilelight.jpg" : `/storage/${targetUser?.photo}`} alt="avatar" />
+                    <div className="user-info">
+                      <h4>{targetUser?.nom} {targetUser?.prenom}</h4>
+                      <span className="post-time">{new Date(post.created_at).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="post-content">
+                    <p>{post.content}</p>
+                  </div>
+
+                  {/* Image */}
                   {post.media_url && (
-                    <div className="post-media-wrapper">
-                      <img src={`/storage/${post.media_url}`} alt="Post" />
+                    <div className="post-image">
+                      <img src={`/storage/${post.media_url}`} alt="Post content" />
                     </div>
                   )}
-                  <div className="post-body-content">
-                    <p className="post-text">{post.content}</p>
-                    <div className="post-footer-meta">
-                      <span className="post-date-tag">{new Date(post.created_at).toLocaleDateString()}</span>
-                    </div>
+
+                  {/* Actions (Like/Comment - Static for now) */}
+                  <div className="post-actions">
+                      <button><IconMessage /> Like</button>
+                      <button><IconMessage /> Comment</button>
                   </div>
                 </article>
               ))
             ) : (
-              <div className="empty-state-msg">
-                <p>{language === "ar" ? "لا توجد منشورات" : "Aucune publication"}</p>
-              </div>
+              <div className="empty-state-msg">...</div>
             )}
           </section>
         </div>

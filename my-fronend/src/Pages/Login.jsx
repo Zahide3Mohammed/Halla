@@ -8,7 +8,6 @@ import { translationsLogin } from '../Elementes/translations/translationsLogin';
 
 const image = ["./chta.png"];
 
-// لستة البلدان باش نتفاداو مشاكل الـ API
 const countriesList = [
   "Morocco", "France", "Spain", "USA", "Algeria", "Tunisia", "Germany", 
   "Canada", "United Kingdom", "Italy", "Belgium", "Saudi Arabia", "UAE", "Egypt"
@@ -36,10 +35,10 @@ export default function Login() {
   const [formData, setFormData] = useState({
     nom: '',
     prenom: '',
-    age: '', // Date of Birth
+    age: '', 
     paye: '',
     sexe: '',
-    role: 'user', // الحقل الجديد
+    role: 'user', 
     email: '',
     tel: '',
     password: '',
@@ -254,7 +253,7 @@ export default function Login() {
               const isValid = await validateStep1();
               if (isValid) { setStep(2); }
             }}
-              className="AuthX_PrimaryBtn_Action_10" type="button" disabled={loading}>
+              className="AuthX_PrimaryBtn_Action_1044" type="button" disabled={loading}>
               {loading ? `${t.btnsuivant2}` : `${t.btnsuivant}`}
             </button>
 
@@ -277,7 +276,7 @@ export default function Login() {
                 {t.nesslwl} <Link to="/terms">{t.nesstani}</Link>
               </label>
             </div>
-            <button className="AuthX_PrimaryBtn_Action_10" disabled={loading}>{loading ? <div className="AuthX_LoadingSpinner_Small">Loading...</div> : "Create account"}</button>
+            <button className="AuthX_PrimaryBtn_Action_1044" disabled={loading}>{loading ? <div className="AuthX_LoadingSpinner_Small">Loading...</div> : "Create account"}</button>
           </form>
         )}
 
@@ -295,7 +294,7 @@ export default function Login() {
               </span>
             </div>
             {errors.signin && <span className="AuthX_ErrorMsg_Label">{errors.signin}</span>}
-            <button className="AuthX_PrimaryBtn_Action_10" disabled={loading}>
+            <button className="AuthX_PrimaryBtn_Action_1044" disabled={loading}>
               {loading ? `${t.signinbtn}` : `${t.signinbtn2}`}
             </button>
             <div className="AuthX_SwitcherLink_Container_19">
