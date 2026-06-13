@@ -35,6 +35,7 @@ class PaymentController extends Controller
     public function createCheckoutSession(Request $request)
     {
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+         \Stripe\Stripe::setVerifySslCerts(false);
         $price = 0 ;
         switch ($request->plan) {
             case 'Pro': $price = 1000; break;
@@ -52,8 +53,8 @@ class PaymentController extends Controller
                 'quantity' => 1,
             ]],
             'mode' => 'payment',
-            'success_url' => url('http://localhost:5173/success'), 
-            'cancel_url' => url('http://localhost:5173/cancel'),   
+            'success_url' => 'http://localhost:5173/success', 
+            'cancel_url' => 'http://localhost:5173/cancel',   
         ]);
 
         return response()->json(['url' => $session->url]);

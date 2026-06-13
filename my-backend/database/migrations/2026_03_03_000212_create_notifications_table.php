@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('receiver_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
             $table->enum('type', ['friend_request', 'like', 'comment']);
-            $table->unsignedBigInteger('post_id')->nullable(); // Optional l-like/comment
+            $table->unsignedBigInteger('post_id')->nullable(); 
             $table->boolean('is_read')->default(false);
             $table->timestamps();
         });

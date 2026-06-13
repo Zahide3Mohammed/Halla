@@ -14,7 +14,7 @@ use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Broadcast;
-
+use Laravel\Reverb\Loggers\Log;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -23,6 +23,8 @@ Route::post('/recommendations', [HotelController::class, 'getRecommendations']);
 Route::get('/posts', [PostController::class, 'index']);
 Route::get('/groups', [GroupController::class, 'index']);
 Route::post('/ai/suggest', [AiController::class, 'suggest']);
+Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession']);
+Route::post('/create-payment-intent', [PaymentController::class, 'create']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -70,5 +72,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/find-friends', [PostController::class, 'suggestUsers']);
 
 });
-    Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession']);
-    Route::post('/create-payment-intent', [PaymentController::class, 'create']);

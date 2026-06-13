@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('hotels', function (Blueprint $table) {
     $table->id();
-    // مول الأوتيل
     $table->string('email');
     $table->string('password');
     $table->string('city');
@@ -21,7 +20,7 @@ return new class extends Migration
     $table->string('type'); // Riad, Hôtel, etc.
     $table->text('description')->nullable();
     $table->string('image_url')->nullable();
-    $table->boolean('is_paid')->default(false); // واش خلص؟
+    $table->boolean('is_paid')->default(false); 
     $table->timestamps();
 });
     }

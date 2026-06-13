@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('post_comments', function (Blueprint $table) {
             $table->id();
-            // Had l-ster darouri:
             $table->foreignId('post_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text('body');

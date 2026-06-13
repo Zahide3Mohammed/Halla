@@ -37,10 +37,9 @@ export default function PricingModal({ isOpen, onClose }) {
     },
   ];
 
-  // هادي هي الخدمة اللي كتصيفط الـ User لـ Stripe
   const handlePayment = async (planName) => {
     try {
-      const { data } = await axios.post("/api/create-checkout-session", {
+      const { data } = await axios.post("http://localhost:8000/api/create-checkout-session", {
         plan: planName,
       });
       window.location.href = data.url; 

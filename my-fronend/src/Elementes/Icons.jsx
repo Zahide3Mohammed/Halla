@@ -49,7 +49,6 @@ export const IconClock = () => (
         <polyline points="12 6 12 12 16 14"></polyline>
     </svg>
 );
-
 export const IconMapPin = () => (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -63,7 +62,6 @@ export const IconRocket = () => (
         <path d="M14.5 14.5a3 3 0 1 0 3-3" />
     </svg>
 );
-
 export const IconSparkles = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="m12 3-1.9 5.8c-.1.3-.4.6-.7.7L3.6 12l5.8 1.9c.3.1.6.4.7.7l1.9 5.8 1.9-5.8c.1-.3.4-.6.7-.7l5.8-1.9-5.8-1.9c-.3-.1-.6-.4-.7-.7L12 3z" />
